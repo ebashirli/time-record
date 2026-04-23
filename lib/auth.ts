@@ -10,12 +10,13 @@ const uri =
 
 const client = new MongoClient(uri);
 const db = client.db();
+
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   socialProviders: {
     google: {
       clientId: process.env.AUTH_GOOGLE_ID ?? "",
-      clientKey: process.env.AUTH_GOOGLE_SECRET,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
     },
   },
 });

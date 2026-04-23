@@ -1,6 +1,7 @@
-import { signIn } from "@/lib/auth-client"; //import the auth client
+// "useless"
+import { authClient } from "@/lib/auth-client"; //import the auth client
 
-await signIn.social({
+await authClient.signIn.social({
   /**
    * The social provider ID
    * @example "github", "google", "apple"
