@@ -5,7 +5,8 @@ import { getSessionCookie } from "better-auth/cookies";
 
 export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
-  if (!sessionCookie) return NextResponse.redirect(new URL("/", request.url));
+  if (!sessionCookie)
+    return NextResponse.redirect(new URL("/sign-in", request.url));
 
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.redirect(new URL("/sign-in", request.url));

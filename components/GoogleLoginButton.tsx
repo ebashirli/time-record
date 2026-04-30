@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { authClient } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 
 type Error = {
@@ -17,10 +17,9 @@ const GoogleLoginButton = () => {
   async function handleSocialSignIn(provider: "google" | "github") {
     // setLoading(false);
     setError(null);
-    console.log({ provider });
-    const { error } = await authClient.signIn.social({
+    const { error } = await signIn.social({
       provider,
-      callbackURL: "/",
+      callbackURL: "/dashboard",
     });
 
     if (error) setError(error);

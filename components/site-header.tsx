@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import { SearchForm } from "@/components/search-form"
+// import { QrCode } from "lucide-react";
+// import { SearchForm } from "@/components/search-form";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,14 +9,16 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { useSidebar } from "@/components/ui/sidebar"
-import { PanelLeftIcon } from "lucide-react"
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { useSidebar } from "@/components/ui/sidebar";
+import { PanelLeftIcon } from "lucide-react";
+// import { Input } from "./ui/input";
+import QRButton from "./QRButton";
 
 export function SiteHeader() {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = useSidebar();
 
   return (
     <header className="sticky top-0 z-50 flex w-full items-center border-b bg-background">
@@ -26,8 +29,7 @@ export function SiteHeader() {
           size="icon"
           onClick={toggleSidebar}
         >
-          <PanelLeftIcon
-          />
+          <PanelLeftIcon />
         </Button>
         <Separator
           orientation="vertical"
@@ -44,8 +46,19 @@ export function SiteHeader() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <SearchForm className="w-full sm:ml-auto sm:w-auto" />
+
+        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
+        {/* <Button
+          className="w-full sm:ml-auto sm:w-auto"
+          variant="outline"
+          // size="icon"
+          aria-label="Submit"
+        >
+          <QrCode />
+          <Input type="file" accept="image/*" capture="environment" />
+        </Button> */}
+        <QRButton />
       </div>
     </header>
-  )
+  );
 }

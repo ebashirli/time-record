@@ -16,11 +16,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/server/users";
+// import { signUp } from "@/server/users";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
+import { signUp } from "@/lib/auth-client";
 
 const formSchema = z
   .object({
@@ -36,10 +37,11 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+export function SignUpForm({ ...props }: React.ComponentProps<typeof Card>) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -47,7 +49,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    signUp(data);
+    signUp.email({
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      callbackURL: "/dashboard",
+    });
   }
 
   return (
@@ -59,6 +66,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {form.formState.errors && (
+          <p className="text-red-500">
+            {Object.values(form.formState.errors)
+              .flatMap((v) => v)
+              .join(", ")}
+          </p>
+        )}
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
@@ -145,11 +159,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             <FieldGroup>
               <Field>
                 <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
+                {/* <Button variant="outline" type="button">
                   Sign up with Google
-                </Button>
+                </Button> */}
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link href="/login">Sign in</Link>
+                  Already have an account? <Link href="/sign-in">Sign in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

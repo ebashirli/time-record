@@ -13,9 +13,7 @@ export const signIn = async ({ email, password }: Body) => {
   });
 };
 
-export const signUp = async (
-  body: Body & { name: string; confirmPassword: string },
-) => {
+export const signUp = async (body: Body & { name: string }) => {
   await auth.api.signUpEmail({ body });
 };
 

@@ -1,7 +1,7 @@
 // "useless"
-import { authClient } from "@/lib/auth-client"; //import the auth client
+import { signIn } from "@/lib/auth-client"; //import the auth client
 
-await authClient.signIn.social({
+await signIn.social({
   /**
    * The social provider ID
    * @example "github", "google", "apple"

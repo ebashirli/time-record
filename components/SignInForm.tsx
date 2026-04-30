@@ -17,7 +17,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import GoogleLoginButton from "./GoogleLoginButton";
+// import GoogleLoginButton from "./GoogleLoginButton";
 import Link from "next/link";
 
 import * as React from "react";
@@ -26,14 +26,15 @@ import { Controller, useForm } from "react-hook-form";
 // import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "./ui/button";
-import { signIn } from "@/server/users";
+import { signIn } from "@/lib/auth-client";
+// import { signIn } from "@/server/users";
 
 const formSchema = z.object({
   email: z.email("Invalid email address."),
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
-export function LoginForm({
+export function SignInForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -46,7 +47,10 @@ export function LoginForm({
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    signIn(data);
+    signIn.email({
+      ...data,
+      callbackURL: "/dashboard",
+    });
     // toast("You submitted the following values:", {
     //   description: (
     //     <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
@@ -83,6 +87,7 @@ export function LoginForm({
                     <FieldLabel htmlFor="email">Email</FieldLabel>
                     <Input
                       {...field}
+                      disabled={form.formState.isSubmitting}
                       id="email"
                       aria-invalid={fieldState.invalid}
                       placeholder="m@example.com"
@@ -126,10 +131,10 @@ export function LoginForm({
               />
               <Field>
                 <Button type="submit">Login</Button>
-                <GoogleLoginButton />
+                {/* <GoogleLoginButton /> */}
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
-                  <Link href="/signup">Sign up</Link>
+                  <Link href="/sign-up">Sign up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

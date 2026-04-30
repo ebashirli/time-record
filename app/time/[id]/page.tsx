@@ -8,7 +8,7 @@ type Prop = {
 
 const Page = async ({ params }: Prop) => {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session || !session.user) redirect("/login");
+  if (!session || !session.user) redirect("/sign-in");
 
   const { id } = await params;
 
