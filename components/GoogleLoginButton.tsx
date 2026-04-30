@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { authClient } from "@/lib/auth-client";
+import { Button } from "./ui/button";
 
 type Error = {
   code?: string | undefined;
@@ -9,12 +10,12 @@ type Error = {
   statusText: string;
 };
 
-const LoginForm = () => {
-  const [loading, setLoading] = React.useState(false);
+const GoogleLoginButton = () => {
+  // const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<null | Error>(null);
 
   async function handleSocialSignIn(provider: "google" | "github") {
-    setLoading(false);
+    // setLoading(false);
     setError(null);
     console.log({ provider });
     const { error } = await authClient.signIn.social({
@@ -22,20 +23,26 @@ const LoginForm = () => {
       callbackURL: "/",
     });
 
-    if (error) {
-      setError(error);
-    }
+    if (error) setError(error);
   }
 
   return (
-    <div>
-      <button onClick={() => handleSocialSignIn("google")}>
+    <>
+      {/* <button onClick={() => handleSocialSignIn("google")}>
         Sign{loading ? "ing" : ""} in with google
-      </button>
+      </button> */}
+
+      <Button
+        variant="outline"
+        type="button"
+        onClick={() => handleSocialSignIn("google")}
+      >
+        Login with Google
+      </Button>
 
       {error && <p>{error?.message}</p>}
-    </div>
+    </>
   );
 };
 
-export default LoginForm;
+export default GoogleLoginButton;
