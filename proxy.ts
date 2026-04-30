@@ -14,3 +14,4 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: ["/dashboard"], // Specify the routes the middleware applies to
+};

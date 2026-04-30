@@ -13,14 +13,10 @@ export const signIn = async ({ email, password }: Body) => {
   });
 };
 
-export const signUp = async () => {
-  await auth.api.signUpEmail({
-    body: {
-      name: "",
-      email: "",
-      password: "",
-    },
-  });
+export const signUp = async (
+  body: Body & { name: string; confirmPassword: string },
+) => {
+  await auth.api.signUpEmail({ body });
 };
 
 export const signOut = async () => {

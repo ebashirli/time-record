@@ -28,10 +28,6 @@ const GoogleLoginButton = () => {
 
   return (
     <>
-      {/* <button onClick={() => handleSocialSignIn("google")}>
-        Sign{loading ? "ing" : ""} in with google
-      </button> */}
-
       <Button
         variant="outline"
         type="button"
