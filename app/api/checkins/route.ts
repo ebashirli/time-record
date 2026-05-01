@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -18,22 +17,67 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-
+    // Optional: Check if user is authenticated
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: request.headers,
     });
 
-    const data = {
-      checkedById: session!.user.id,
-      employeeId: body.employeeId,
-    };
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    const checkin = await prisma.checkin.create({ data });
-    return NextResponse.json({ success: true, data: checkin });
+    const body = await request.json();
+    const { employeeId } = body;
+
+    if (!employeeId) {
+      return NextResponse.json(
+        { error: "Employee ID is required" },
+        { status: 400 },
+      );
+    }
+
+    // Verify employee exists
+    const employee = await prisma.employee.findUnique({
+      where: { id: employeeId },
+      include: { company: true },
+    });
+
+    if (!employee) {
+      return NextResponse.json(
+        { error: "Employee not found" },
+        { status: 404 },
+      );
+    }
+
+    // Create check-in
+    const checkin = await prisma.checkin.create({
+      data: {
+        employeeId: employeeId,
+        checkedById: session.user.id,
+        dateTime: new Date(),
+      },
+      include: {
+        employee: {
+          include: {
+            company: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      checkin,
+      employee: {
+        name: employee.name,
+        company: employee.company.name,
+      },
+    });
   } catch (error) {
-    const message = "Error creating check-in";
-    console.error(`${message}: ${error}`);
-    return NextResponse.json({ success: false, message }, { status: 500 });
+    console.error("Check-in error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
