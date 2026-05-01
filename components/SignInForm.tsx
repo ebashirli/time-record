@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 import * as React from "react";
+import { Suspense } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -31,10 +32,7 @@ const formSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
-export function SignInForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function SignInFormInner({ className, ...props }: React.ComponentProps<"div">) {
   const searchParams = useSearchParams();
   const callbackURL = searchParams.get("callbackUrl") || "/dashboard";
 
@@ -119,5 +117,13 @@ export function SignInForm({
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export function SignInForm(props: React.ComponentProps<"div">) {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <SignInFormInner {...props} />
+    </Suspense>
   );
 }

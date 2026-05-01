@@ -16,10 +16,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-// import { signUp } from "@/server/users";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { Suspense } from "react";
 import * as z from "zod";
 import { signUp } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
@@ -38,7 +38,7 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export function SignUpForm({ ...props }: React.ComponentProps<typeof Card>) {
+function SignUpFormInner({ ...props }: React.ComponentProps<typeof Card>) {
   const searchParams = useSearchParams();
   const callbackURL = searchParams.get("callbackUrl") || "/dashboard";
 
@@ -175,5 +175,13 @@ export function SignUpForm({ ...props }: React.ComponentProps<typeof Card>) {
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+export function SignUpForm(props: React.ComponentProps<"div">) {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <SignUpFormInner {...props} />
+    </Suspense>
   );
 }
