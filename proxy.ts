@@ -7,10 +7,12 @@ export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
   const { pathname } = request.nextUrl;
 
-  console.log({ pathname }, request.url);
-
-  if (!sessionCookie)
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  if (!sessionCookie) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/sign-in";
+    url.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(url);
+  }
 
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.redirect(new URL("/sign-in", request.url));

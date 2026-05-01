@@ -1,4 +1,6 @@
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -18,10 +20,19 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const checkin = await prisma.checkin.create({ data: body });
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    const data = {
+      postId: session!.user.id,
+      employeeId: body.employeeId,
+    };
+
+    const checkin = await prisma.checkin.create({ data });
     return NextResponse.json({ success: true, data: checkin });
   } catch (error) {
-    const message = "Error fetching check-ins";
+    const message = "Error creating check-in";
     console.error(`${message}: ${error}`);
     return NextResponse.json({ success: false, message }, { status: 500 });
   }

@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { signUp } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -38,6 +39,9 @@ const formSchema = z
   });
 
 export function SignUpForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get("callbackUrl") || "/dashboard";
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,7 +57,7 @@ export function SignUpForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: data.name,
       email: data.email,
       password: data.password,
-      callbackURL: "/dashboard",
+      callbackURL,
     });
   }
 
