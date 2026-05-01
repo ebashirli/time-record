@@ -1,1 +1,2 @@
 1. Sign up-dan sonra redirect olmur
+2. Authorization
