@@ -75,25 +75,38 @@ model Verification {
   @@map("verification")
 }
 
-model Employee {
-  id        String   @id
+
+
+model Company {
+  id        String   @id @default(uuid())
   name      String
-  postId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  times     Time[]
+  employees  Employee[]
+
+  @@map("company")
+}
+
+model Employee {
+  id        String   @id @default(uuid())
+  name      String
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  checkins     Checkin[]
 
   @@map("employee")
 }
 
-model Time {
-  id         String   @id
+model Checkin {
+  id         String   @id @default(uuid())
   employeeId String
   employee   Employee @relation(fields: [employeeId], references: [id])
   postId     String
-  time       DateTime
+  time       DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@map("time")
+  @@map("checkin")
 }
