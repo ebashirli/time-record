@@ -162,7 +162,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee1.id,
-  //     postId: "post-001",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
   //   },
   // });
@@ -170,7 +170,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee2.id,
-  //     postId: "post-002",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 1 * 60 * 60 * 1000), // 1 hour ago
   //   },
   // });
@@ -178,7 +178,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee3.id,
-  //     postId: "post-003",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 30 * 60 * 1000), // 30 minutes ago
   //   },
   // });
@@ -187,7 +187,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee1.id,
-  //     postId: "post-004",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 24 * 60 * 60 * 1000), // Yesterday
   //   },
   // });
@@ -195,7 +195,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee4.id,
-  //     postId: "post-005",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 24 * 60 * 60 * 1000), // Yesterday
   //   },
   // });
@@ -204,7 +204,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee5.id,
-  //     postId: "post-006",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
   //   },
   // });
@@ -212,7 +212,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee6.id,
-  //     postId: "post-007",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
   //   },
   // });
@@ -220,7 +220,7 @@ async function main() {
   // await prisma.checkin.create({
   //   data: {
   //     employeeId: employee2.id,
-  //     postId: "post-008",
+  //     checkedById: user1.id,
   //     dateTime: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
   //   },
   // });

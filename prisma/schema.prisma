@@ -23,6 +23,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  checkedins     Checkin[]
+
 
   @@map("user")
 }
@@ -103,7 +105,8 @@ model Checkin {
   id         String   @id @default(uuid())
   employeeId String
   employee   Employee @relation(fields: [employeeId], references: [id])
-  postId     String
+  checkedById     String
+  checkedBy     User @relation(fields: [checkedById], references: [id])
   dateTime       DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

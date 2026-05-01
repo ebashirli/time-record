@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     });
 
     const data = {
-      postId: session!.user.id,
+      checkedById: session!.user.id,
       employeeId: body.employeeId,
     };
 
