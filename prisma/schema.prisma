@@ -104,7 +104,7 @@ model Checkin {
   employeeId String
   employee   Employee @relation(fields: [employeeId], references: [id])
   postId     String
-  time       DateTime @default(now())
+  dateTime       DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

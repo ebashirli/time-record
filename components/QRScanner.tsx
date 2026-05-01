@@ -22,7 +22,7 @@ const QRScanner = () => {
 
     function success(result: string) {
       scanner.clear();
-      router.push(`/time/${result}`);
+      router.push(`/checkins/${result}`);
     }
 
     function error(errorMessage: string) {
