@@ -40,7 +40,11 @@ export function SignInForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: {
+      email:
+        process.env.NODE_ENV === "production" ? "" : "john.doe@example.com",
+      password: process.env.NODE_ENV === "production" ? "" : "Password123!",
+    },
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
