@@ -46,8 +46,12 @@ export function SignInForm({
     },
   });
 
+  React.useEffect(() => {
+    console.log({ password: form.formState });
+  }, [form.formState]);
+
   function onSubmit(data: z.infer<typeof formSchema>) {
-    signIn.email({
+    return signIn.email({
       ...data,
       callbackURL: "/dashboard",
     });
@@ -82,52 +86,56 @@ export function SignInForm({
               <Controller
                 name="email"
                 control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <Input
-                      {...field}
-                      disabled={form.formState.isSubmitting}
-                      id="email"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="m@example.com"
-                      // autoComplete="off"
-                      required
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
+                render={({ field, fieldState }) => {
+                  return (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="email">Email</FieldLabel>
+                      <Input
+                        {...field}
+                        disabled={form.formState.isSubmitting}
+                        id="email"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="m@example.com"
+                        // autoComplete="off"
+                        required
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  );
+                }}
               />
               <Controller
                 name="password"
                 control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    {/* <div className="flex items-center"> */}
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    {/* <Link
+                render={({ field, fieldState }) => {
+                  return (
+                    <Field data-invalid={fieldState.invalid}>
+                      {/* <div className="flex items-center"> */}
+                      <FieldLabel htmlFor="password">Password</FieldLabel>
+                      {/* <Link
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
                   </Link> */}
-                    {/* </div> */}
-                    <Input
-                      {...field}
-                      id="password"
-                      type="password"
-                      required
-                      aria-invalid={fieldState.invalid}
-                      placeholder="••••••••"
-                      // autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
+                      {/* </div> */}
+                      <Input
+                        {...field}
+                        id="password"
+                        type="password"
+                        required
+                        aria-invalid={fieldState.invalid}
+                        placeholder="••••••••"
+                        // autoComplete="off"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  );
+                }}
               />
               <Field>
                 <Button type="submit">Login</Button>

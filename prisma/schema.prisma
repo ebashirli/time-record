@@ -14,7 +14,7 @@ datasource db {
 
 // @default(autoincrement())
 model User {
-  id            String    @id 
+  id            String    @id
   createdAt     DateTime  @default(now())
   email         String    @unique
   name          String?
@@ -73,4 +73,27 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Employee {
+  id        String   @id
+  name      String
+  postId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  times     Time[]
+
+  @@map("employee")
+}
+
+model Time {
+  id         String   @id
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  postId     String
+  time       DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("time")
 }

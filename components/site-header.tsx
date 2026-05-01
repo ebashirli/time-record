@@ -13,9 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { PanelLeftIcon } from "lucide-react";
+import { PanelLeftIcon, QrCode } from "lucide-react";
+import Link from "next/link";
 // import { Input } from "./ui/input";
-import QRButton from "./QRButton";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -48,16 +48,12 @@ export function SiteHeader() {
         </Breadcrumb>
 
         {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
-        {/* <Button
-          className="w-full sm:ml-auto sm:w-auto"
-          variant="outline"
-          // size="icon"
-          aria-label="Submit"
-        >
-          <QrCode />
-          <Input type="file" accept="image/*" capture="environment" />
-        </Button> */}
-        <QRButton />
+
+        <Button asChild>
+          <Link href="/scanner">
+            <QrCode />
+          </Link>
+        </Button>
       </div>
     </header>
   );
