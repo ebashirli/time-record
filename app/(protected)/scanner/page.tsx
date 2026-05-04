@@ -1,10 +1,22 @@
+import { SidebarRight } from "@/components/SidebarRight";
 import QRScanner from "@/components/QRScanner";
+import { SidebarInset } from "@/components/ui/sidebar";
+import LastCheckins from "@/components/LastCheckins";
 
 export default function ScannerPage() {
   return (
-    <main className="p-8 w-full">
-      <h1 className="text-2xl font-bold mb-6 text-center">Scan QR Code</h1>
-      <QRScanner />
-    </main>
+    <>
+      <SidebarInset>
+        <main className="p-8 w-full">
+          <QRScanner />
+          <div className="sm:hidden">
+            <LastCheckins />
+          </div>
+        </main>
+      </SidebarInset>
+      <SidebarRight>
+        <LastCheckins />
+      </SidebarRight>
+    </>
   );
 }

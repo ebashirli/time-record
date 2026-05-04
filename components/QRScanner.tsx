@@ -60,6 +60,7 @@ const QRScanner = () => {
           setScanning(true);
           // router.push("/scanner"); // Or wherever you want to redirect
         }, 2000);
+        router.refresh();
       } catch (err) {
         setMessage({
           type: "error",

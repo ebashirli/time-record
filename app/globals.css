@@ -128,3 +128,17 @@
     @apply font-sans;
   }
 }
+
+#reader__scan_region {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+#reader__scan_region #html5-qrcode-button-camera-permission {
+  border: 1px solid #000 !important;
+}
+
+#html5-qrcode-anchor-scan-type-change {
+  display: none !important;
+  /* visibility: hidden !important; */
+}
