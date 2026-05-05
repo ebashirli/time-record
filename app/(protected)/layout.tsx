@@ -1,7 +1,19 @@
 import { Metadata } from "next";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { ListCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,10 +28,33 @@ export default function Layout({
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
-        <SiteHeader />
+        <SiteHeader>
+          <Drawer direction="right">
+            <DrawerTrigger asChild>
+              <Button variant="outline">
+                <ListCheck />
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Move Goal</DrawerTitle>
+                <DrawerDescription>
+                  Set your daily activity goal.
+                </DrawerDescription>
+              </DrawerHeader>
+              {/* <LatestCheckins /> */}
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button variant="outline">Close</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </SiteHeader>
+
         <div className="flex flex-1 max-h-screen overflow-hidden ">
           <AppSidebar />
-          {children}
+          <SidebarInset>{children}</SidebarInset>
         </div>
       </SidebarProvider>
     </div>

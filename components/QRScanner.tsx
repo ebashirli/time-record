@@ -80,10 +80,12 @@ const QRScanner = () => {
       await handleCheckIn(result);
     };
 
-    const onScanFailure = (error: string) => {
-      console.warn(error);
-      // Scanning errors are common (no QR in frame), usually safe to ignore
-    };
+    const onScanFailure = () =>
+      // error: string
+      {
+        // console.warn(error);
+        // Scanning errors are common (no QR in frame), usually safe to ignore
+      };
 
     scannerRef.current.render(onScanSuccess, onScanFailure);
 

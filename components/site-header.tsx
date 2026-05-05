@@ -1,7 +1,5 @@
 "use client";
 
-// import { QrCode } from "lucide-react";
-// import { SearchForm } from "@/components/search-form";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,15 +8,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { HomeIcon, PanelLeftIcon } from "lucide-react";
-import HeaderActions from "./HeaderActions";
-// import { Input } from "./ui/input";
+import { HomeIcon, Link, PanelLeftIcon, QrCode } from "lucide-react";
+import React from "react";
 
-export function SiteHeader() {
+import { usePathname } from "next/navigation";
+
+export function SiteHeader({ children }: { children: React.ReactElement }) {
   const { toggleSidebar } = useSidebar();
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 flex w-full items-center border-b bg-background">
@@ -53,7 +54,15 @@ export function SiteHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <HeaderActions />
+        {pathname === "/scanner" ? (
+          children
+        ) : (
+          <Button asChild variant="ghost" size="icon">
+            <Link href="/scanner">
+              <QrCode />
+            </Link>
+          </Button>
+        )}
       </div>
     </header>
   );
