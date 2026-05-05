@@ -17,7 +17,7 @@ export default function Layout({
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
-        <div className="flex flex-1">
+        <div className="flex flex-1 max-h-screen overflow-hidden ">
           <AppSidebar />
           {children}
         </div>

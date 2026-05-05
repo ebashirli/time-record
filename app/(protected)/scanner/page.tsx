@@ -9,7 +9,7 @@ export default function ScannerPage() {
       <SidebarInset>
         <main className="p-8 w-full">
           <QRScanner />
-          <div className="sm:hidden">
+          <div className="sm:hidden max-h-1/2 overflow-y-auto">
             <LastCheckins />
           </div>
         </main>
