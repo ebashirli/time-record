@@ -13,8 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { HomeIcon, PanelLeftIcon, QrCode } from "lucide-react";
-import Link from "next/link";
+import { HomeIcon, PanelLeftIcon } from "lucide-react";
+import HeaderActions from "./HeaderActions";
 // import { Input } from "./ui/input";
 
 export function SiteHeader() {
@@ -53,13 +53,7 @@ export function SiteHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
-
-        <Button asChild variant="ghost" size="icon">
-          <Link href="/scanner">
-            <QrCode />
-          </Link>
-        </Button>
+        <HeaderActions />
       </div>
     </header>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRouter } from "next/navigation";
 
@@ -12,103 +12,105 @@ const QRScanner = () => {
   } | null>(null);
   const router = useRouter();
 
+  // 1. Use a Ref to keep track of the scanner instance
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+
   useEffect(() => {
-    if (!scanning) return;
+    // Only initialize if we are in scanning mode and the element exists
+    if (!scanning || !document.getElementById("reader")) return;
 
-    const scanner = new Html5QrcodeScanner(
-      "reader",
-      {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-      },
-      false,
-    );
+    // 2. Initialize instance only if it doesn't exist
+    if (!scannerRef.current) {
+      scannerRef.current = new Html5QrcodeScanner(
+        "reader",
+        {
+          fps: 10,
+          qrbox: { width: 250, height: 250 }, // Increased size for better scanning
+          aspectRatio: 1.0,
+        },
+        /* verbose= */ false,
+      );
+    }
 
-    scanner.render(success, error);
-
-    async function success(result: string) {
-      scanner.clear();
-      setScanning(false);
-
-      try {
-        // Parse the QR code result (expecting employeeId)
-        const employeeId = result.trim();
-
-        // Call the check-in API
-        const response = await fetch("/api/checkins", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ employeeId }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Check-in failed");
+    const onScanSuccess = async (result: string) => {
+      // Important: Stop the scanner immediately on success
+      if (scannerRef.current) {
+        try {
+          await scannerRef.current.clear();
+        } catch (e) {
+          console.error("Failed to clear scanner", e);
         }
-
-        setMessage({
-          type: "success",
-          text: `Check-in successful for ${data.employee.name}!`,
-        });
-
-        // Redirect after 2 seconds
-        setTimeout(() => {
-          setMessage(null);
-          setScanning(true);
-          // router.push("/scanner"); // Or wherever you want to redirect
-        }, 2000);
-        router.refresh();
-      } catch (err) {
-        setMessage({
-          type: "error",
-          text: err instanceof Error ? err.message : "Check-in failed",
-        });
-
-        // Allow scanning again after error
-        setTimeout(() => {
-          setScanning(true);
-          setMessage(null);
-        }, 3000);
       }
-    }
 
-    function error() {
-      // errorMessage: string
-      // Only log errors, don't show to user (scanning errors are common)
-      // console.warn(`QR Code scan error: ${errorMessage}`);
-    }
+      async function handleCheckIn(employeeId: string) {
+        try {
+          const response = await fetch("/api/checkins", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ employeeId: employeeId.trim() }),
+          });
 
-    return () => {
-      scanner.clear().catch(() => {});
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || "Check-in failed");
+
+          setMessage({
+            type: "success",
+            text: `Check-in successful for ${data.employee.name}!`,
+          });
+
+          setTimeout(() => {
+            setMessage(null);
+            setScanning(true);
+          }, 2000);
+
+          router.refresh();
+        } catch (err) {
+          setMessage({
+            type: "error",
+            text: err instanceof Error ? err.message : "Check-in failed",
+          });
+          setTimeout(() => {
+            setScanning(true);
+            setMessage(null);
+          }, 3000);
+        }
+      }
+
+      setScanning(false);
+      await handleCheckIn(result);
     };
-  }, [router, scanning]);
+
+    const onScanFailure = (error: string) => {
+      console.warn(error);
+      // Scanning errors are common (no QR in frame), usually safe to ignore
+    };
+
+    scannerRef.current.render(onScanSuccess, onScanFailure);
+
+    // Cleanup: Clear the scanner when component unmounts
+    return () => {
+      if (scannerRef.current) {
+        scannerRef.current
+          .clear()
+          .catch((err) => console.error("Cleanup error", err));
+        scannerRef.current = null;
+      }
+    };
+  }, [scanning, router]);
 
   return (
     <div className="max-w-md mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Scan QR Code</h1>
-
       {message && (
         <div
-          className={`mb-4 p-4 rounded-lg ${
-            message.type === "success"
-              ? "bg-green-100 text-green-800 border border-green-200"
-              : "bg-red-100 text-red-800 border border-red-200"
-          }`}
+          className={`mb-4 p-4 rounded-lg ${message.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
         >
-          <p className="font-medium">{message.text}</p>
+          <p>{message.text}</p>
         </div>
       )}
-
-      {scanning && <div id="reader"></div>}
-
-      {!scanning && !message && (
-        <div className="text-center">
-          <p className="text-gray-600">Processing check-in...</p>
-        </div>
-      )}
+      {/* 3. Keep the div in the DOM but control visibility if needed */}
+      <div id="reader" style={{ display: scanning ? "block" : "none" }}></div>
+      {!scanning && !message && <p className="text-center">Processing...</p>}
     </div>
   );
 };
