@@ -1,4 +1,10 @@
-import { Accordion, AccordionItem, AccordionTrigger } from "./ui/accordion";
+import CheckinDetails from "./CheckinDetails";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
 import prisma from "@/lib/prisma";
 
 const LatestCheckins = async () => {
@@ -27,11 +33,13 @@ const LatestCheckins = async () => {
         return (
           <AccordionItem
             key={checkin.id}
-            value={checkin.employee.fullName}
+            value={checkin.id}
             className="border-b px-4 last:border-b-0"
           >
             <AccordionTrigger>{checkin.employee.fullName}</AccordionTrigger>
-            {/* <AccordionContent>{checkin.content}</AccordionContent> */}
+            <AccordionContent>
+              <CheckinDetails id={checkin.id} />
+            </AccordionContent>
           </AccordionItem>
         );
       })}
