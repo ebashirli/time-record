@@ -12,11 +12,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { HomeIcon, PanelLeftIcon, QrCode } from "lucide-react";
+import { Home, HomeIcon, PanelLeftIcon, QrCode } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
+  const pathname = usePathname();
+  const isScannerPage = pathname === "/scanner";
 
   return (
     <header className="sticky top-0 z-50 flex w-full items-center border-b bg-background">
@@ -51,11 +54,13 @@ export function SiteHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Button asChild variant="ghost" size="icon">
-          <Link href="/scanner">
-            <QrCode />
-          </Link>
-        </Button>
+        {
+          <Button asChild variant="ghost" size="icon">
+            <Link href={isScannerPage ? "/" : "/scanner"}>
+              {isScannerPage ? <Home /> : <QrCode />}
+            </Link>
+          </Button>
+        }
       </div>
     </header>
   );
