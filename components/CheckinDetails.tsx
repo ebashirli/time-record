@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import dayjs from "dayjs";
 import React from "react";
 
 const CheckinDetails = async ({ id }: { id: string }) => {
@@ -17,7 +18,7 @@ const CheckinDetails = async ({ id }: { id: string }) => {
   });
   return (
     <div>
-      <div>{checkin?.dateTime.toString()}</div>
+      <div>{dayjs(checkin?.dateTime).format("DD/MM/YY HH:mm")}</div>
       <div>{checkin?.employee.company.name}</div>
       <div>{checkin?.employee.position.name}</div>
     </div>
