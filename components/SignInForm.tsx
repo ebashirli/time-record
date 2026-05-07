@@ -40,7 +40,7 @@ function SignInFormInner({ className, ...props }: React.ComponentProps<"div">) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email:
-        process.env.NODE_ENV === "production" ? "" : "john.doe@example.com",
+        process.env.NODE_ENV === "production" ? "" : "ebesirli@kolin.com.tr",
       password: process.env.NODE_ENV === "production" ? "" : "Password123!",
     },
   });

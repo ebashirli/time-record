@@ -27,10 +27,10 @@ async function main() {
 
   const user1 = await prisma.user.create({
     data: {
-      email: "john.doe@example.com",
-      name: "John Doe",
+      email: "ebesirli@kolin.com.tr",
+      name: "Elvin Bashirli",
       emailVerified: true,
-      image: "https://i.pravatar.cc/150?img=1",
+      image: "",
     },
   });
 
@@ -85,74 +85,74 @@ async function main() {
   });
 
   // Create Companies
-  console.log("🏢 Creating companies...");
-  const company1 = await prisma.company.create({
-    data: {
-      name: "Kolin Construction",
-    },
-  });
+  // console.log("🏢 Creating companies...");
+  // const company1 = await prisma.company.create({
+  //   data: {
+  //     name: "Kolin Construction",
+  //   },
+  // });
 
-  const company2 = await prisma.company.create({
-    data: {
-      name: "Global Solutions Ltd.",
-    },
-  });
+  // const company2 = await prisma.company.create({
+  //   data: {
+  //     name: "Global Solutions Ltd.",
+  //   },
+  // });
 
-  const company3 = await prisma.company.create({
-    data: {
-      name: "Creative Dynamics Corp.",
-    },
-  });
+  // const company3 = await prisma.company.create({
+  //   data: {
+  //     name: "Creative Dynamics Corp.",
+  //   },
+  // });
 
   // Create Employees
   console.log("👷 Creating employees...");
   // const employee1 =
-  await prisma.employee.create({
-    data: {
-      name: "Alice Johnson",
-      companyId: company1.id,
-    },
-  });
+  // await prisma.employee.create({
+  //   data: {
+  //     name: "Alice Johnson",
+  //     companyId: company1.id,
+  //   },
+  // });
 
-  // const employee2 =
-  await prisma.employee.create({
-    data: {
-      name: "Bob Williams",
-      companyId: company1.id,
-    },
-  });
+  // // const employee2 =
+  // await prisma.employee.create({
+  //   data: {
+  //     name: "Bob Williams",
+  //     companyId: company1.id,
+  //   },
+  // });
 
-  // const employee3 =
-  await prisma.employee.create({
-    data: {
-      name: "Charlie Brown",
-      companyId: company2.id,
-    },
-  });
+  // // const employee3 =
+  // await prisma.employee.create({
+  //   data: {
+  //     name: "Charlie Brown",
+  //     companyId: company2.id,
+  //   },
+  // });
 
-  // const employee4 =
-  await prisma.employee.create({
-    data: {
-      name: "Diana Martinez",
-      companyId: company2.id,
-    },
-  });
+  // // const employee4 =
+  // await prisma.employee.create({
+  //   data: {
+  //     name: "Diana Martinez",
+  //     companyId: company2.id,
+  //   },
+  // });
 
-  // const employee5 =
-  await prisma.employee.create({
-    data: {
-      name: "Eve Davis",
-      companyId: company3.id,
-    },
-  });
+  // // const employee5 =
+  // await prisma.employee.create({
+  //   data: {
+  //     name: "Eve Davis",
+  //     companyId: company3.id,
+  //   },
+  // });
 
-  // const employee6 =
-  await prisma.employee.create({
-    data: {
-      name: "Frank Garcia",
-      companyId: company3.id,
-    },
-  });
+  // // const employee6 =
+  // await prisma.employee.create({
+  //   data: {
+  //     name: "Frank Garcia",
+  //     companyId: company3.id,
+  //   },
+  // });
 
   // Create Check-ins
   // console.log("✅ Creating check-ins...");
@@ -229,11 +229,11 @@ async function main() {
   console.log("\n📊 Seeded data summary:");
   console.log(`   - Users: 3`);
   console.log(`   - Accounts: 3`);
-  console.log(`   - Companies: 3`);
-  console.log(`   - Employees: 6`);
+  // console.log(`   - Companies: 3`);
+  // console.log(`   - Employees: 6`);
   // console.log(`   - Check-ins: 8`);
   console.log("\n🔑 Test credentials:");
-  console.log(`   Email: john.doe@example.com`);
+  console.log(`   Email: ebesirli@kolin.com.tr`);
   console.log(`   Password: Password123!`);
 }
 
