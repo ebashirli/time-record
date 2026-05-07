@@ -29,7 +29,7 @@ const LatestCheckins = async () => {
       className="max-w-lg rounded-lg border"
       defaultValue="billing"
     >
-      {checkins.map((checkin) => {
+      {checkins?.map((checkin) => {
         return (
           <AccordionItem
             key={checkin.id}
