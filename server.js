@@ -1,5 +1,5 @@
 import { createServer } from "https";
-import { parse } from "url";
+// import { parse } from "url";
 import next from "next";
 import fs from "fs";
 
@@ -14,7 +14,10 @@ const httpsOptions = {
 
 app.prepare().then(() => {
   createServer(httpsOptions, (req, res) => {
-    const parsedUrl = parse(req.url, true);
+    const protocol = httpsOptions ? "https" : "http";
+    const base = `${protocol}://${req.headers.host}`;
+
+    const parsedUrl = new URL(req.url, base);
     handle(req, res, parsedUrl);
   }).listen(3000, "0.0.0.0", (err) => {
     if (err) throw err;
