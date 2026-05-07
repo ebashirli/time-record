@@ -78,7 +78,7 @@ model Verification {
 
 model Work {
   id   String @id @default(uuid())
-  name String
+  name String @unique
 
   companies Company[]
   @@map("work")
@@ -86,7 +86,7 @@ model Work {
 
 model Company {
   id        String     @id @default(uuid())
-  name      String
+  name      String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   employees Employee[]
@@ -99,7 +99,7 @@ model Company {
 
 model Department {
   id   String @id @default(uuid())
-  name String
+  name String @unique
 
   employees Employee[]
   @@map("department")
@@ -107,7 +107,7 @@ model Department {
 
 model Position {
   id   String @id @default(uuid())
-  name String
+  name String @unique
 
   employees Employee[]
   @@map("position")
@@ -115,7 +115,7 @@ model Position {
 
 model Employee {
   id        String    @id @default(uuid())
-  name      String
+  fullName      String
   companyId String
   company   Company   @relation(fields: [companyId], references: [id])
   createdAt DateTime  @default(now())
@@ -142,4 +142,10 @@ model Checkin {
   updatedAt   DateTime @updatedAt
 
   @@map("checkin")
+}
+
+enum Nationality {
+  AZERBAIJANI
+  TURKISH
+  RUSSIAN
 }

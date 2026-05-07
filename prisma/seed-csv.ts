@@ -67,7 +67,7 @@ async function main() {
     await prisma.employee.create({
       data: {
         fullName: row.fullName,
-        nationality: Nationality[row.nationality as keyof typeof Nationality], // adjust if it's enum
+        nationality: Nationality[row.nationality as keyof typeof Nationality],
         companyId: company.id,
         departmentId: department.id,
         positionId: position.id,
