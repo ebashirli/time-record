@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next dev --experimental-https",
     "dev:https": "node server.js",
     "dev-old": "next dev",
     "build": "next build",
