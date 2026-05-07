@@ -14,7 +14,7 @@ const LatestCheckins = async () => {
     include: {
       employee: {
         select: {
-          image: true,
+          // image: true,
           fullName: true,
           company: { select: { name: true } },
         },
