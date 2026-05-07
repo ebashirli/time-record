@@ -122,6 +122,8 @@ model Employee {
   updatedAt DateTime  @updatedAt
   checkins  Checkin[]
 
+  nationality Nationality
+
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
 
