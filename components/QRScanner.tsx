@@ -12,14 +12,11 @@ const QRScanner = () => {
   } | null>(null);
   const router = useRouter();
 
-  // 1. Use a Ref to keep track of the scanner instance
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   useEffect(() => {
-    // Only initialize if we are in scanning mode and the element exists
     if (!scanning || !document.getElementById("reader")) return;
 
-    // 2. Initialize instance only if it doesn't exist
     if (!scannerRef.current) {
       scannerRef.current = new Html5QrcodeScanner(
         "reader",
@@ -33,7 +30,6 @@ const QRScanner = () => {
     }
 
     const onScanSuccess = async (result: string) => {
-      // Important: Stop the scanner immediately on success
       if (scannerRef.current) {
         try {
           await scannerRef.current.clear();
@@ -80,16 +76,10 @@ const QRScanner = () => {
       await handleCheckIn(result);
     };
 
-    const onScanFailure = () =>
-      // error: string
-      {
-        // console.warn(error);
-        // Scanning errors are common (no QR in frame), usually safe to ignore
-      };
+    const onScanFailure = () => {};
 
     scannerRef.current.render(onScanSuccess, onScanFailure);
 
-    // Cleanup: Clear the scanner when component unmounts
     return () => {
       if (scannerRef.current) {
         scannerRef.current
@@ -110,7 +100,6 @@ const QRScanner = () => {
           <p>{message.text}</p>
         </div>
       )}
-      {/* 3. Keep the div in the DOM but control visibility if needed */}
       <div id="reader" style={{ display: scanning ? "block" : "none" }}></div>
       {!scanning && !message && <p className="text-center">Processing...</p>}
     </div>
