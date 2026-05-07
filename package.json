@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --experimental-https",
+    "start": "next start --experimental-https",
     "dev:https": "node server.js",
     "dev-old": "next dev",
     "build": "next build",
-    "start": "next start",
     "lint": "eslint",
     "posti": "prisma generate",
     "db:migrate": "prisma migrate dev",
