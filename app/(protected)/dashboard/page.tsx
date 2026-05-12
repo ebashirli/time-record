@@ -1,4 +1,4 @@
-export const iframeHeight = "800px";
+// export const iframeHeight = "800px";
 
 export const description = "A sidebar with a header and a search form.";
 

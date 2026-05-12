@@ -18,7 +18,7 @@ export default function Layout({
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
 
-        <div className="flex flex-1 max-h-screen overflow-hidden ">
+        <div className="flex flex-1 max-h-full overflow-hidden ">
           <AppSidebar />
           <SidebarInset>{children}</SidebarInset>
         </div>
