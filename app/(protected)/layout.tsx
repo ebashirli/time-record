@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
+import { Header } from "@/components/Header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function Layout({
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
-        <SiteHeader />
+        <Header />
 
         <div className="flex flex-1 max-h-full overflow-hidden ">
           <AppSidebar />

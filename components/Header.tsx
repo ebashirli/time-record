@@ -12,14 +12,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { Home, HomeIcon, PanelLeftIcon, QrCode } from "lucide-react";
+import { Home, HomeIcon, Moon, PanelLeftIcon, QrCode, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function SiteHeader() {
+export function Header() {
   const { toggleSidebar } = useSidebar();
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const isScannerPage = pathname === "/scanner";
+
+  console.log({ theme });
 
   return (
     <header className="sticky top-0 z-50 flex w-full items-center border-b bg-background">
@@ -54,13 +58,25 @@ export function SiteHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {
-          <Button asChild variant="ghost" size="icon">
-            <Link href={isScannerPage ? "/" : "/scanner"}>
-              {isScannerPage ? <Home /> : <QrCode />}
-            </Link>
+        <div className="flex items-center">
+          {
+            <Button asChild variant="ghost" size="icon">
+              <Link href={isScannerPage ? "/" : "/scanner"}>
+                {isScannerPage ? <Home /> : <QrCode />}
+              </Link>
+            </Button>
+          }
+
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="h-6"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? <Sun /> : <Moon />}
           </Button>
-        }
+        </div>
       </div>
     </header>
   );
