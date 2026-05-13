@@ -22,11 +22,20 @@ export function NavMain({
     icon?: React.ReactNode;
   }[];
 }) {
-  const path = usePathname();
+  const pathname = usePathname();
+  const pathParts = pathname
+    .split("?")
+    .at(0)
+    ?.split("/")
+    .filter((e) => !!e);
+
+  const firstPart = pathParts?.at(0);
 
   function handleClick(url?: string) {
-    console.log({ url });
-    if (url === "#") toast.info("Soon. Under construction 🚧");
+    if (url === "#") {
+      toast.dismiss();
+      toast.info("Soon. Under construction 🚧", { position: "bottom-left" });
+    }
   }
 
   return (
@@ -35,12 +44,15 @@ export function NavMain({
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
-              disabled={path === "/scanner"}
+              disabled={pathname === "/scanner"}
               asChild
               tooltip="Scan new QR Code"
               className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground "
             >
-              <Link href={path === "/scanner" ? "" : "/scanner"} className="">
+              <Link
+                href={pathname === "/scanner" ? "" : "/scanner"}
+                className=""
+              >
                 <QrCodeIcon className="" />
                 <span>Scan QR</span>
               </Link>
@@ -59,6 +71,7 @@ export function NavMain({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
+                isActive={`/${firstPart}` === item.url}
                 asChild
                 tooltip={item.title}
                 onClick={() => handleClick(item.url)}

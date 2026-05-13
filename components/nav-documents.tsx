@@ -39,8 +39,10 @@ export function NavSection({
 
   function handleClick(url?: string) {
     console.log({ url });
-    toast.dismiss();
-    if (url === "#") toast.info("Soon. Under construction 🚧");
+    if (url === "#") {
+      toast.dismiss();
+      toast.info("Soon. Under construction 🚧", { position: "bottom-left" });
+    }
   }
 
   return (

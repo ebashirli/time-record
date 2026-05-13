@@ -13,9 +13,19 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { HomeIcon, PanelLeftIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
+  const pathname = usePathname();
+
+  const pathParts = pathname
+    .split("?")
+    .at(0)
+    ?.split("/")
+    .filter((e) => !!e);
+
+  console.log({ pathParts });
 
   return (
     <header className="sticky top-0 z-50 flex w-full items-center border-b bg-background">
@@ -40,12 +50,16 @@ export function SiteHeader() {
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-            </BreadcrumbItem>
+            {pathParts?.map((part) => (
+              <BreadcrumbItem key={part}>
+                <BreadcrumbPage>
+                  {part.at(0)?.toLocaleUpperCase() + part.slice(1)}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <SearchForm className="w-full sm:ml-auto sm:w-auto" />
+        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
       </div>
     </header>
   );
