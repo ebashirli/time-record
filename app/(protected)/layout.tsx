@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Header } from "@/components/Header";
+// import { Header } from "@/components/Header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,15 +15,19 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="[--header-height:calc(--spacing(14))]">
-      <SidebarProvider className="flex flex-col">
-        <Header />
-
-        <div className="flex flex-1 max-h-full overflow-hidden ">
-          <AppSidebar />
-          <SidebarInset>{children}</SidebarInset>
-        </div>
-      </SidebarProvider>
-    </div>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader />
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
