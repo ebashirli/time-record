@@ -26,24 +26,29 @@ import {
   FileTextIcon,
   FolderIcon,
   LayoutDashboardIcon,
-  ListIcon,
   SearchIcon,
   UsersIcon,
   Settings2Icon,
   CommandIcon,
+  Building2Icon,
 } from "lucide-react";
 
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: <ListIcon />,
+      title: "Companies",
+      url: "/companies",
+      icon: <Building2Icon />,
+    },
+    {
+      title: "Employees",
+      url: "/employees",
+      icon: <UsersIcon />,
     },
     {
       title: "Analytics",
@@ -54,11 +59,6 @@ const data = {
       title: "Projects",
       url: "#",
       icon: <FolderIcon />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <UsersIcon />,
     },
   ],
   navClouds: [

@@ -7,11 +7,13 @@ import { Loader2 } from "lucide-react";
 type Props<N extends string, T> = {
   children: React.ReactElement;
   setData: (data: Record<N, T[]>) => void;
+  name: string;
 };
 
 const CustomInfiniteScroll = <N extends string, T>({
   children,
   setData,
+  name,
 }: Props<N, T>) => {
   const [page, setPage] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
@@ -23,19 +25,20 @@ const CustomInfiniteScroll = <N extends string, T>({
 
     try {
       const res = await fetch(
-        `/api/employees?limit=${LIMIT}&skip=${LIMIT * page}`,
+        `/api/${name}?limit=${LIMIT}&skip=${LIMIT * page}`,
       );
       const data = await res.json();
 
       setData(data);
       setPage((prev) => prev + 1);
 
-      // Check if there are more employees to load
-      if (data.employees.length < LIMIT) {
+      console.log({ data });
+
+      if (data[name]?.length < LIMIT) {
         setHasMore(false);
       }
     } catch (error) {
-      console.error("Error fetching employees:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }

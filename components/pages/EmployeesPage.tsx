@@ -31,7 +31,7 @@ const EmployeesPage = () => {
   }
 
   return (
-    <CustomInfiniteScroll setData={setData}>
+    <CustomInfiniteScroll setData={setData} name="employees">
       <>
         {employees.map((employee) => (
           <EmployeeCard key={employee.id} employee={employee} />

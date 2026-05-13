@@ -36,7 +36,7 @@ export function SiteHeader() {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">
-                <HomeIcon size={8} />
+                <HomeIcon size={18} />
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
