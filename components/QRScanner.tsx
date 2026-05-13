@@ -100,7 +100,11 @@ const QRScanner = () => {
           <p>{message.text}</p>
         </div>
       )}
-      <div id="reader" style={{ display: scanning ? "block" : "none" }}></div>
+      <div
+        id="reader"
+        className="border-none!"
+        style={{ display: scanning ? "block" : "none" }}
+      ></div>
       {!scanning && !message && <p className="text-center">Processing...</p>}
     </div>
   );
