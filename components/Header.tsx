@@ -12,18 +12,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { Home, HomeIcon, Moon, PanelLeftIcon, QrCode, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Home, HomeIcon, PanelLeftIcon, QrCode } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function Header() {
   const { toggleSidebar } = useSidebar();
-  const { theme, setTheme } = useTheme();
+
   const pathname = usePathname();
   const isScannerPage = pathname === "/scanner";
-
-  console.log({ theme });
 
   return (
     <header className="sticky top-0 z-50 flex w-full items-center border-b bg-background">
@@ -66,16 +63,6 @@ export function Header() {
               </Link>
             </Button>
           }
-
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="h-6"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? <Sun /> : <Moon />}
-          </Button>
         </div>
       </div>
     </header>
