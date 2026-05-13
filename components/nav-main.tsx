@@ -26,7 +26,7 @@ export function NavMain({
 
   function handleClick(url?: string) {
     console.log({ url });
-    if (url === "#") toast.info("Soon");
+    if (url === "#") toast.info("Soon. Under construction 🚧");
   }
 
   return (

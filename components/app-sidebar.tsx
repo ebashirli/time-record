@@ -2,9 +2,9 @@
 
 import * as React from "react";
 
-import { NavDocuments } from "@/components/nav-documents";
+import { NavSection } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
+// import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -19,14 +19,12 @@ import {
 import {
   CameraIcon,
   ChartBarIcon,
-  CircleHelpIcon,
   DatabaseIcon,
   FileChartColumnIcon,
   FileIcon,
   FileTextIcon,
   FolderIcon,
   LayoutDashboardIcon,
-  SearchIcon,
   UsersIcon,
   Settings2Icon,
   CommandIcon,
@@ -51,12 +49,27 @@ const data = {
       icon: <UsersIcon />,
     },
     {
-      title: "Analytics",
+      title: "Attendance Tracking System",
       url: "#",
       icon: <ChartBarIcon />,
     },
     {
-      title: "Projects",
+      title: "Time Sheet",
+      url: "#",
+      icon: <FolderIcon />,
+    },
+    {
+      title: "Personnel Movements",
+      url: "#",
+      icon: <ChartBarIcon />,
+    },
+    {
+      title: "Leave Management",
+      url: "#",
+      icon: <ChartBarIcon />,
+    },
+    {
+      title: "Entry/Exit Records",
       url: "#",
       icon: <FolderIcon />,
     },
@@ -109,36 +122,62 @@ const data = {
       ],
     },
   ],
-  navSecondary: [
+
+  configurations: [
     {
-      title: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: <CircleHelpIcon />,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: <SearchIcon />,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
+      name: "Shift Planning",
       url: "#",
       icon: <DatabaseIcon />,
     },
     {
-      name: "Reports",
+      name: "Departments",
       url: "#",
       icon: <FileChartColumnIcon />,
     },
     {
-      name: "Word Assistant",
+      name: "Public Holidays",
+      url: "#",
+      icon: <FileIcon />,
+    },
+    {
+      name: "Terminal Management",
+      url: "#",
+      icon: <FileIcon />,
+    },
+    {
+      name: "Settings",
+      url: "#",
+      icon: <Settings2Icon />,
+    },
+  ],
+  tools: [
+    {
+      name: "Strategic Reports",
+      url: "#",
+      icon: <DatabaseIcon />,
+    },
+    {
+      name: "Personnel Details Table",
+      url: "#",
+      icon: <FileChartColumnIcon />,
+    },
+    {
+      name: "Announcements",
+      url: "#",
+      icon: <FileIcon />,
+    },
+    {
+      name: "Bulk Personnel Import",
+      url: "#",
+      icon: <FileIcon />,
+    },
+    {
+      name: "Working Hours",
+      url: "#",
+      icon: <FileIcon />,
+    },
+    {
+      name: "Security Records",
       url: "#",
       icon: <FileIcon />,
     },
@@ -165,8 +204,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSection items={data.configurations} />
+        <NavSection items={data.tools} name="Tools" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
