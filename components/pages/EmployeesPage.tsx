@@ -13,6 +13,7 @@ import CustomInfiniteScroll from "../CustomInfiniteScroll";
 type Employee = {
   id: string;
   fullName: string;
+  image?: string;
   position: {
     id: string;
     name: string;
@@ -52,7 +53,7 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
       <CardHeader>
         <Avatar className="h-8 w-8 rounded-lg">
           {employee.fullName && (
-            <AvatarImage src={employee.fullName} alt={employee.fullName} />
+            <AvatarImage src={employee.image} alt={employee.fullName} />
           )}
           <AvatarFallback className="rounded-lg">
             {employee.fullName.at(0)}
