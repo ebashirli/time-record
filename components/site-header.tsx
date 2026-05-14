@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchForm } from "@/components/search-form";
+import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { HomeIcon, PanelLeftIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
+// import { SearchForm } from "@/components/search-form";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
