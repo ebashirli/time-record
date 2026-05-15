@@ -50,7 +50,8 @@ export function ExcelUploader() {
         const result: UploadedData = {
           sheetName: firstSheetName,
           rows: jsonData.length,
-          columns: jsonData.length > 0 ? Object.keys(jsonData[0]).length : 0,
+          // columns: jsonData.length > 0 ? Object.keys(jsonData[0]).length : 0,
+          columns: jsonData.length > 0 ? Object.keys(10).length : 0,
           data: jsonData,
         };
 

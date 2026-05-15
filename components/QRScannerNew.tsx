@@ -11,7 +11,7 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 
-export function QRScanner() {
+export function QRScannerNew() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [scannedCode, setScannedCode] = useState<string>("");
   const [isScanning, setIsScanning] = useState(false);

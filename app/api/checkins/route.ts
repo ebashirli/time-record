@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       success: true,
       checkin,
       employee: {
-        name: employee.name,
+        name: employee.fullName,
         company: employee.company.name,
       },
     });

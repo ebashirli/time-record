@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hashPassword } from "better-auth/crypto";
-import { PrismaClient } from "./lib/generated/prisma/client";
+import { PrismaClient, Role } from "./lib/generated/prisma/client";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -31,6 +31,7 @@ async function main() {
       name: "Elvin Bashirli",
       emailVerified: true,
       image: "",
+      role: Role.ADMIN,
     },
   });
 
@@ -40,6 +41,7 @@ async function main() {
       name: "Jane Smith",
       emailVerified: true,
       image: "https://i.pravatar.cc/150?img=2",
+      role: Role.MANAGER,
     },
   });
 
@@ -49,6 +51,7 @@ async function main() {
       name: "Admin User",
       emailVerified: true,
       image: "https://i.pravatar.cc/150?img=3",
+      role: Role.EMPLOYEE,
     },
   });
 
