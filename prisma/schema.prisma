@@ -18,9 +18,14 @@ model User {
   createdAt     DateTime  @default(now())
   email         String    @unique
   name          String?
+  role          Role      @default(EMPLOYEE)
   emailVerified Boolean   @default(false)
   image         String?
   updatedAt     DateTime  @updatedAt
+
+  employeeId    String?   @unique 
+  employee      Employee? @relation(fields: [employeeId], references: [id])
+
   sessions      Session[]
   accounts      Account[]
   checkedins    Checkin[]
@@ -81,6 +86,7 @@ model Work {
   name String @unique
 
   companies Company[]
+
   @@map("work")
 }
 
@@ -103,6 +109,7 @@ model Department {
   name String @unique
 
   employees Employee[]
+
   @@map("department")
 }
 
@@ -111,6 +118,7 @@ model Position {
   name String @unique
 
   employees Employee[]
+
   @@map("position")
 }
 
@@ -123,7 +131,7 @@ model Employee {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   checkins  Checkin[]
-
+  user         User?      @relation
   nationality Nationality
 
   departmentId String
@@ -152,4 +160,12 @@ enum Nationality {
   AZERBAIJANI
   TURKISH
   RUSSIAN
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+  HR
+  TERMINAL
 }
