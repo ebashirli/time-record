@@ -14,21 +14,21 @@ datasource db {
 
 // @default(autoincrement())
 model User {
-  id            String    @id @default(uuid())
-  createdAt     DateTime  @default(now())
-  email         String    @unique
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  email         String   @unique
   name          String?
-  role          Role      @default(EMPLOYEE)
-  emailVerified Boolean   @default(false)
+  role          Role     @default(EMPLOYEE)
+  emailVerified Boolean  @default(false)
   image         String?
-  updatedAt     DateTime  @updatedAt
+  updatedAt     DateTime @updatedAt
 
-  employeeId    String?   @unique 
-  employee      Employee? @relation(fields: [employeeId], references: [id])
+  employeeId String?   @unique
+  employee   Employee? @relation(fields: [employeeId], references: [id])
 
-  sessions      Session[]
-  accounts      Account[]
-  checkedins    Checkin[]
+  sessions   Session[]
+  accounts   Account[]
+  checkedins Checkin[]
 
   @@map("user")
 }
@@ -122,23 +122,46 @@ model Position {
   @@map("position")
 }
 
+model Shift {
+  id   String @id @default(uuid())
+  name String @unique
+
+  employees Employee[]
+
+  @@map("shift")
+}
+
 model Employee {
-  id        String    @id @default(uuid())
-  fullName  String
-  image     String?
-  companyId String
-  company   Company   @relation(fields: [companyId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  checkins  Checkin[]
-  user         User?      @relation
-  nationality Nationality
+  id                   String      @id @default(uuid())
+  fullName             String
+  idCardNo             String
+  idCardPin            String
+  phoneNumber          String
+  emergencyPhoneNumber String
+  hireDate             DateTime    @default(now())
+  cardId               String
+  sex                  Sex
+  birthDate            DateTime
+  bloodType            BloodType
+  image                String?
+  companyId            String
+  company              Company     @relation(fields: [companyId], references: [id])
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  checkins             Checkin[]
+  user                 User?       @relation
+  nationality          Nationality
+  isActive             Boolean?
+  terminationDate      DateTime?
 
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
 
   positionId String
   position   Position @relation(fields: [positionId], references: [id])
+
+  shiftId String
+  shift   Shift  @relation(fields: [shiftId], references: [id])
 
   @@map("employee")
 }
@@ -168,4 +191,20 @@ enum Role {
   EMPLOYEE
   HR
   TERMINAL
+}
+
+enum BloodType {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+}
+
+enum Sex {
+  MALE
+  FEMALE
 }
