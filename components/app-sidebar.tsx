@@ -168,7 +168,7 @@ const data = {
     },
     {
       name: "Bulk Personnel Import",
-      url: "#",
+      url: "/bulk-personnel-import",
       icon: <FileIcon />,
     },
     {
