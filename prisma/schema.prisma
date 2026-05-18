@@ -161,6 +161,7 @@ model Checkin {
   checkedById String
   checkedBy   User     @relation(fields: [checkedById], references: [id])
   dateTime    DateTime @default(now())
+  direction   Direction
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -207,4 +208,10 @@ enum Role {
   MANAGER
   HR
   TERMINAL
+}
+
+
+enum Direction {
+  IN
+  OUT
 }
