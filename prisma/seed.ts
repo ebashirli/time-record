@@ -51,7 +51,7 @@ async function main() {
       name: "Admin User",
       emailVerified: true,
       image: "https://i.pravatar.cc/150?img=3",
-      role: Role.EMPLOYEE,
+      role: Role.TERMINAL,
     },
   });
 

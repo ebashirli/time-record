@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import DownloadTemplateButton from "@/components/DownloadTemplateButton";
-import { ExcelUploader } from "@/components/ExcelUploader";
+import UploadEmployees from "@/components/UploadEmployees";
 
 export default function Page() {
   return (
@@ -28,7 +28,7 @@ export default function Page() {
           </CardContent>
         </Card>
 
-        <ExcelUploader />
+        <UploadEmployees />
       </div>
     </main>
   );

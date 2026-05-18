@@ -19,6 +19,7 @@ model User {
   email         String    @unique
   name          String?
   emailVerified Boolean   @default(false)
+  role          Role
   image         String?
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
@@ -81,6 +82,7 @@ model Work {
   name String @unique
 
   companies Company[]
+
   @@map("work")
 }
 
@@ -103,6 +105,7 @@ model Department {
   name String @unique
 
   employees Employee[]
+
   @@map("department")
 }
 
@@ -111,20 +114,36 @@ model Position {
   name String @unique
 
   employees Employee[]
+
   @@map("position")
 }
 
 model Employee {
-  id        String    @id @default(uuid())
-  fullName  String
+  id                     String      @id @default(uuid())
+  firstName              String
+  middleNameOrPatronymic String
+  lastName               String
+  idCardSerie            IdCardSerie
+  idCardNo               String
+  idCardPin              String      @unique
+  nationality            Nationality
+
+  sex                  Sex
+  birthDate            DateTime
+  bloodType            BloodType
+  phoneNumber          String
+  emergencyPhoneNumber String
+  shift                Shift?
+  hireDate             DateTime
+  terminationDate      DateTime?
+  cardId               String    @unique
+
   image     String?
   companyId String
   company   Company   @relation(fields: [companyId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   checkins  Checkin[]
-
-  nationality Nationality
 
   departmentId String
   department   Department @relation(fields: [departmentId], references: [id])
@@ -152,4 +171,40 @@ enum Nationality {
   AZERBAIJANI
   TURKISH
   RUSSIAN
+}
+
+enum Sex {
+  FEMALE
+  MALE
+}
+
+enum BloodType {
+  O_I_RH_POSITIVE
+  O_I_RH_NEGATIVE
+  A_II_RH_POSITIVE
+  A_II_RH_NEGATIVE
+  B_III_RH_POSITIVE
+  B_III_RH_NEGATIVE
+  AB_IV_RH_POSITIVE
+  AB_IV_RH_NEGATIVE
+}
+
+enum IdCardSerie {
+  AA
+  AZE
+  MYI
+}
+
+enum Shift {
+  DAY
+  EVENING
+  NIGHT
+  OFFICE
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  HR
+  TERMINAL
 }
