@@ -15,7 +15,8 @@ const LatestCheckins = async () => {
       employee: {
         select: {
           // image: true,
-          fullName: true,
+          firstName: true,
+          lastName: true,
           company: { select: { name: true } },
         },
       },
@@ -36,7 +37,7 @@ const LatestCheckins = async () => {
             value={checkin.id}
             className="border-b px-4 last:border-b-0"
           >
-            <AccordionTrigger>{checkin.employee.fullName}</AccordionTrigger>
+            <AccordionTrigger>{`${checkin.employee.firstName} ${checkin.employee.lastName}`}</AccordionTrigger>
             <AccordionContent>
               <CheckinDetails id={checkin.id} />
             </AccordionContent>
