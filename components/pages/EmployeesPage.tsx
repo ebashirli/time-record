@@ -12,6 +12,8 @@ import CustomInfiniteScroll from "../CustomInfiniteScroll";
 
 type Employee = {
   id: string;
+  firstName: string;
+  lastName: string;
   fullName: string;
   image?: string;
   position: {
@@ -28,7 +30,15 @@ const EmployeesPage = () => {
   const [employees, setEmployees] = React.useState<Employee[]>([]);
 
   function setData(data: { employees: Employee[] }) {
-    setEmployees((prev: Employee[]) => [...prev, ...data.employees]);
+    const employees = data.employees.map(
+      ({ firstName, lastName, ...props }) => ({
+        ...props,
+        firstName,
+        lastName,
+        fullName: `${firstName} ${lastName}`,
+      }),
+    );
+    setEmployees((prev: Employee[]) => [...prev, ...employees]);
   }
 
   return (
