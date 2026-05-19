@@ -72,7 +72,10 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
             />
           )}
           <AvatarFallback className="rounded-lg">
-            {employee.fullName.at(0)}
+            {(
+              employee.fullName.slice(0, 2) ||
+              `${employee.firstName.at(0)}${employee.lastName.at(0)}`
+            ).toLocaleUpperCase()}
           </AvatarFallback>
         </Avatar>
         <CardTitle>

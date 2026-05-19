@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 export default function UploadEmployees() {
   const [isPending, startTransition] = useTransition();
@@ -33,11 +34,8 @@ export default function UploadEmployees() {
     // Execute the Server Action inside a transition
     startTransition(async () => {
       const response = await uploadExcel(formData);
-      if (response.success) {
-        setStatus({ message: response.message });
-      } else {
-        setStatus({ error: response.error });
-      }
+      if (response.success) toast.success(response.message);
+      else toast.error(response.error);
     });
   };
 

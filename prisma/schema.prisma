@@ -128,7 +128,7 @@ model Employee {
   idCardSerie IdCardSerie
   idCardNo    String?
   idCardPin   String?     @unique
-  nationality Nationality
+  nationality Nationality?
 
   sex                  Sex?
   birthDate            DateTime?
@@ -138,7 +138,7 @@ model Employee {
   shift                Shift?
   hireDate             DateTime?
   terminationDate      DateTime?
-  cardId               String?    @unique
+  cardId               String    @unique
 
   image     String?
   companyId String
