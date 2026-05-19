@@ -69,7 +69,7 @@ export function ScanResultSubmitDialog({ pin, setPin }: Props) {
   }
 
   return (
-    <Dialog open={!!pin} onOpenChange={handleClose}>
+    <Dialog open={!!employee} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Employee Check-in</DialogTitle>
