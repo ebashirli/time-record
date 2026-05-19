@@ -50,24 +50,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Create check-in
-    const checkin = await prisma.checkin.create({
-      data: {
-        employeeId: employeeId,
-        checkedById: session.user.id,
-        dateTime: new Date(),
-      },
-      include: {
-        employee: {
-          include: {
-            company: true,
-          },
-        },
-      },
-    });
+    // const checkin = await prisma.checkin.create({
+    //   data: {
+    //     employeeId: employeeId,
+    //     checkedById: session.user.id,
+    //     dateTime: new Date(),
+    //     // direction:
+    //   },
+    //   include: {
+    //     employee: {
+    //       include: {
+    //         company: true,
+    //       },
+    //     },
+    //   },
+    // });
 
     return NextResponse.json({
       success: true,
-      checkin,
+      // checkin,
       employee: {
         name: `${employee.firstName} ${employee.lastName}`,
         company: employee.company.name,

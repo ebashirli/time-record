@@ -5,23 +5,25 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Dispatch,
   SetStateAction,
+  useActionState,
   useEffect,
   useState,
   useTransition,
 } from "react";
-import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Image from "next/image";
-import { Loader } from "lucide-react";
-import { InOrOutChoice } from "./pages/scanning/InOrOutChoice";
-import { Input } from "./ui/input";
+import { LogIn, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Spinner } from "./ui/spinner";
+import { Direction } from "@/prisma/lib/generated/prisma/browser";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type Employee = {
   id: string;
@@ -33,13 +35,12 @@ type Employee = {
   department: { name: string };
 };
 
-export function ScanResultSubmitDialog({
-  pin,
-  setPin,
-}: {
+type Props = {
   pin: string | null;
   setPin: Dispatch<SetStateAction<string>>;
-}) {
+};
+
+export function ScanResultSubmitDialog({ pin, setPin }: Props) {
   // Step 1: Triggered immediately when QR code hits the lens
 
   const [employee, setEmployee] = useState<Employee | null>(null);
@@ -61,56 +62,142 @@ export function ScanResultSubmitDialog({
     handleScanSuccess(pin);
   }, [pin]);
 
-  // Step 2: Triggered when user clicks "Confirm Check-In"
-  // const handleConfirmCheckIn = async () => {
-  //   if (!employee) return;
-  //   try {
-  //     await submitCheckIn(employee.id);
-  //   } catch (err) {}
-  // };
+  function handleClose(open: boolean) {
+    if (open) return;
+    setPin("");
+  }
 
   return (
-    <Dialog open={!!pin} onOpenChange={(e) => (!e ? setPin("") : undefined)}>
+    <Dialog open={!!pin} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Employee information</DialogTitle>
-          <DialogDescription>Check employee information</DialogDescription>
+          <DialogTitle>Employee Check-in</DialogTitle>
+          <DialogDescription>Confirm attendance status</DialogDescription>
         </DialogHeader>
-
-        {isPending && <Loader />}
-
-        {!isPending && employee && (
-          <>
-            <Card className="relative mx-auto w-full max-w-sm pt-0">
-              <div className="absolute inset-0 z-30 aspect-video " />
-              {employee?.image && (
-                <Image
-                  src={employee?.image}
-                  alt={`${employee.firstName} ${employee.lastName}`}
-                  className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
-                />
-              )}
-              <CardHeader className="pt-6">
-                <CardTitle>
-                  {employee.firstName} {employee.lastName}
-                </CardTitle>
-                <CardDescription>{employee.company.name}</CardDescription>
-                <CardDescription>{employee.department.name}</CardDescription>
-                <CardDescription>{employee.position.name}</CardDescription>
-              </CardHeader>
-            </Card>
-
-            <form action={submitCheckIn}>
-              <Input type="hidden" name={"employeeId"} value={employee?.id} />
-              <InOrOutChoice />
-
-              <DialogFooter className="">
-                <Button type="submit">Submit</Button>
-              </DialogFooter>
-            </form>
-          </>
+        {isPending ? (
+          <Spinner />
+        ) : (
+          employee && (
+            <div className="flex flex-col gap-6">
+              <EmployeeCard employee={employee} />
+              <Form employee={employee} />
+            </div>
+          )
         )}
       </DialogContent>
     </Dialog>
   );
+}
+
+function EmployeeCard({ employee }: { employee: Employee }) {
+  return (
+    <div className="flex flex-col items-center gap-4">
+      {employee.image && (
+        <Image
+          src={employee.image}
+          alt={employee.firstName}
+          className="w-24 h-24 rounded-full object-cover border-2 border-slate-200"
+        />
+      )}
+      <div className="text-center">
+        <h3 className="font-semibold text-lg">{employee.firstName}</h3>
+        <p className="text-xs text-slate-500">{employee.company.name}</p>
+        <p className="text-sm text-slate-600">{employee.department.name}</p>
+      </div>
+    </div>
+  );
+}
+
+function Form({ employee }: { employee: Employee }) {
+  const [state, formAction, isPending] = useActionState(submitCheckIn, null);
+
+  useEffect(() => {
+    if (state?.error) toast.error(state.error);
+    const checkin = state?.data;
+    if (checkin)
+      toast.success(`${checkin.employeeId} checkied in successfully`);
+  }, [state]);
+
+  return (
+    <form action={formAction}>
+      <Input type="hidden" name="employeeId" value={employee.id} />
+      <div className="flex w-full justify-between  gap-3">
+        <InOutButton direction={Direction.IN} isPending={isPending} />
+        <InOutButton direction={Direction.OUT} isPending={isPending} />
+      </div>
+    </form>
+  );
+}
+
+function InOutButton({
+  direction,
+  isPending,
+}: {
+  direction: Direction;
+  isPending: boolean;
+}) {
+  return (
+    <Button
+      disabled={isPending}
+      value={direction}
+      type="submit"
+      name="direction"
+      className={cn(
+        "py-4 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-3 font-semibold text-base",
+        // selectedStatus === "going"
+        //   ? "border-blue-500 bg-blue-50 text-blue-900"
+        //   :,
+        // selectedStatus === "coming"
+        //   ? "border-green-500 bg-green-50 text-green-900"
+        //   :
+        "border-slate-300 bg-white text-slate-700",
+        direction === Direction.OUT
+          ? "hover:border-blue-300 hover:bg-blue-50"
+          : "hover:border-green-300 hover:bg-green-50",
+      )}
+    >
+      {direction === Direction.OUT ? (
+        <LogIn className="w-5 h-5" />
+      ) : (
+        <LogOut className="w-5 h-5" />
+      )}
+      {direction === Direction.OUT ? "Exit" : "Entry"}
+    </Button>
+  );
+}
+
+{
+  /* <Button
+disabled={isPending}
+value={Direction.IN}
+type="submit"
+name="direction"
+className={`py-4 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-3 font-semibold text-base ${
+// selectedStatus === "coming"
+//   ? "border-green-500 bg-green-50 text-green-900"
+//   :
+"border-slate-300 bg-white text-slate-700 hover:border-green-300 hover:bg-green-50"
+}`}
+>
+<LogIn className="w-5 h-5" />
+Entry
+</Button> */
+}
+
+{
+  /* <Button
+disabled={isPending}
+value={Direction.OUT}
+type="submit"
+name="direction"
+className={`py-4 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-3 font-semibold text-base ${
+// selectedStatus === "going"
+//   ? "border-blue-500 bg-blue-50 text-blue-900"
+//   :
+"border-slate-300 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50"
+}`}
+>
+<LogOut className="w-5 h-5" />
+Exit
+</Button>  */
 }
