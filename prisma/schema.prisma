@@ -125,7 +125,7 @@ model Employee {
   patronymic  String?
   lastName    String?
   fullName    String?
-  idCardSerie IdCardSerie
+  idCardSerie IdCardSerie?
   idCardNo    String?
   idCardPin   String?     @unique
   nationality Nationality?
