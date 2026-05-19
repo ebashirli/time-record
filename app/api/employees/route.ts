@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
       include: {
         position: true,
         company: true,
+        department: true,
       },
       take: limit,
       skip: skip,

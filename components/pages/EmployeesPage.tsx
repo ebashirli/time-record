@@ -5,10 +5,13 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 import CustomInfiniteScroll from "../CustomInfiniteScroll";
+import { Button } from "../ui/button";
+import { Pencil, QrCode, Trash } from "lucide-react";
 
 type Employee = {
   id: string;
@@ -24,6 +27,10 @@ type Employee = {
     id: string;
     name: string;
   };
+  department: {
+    id: string;
+    name: string;
+  };
 };
 
 const EmployeesPage = () => {
@@ -31,11 +38,12 @@ const EmployeesPage = () => {
 
   function setData(data: { employees: Employee[] }) {
     const employees = data.employees.map(
-      ({ firstName, fullName, lastName, ...props }) => ({
+      ({ firstName, fullName, department, lastName, ...props }) => ({
         ...props,
         firstName,
         lastName,
         fullName,
+        department,
       }),
     );
     setEmployees((prev: Employee[]) => [...prev, ...employees]);
@@ -57,33 +65,63 @@ export default EmployeesPage;
 export const EmployeeCard = ({ employee }: { employee: Employee }) => {
   return (
     <Card
-      size="sm"
-      className="mx-auto w-full max-w-sm aspect-video rounded-xl bg-muted/50"
+      // size="sm"
+      className="mx-auto w-full max-w-sm rounded-xl bg-muted/50 border-2"
     >
       <CardHeader>
-        <Avatar className="h-8 w-8 rounded-lg">
-          {employee && (
-            <AvatarImage
-              src={employee.image}
-              alt={
-                employee.fullName ||
-                `${employee.firstName} ${employee.lastName}`
-              }
-            />
-          )}
-          <AvatarFallback className="rounded-lg">
-            {(
-              employee.fullName?.slice(0, 2) ||
-              `${employee.firstName.at(0)}${employee.lastName.at(0)}`
-            ).toLocaleUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <CardTitle>
-          {employee.fullName || `${employee.firstName} ${employee.lastName}`}
-        </CardTitle>
+        <div className="flex items-center gap-2 min-h-14 ">
+          <Avatar className="h-8 w-8 rounded-lg">
+            {employee && (
+              <AvatarImage
+                src={employee.image}
+                alt={
+                  employee.fullName ||
+                  `${employee.firstName} ${employee.lastName}`
+                }
+              />
+            )}
+            <AvatarFallback className="rounded-lg">
+              {(
+                employee.fullName?.slice(0, 2) ||
+                `${employee.firstName.at(0)}${employee.lastName.at(0)}`
+              ).toLocaleUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <CardTitle>
+            {employee.fullName || `${employee.firstName} ${employee.lastName}`}
+          </CardTitle>
+        </div>
         <CardDescription>{employee.position.name}</CardDescription>
       </CardHeader>
-      <CardContent>{employee.company.name}</CardContent>
+      <CardContent>
+        <p>{employee.company.name}</p>
+        <p>{employee.department?.name}</p>
+      </CardContent>
+      <CardFooter>
+        <div className="flex items-center gap-1">
+          <Button
+            asChild
+            variant={"outline"}
+            className="min-w-10 cursor-pointer "
+          >
+            <Pencil />
+          </Button>
+          <Button
+            asChild
+            variant={"outline"}
+            className="min-w-10 cursor-pointer"
+          >
+            <QrCode />
+          </Button>
+          <Button
+            asChild
+            variant={"outline"}
+            className="min-w-10 cursor-pointer"
+          >
+            <Trash />
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 };
