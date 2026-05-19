@@ -62,14 +62,22 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
     >
       <CardHeader>
         <Avatar className="h-8 w-8 rounded-lg">
-          {employee.fullName && (
-            <AvatarImage src={employee.image} alt={employee.fullName} />
+          {employee && (
+            <AvatarImage
+              src={employee.image}
+              alt={
+                employee.fullName ||
+                `${employee.firstName} ${employee.lastName}`
+              }
+            />
           )}
           <AvatarFallback className="rounded-lg">
             {employee.fullName.at(0)}
           </AvatarFallback>
         </Avatar>
-        <CardTitle>{employee.fullName}</CardTitle>
+        <CardTitle>
+          {employee.fullName || `${employee.firstName} ${employee.lastName}`}
+        </CardTitle>
         <CardDescription>{employee.position.name}</CardDescription>
       </CardHeader>
       <CardContent>{employee.company.name}</CardContent>

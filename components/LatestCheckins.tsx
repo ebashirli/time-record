@@ -51,7 +51,8 @@ const LatestCheckins = async () => {
               >
                 {checkin.direction}
               </Badge>
-              {checkin.employee.fullName}
+              {checkin.employee.fullName ||
+                `${checkin.employee.firstName} ${checkin.employee.lastName}`}
             </AccordionTrigger>
             <AccordionContent>
               <CheckinDetails id={checkin.id} />

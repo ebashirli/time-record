@@ -97,7 +97,9 @@ function EmployeeCard({ employee }: { employee: Employee }) {
       {employee.image && (
         <Image
           src={employee.image}
-          alt={employee.fullName}
+          alt={
+            employee.fullName || `${employee.firstName} ${employee.lastName}`
+          }
           className="w-24 h-24 rounded-full object-cover border-2 border-slate-200"
         />
       )}
