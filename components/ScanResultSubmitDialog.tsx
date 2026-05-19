@@ -52,7 +52,7 @@ export function ScanResultSubmitDialog({ pin, setPin }: Props) {
       startTransition(async () => {
         try {
           const { data, error } = await getEmployeeByPin(scannedId);
-          if (!error) toast.error(error);
+          if (error) toast.error(error);
           if (data) setEmployee(data as Employee);
         } catch (err) {
           console.log({ err });
