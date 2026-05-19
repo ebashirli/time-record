@@ -6,12 +6,14 @@ import { Direction } from "@/prisma/lib/generated/prisma/enums";
 import { Checkin } from "@/prisma/lib/generated/prisma/browser";
 
 export async function getEmployeeByPin(pin: string) {
+  if (!pin) return { error: "PIN not provided" };
   const employee = await prisma.employee.findFirst({
     where: { idCardPin: pin },
     include: { company: true, position: true, department: true },
   });
 
-  return employee;
+  if (!employee) return { error: "Employee not found" };
+  return { data: employee };
 }
 
 type PrevState = {
