@@ -28,6 +28,7 @@ import { toast } from "sonner";
 type Employee = {
   id: string;
   firstName: string;
+  fullName: string;
   lastName: string;
   image: string;
   company: { name: string };
@@ -96,12 +97,12 @@ function EmployeeCard({ employee }: { employee: Employee }) {
       {employee.image && (
         <Image
           src={employee.image}
-          alt={employee.firstName}
+          alt={employee.fullName}
           className="w-24 h-24 rounded-full object-cover border-2 border-slate-200"
         />
       )}
       <div className="text-center">
-        <h3 className="font-semibold text-lg">{employee.firstName}</h3>
+        <h3 className="font-semibold text-lg">{employee.fullName}</h3>
         <p className="text-xs text-slate-500">{employee.company.name}</p>
         <p className="text-sm text-slate-600">{employee.department.name}</p>
       </div>

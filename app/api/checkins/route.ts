@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       success: true,
       // checkin,
       employee: {
-        name: `${employee.firstName} ${employee.lastName}`,
+        name: employee.fullName,
         company: employee.company.name,
       },
     });

@@ -119,24 +119,26 @@ model Position {
 }
 
 model Employee {
-  id                     String      @id @default(uuid())
-  firstName              String
-  middleNameOrPatronymic String
-  lastName               String
-  idCardSerie            IdCardSerie
-  idCardNo               String
-  idCardPin              String      @unique
-  nationality            Nationality
+  id          String      @id @default(uuid())
+  firstName   String?
+  middleName  String?
+  patronymic  String?
+  lastName    String?
+  fullName    String?
+  idCardSerie IdCardSerie
+  idCardNo    String?
+  idCardPin   String?     @unique
+  nationality Nationality
 
-  sex                  Sex
-  birthDate            DateTime
-  bloodType            BloodType
-  phoneNumber          String
-  emergencyPhoneNumber String
+  sex                  Sex?
+  birthDate            DateTime?
+  bloodType            BloodType?
+  phoneNumber          String?
+  emergencyPhoneNumber String?
   shift                Shift?
-  hireDate             DateTime
+  hireDate             DateTime?
   terminationDate      DateTime?
-  cardId               String    @unique
+  cardId               String?    @unique
 
   image     String?
   companyId String
@@ -155,15 +157,15 @@ model Employee {
 }
 
 model Checkin {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   employeeId  String
-  employee    Employee @relation(fields: [employeeId], references: [id])
+  employee    Employee  @relation(fields: [employeeId], references: [id])
   checkedById String
-  checkedBy   User     @relation(fields: [checkedById], references: [id])
-  dateTime    DateTime @default(now())
+  checkedBy   User      @relation(fields: [checkedById], references: [id])
+  dateTime    DateTime  @default(now())
   direction   Direction
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("checkin")
 }
@@ -209,7 +211,6 @@ enum Role {
   HR
   TERMINAL
 }
-
 
 enum Direction {
   IN

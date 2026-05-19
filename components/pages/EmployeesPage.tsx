@@ -31,11 +31,11 @@ const EmployeesPage = () => {
 
   function setData(data: { employees: Employee[] }) {
     const employees = data.employees.map(
-      ({ firstName, lastName, ...props }) => ({
+      ({ firstName, fullName, lastName, ...props }) => ({
         ...props,
         firstName,
         lastName,
-        fullName: `${firstName} ${lastName}`,
+        fullName,
       }),
     );
     setEmployees((prev: Employee[]) => [...prev, ...employees]);

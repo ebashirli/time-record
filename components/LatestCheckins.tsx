@@ -17,6 +17,7 @@ const LatestCheckins = async () => {
       employee: {
         select: {
           image: true,
+          fullName: true,
           firstName: true,
           lastName: true,
           company: { select: { name: true } },
@@ -50,7 +51,7 @@ const LatestCheckins = async () => {
               >
                 {checkin.direction}
               </Badge>
-              {`${checkin.employee.firstName} ${checkin.employee.lastName}`}
+              {checkin.employee.fullName}
             </AccordionTrigger>
             <AccordionContent>
               <CheckinDetails id={checkin.id} />

@@ -13,18 +13,20 @@ import {
 } from "@/prisma/lib/generated/prisma/browser";
 
 type Row = {
-  firstName: string;
-  middleNameOrPatronymic: string;
-  lastName: string;
-  idCardSerie: string;
-  idCardNo: string;
-  idCardPin: string;
-  nationality: string;
-  sex: string;
-  birthDate: string;
-  bloodType: string;
-  phoneNumber: string;
-  emergencyPhoneNumber: string;
+  firstName?: string;
+  middleName?: string;
+  patronymic?: string;
+  lastName?: string;
+  fullName?: string;
+  idCardSerie?: string;
+  idCardNo?: string;
+  idCardPin?: string;
+  nationality?: string;
+  sex?: string;
+  birthDate?: string;
+  bloodType?: string;
+  phoneNumber?: string;
+  emergencyPhoneNumber?: string;
   company: string;
   department: string;
   position: string;
@@ -58,21 +60,6 @@ export async function uploadExcel(formData: FormData) {
     if (rawData.length === 0) {
       return { success: false, error: "The excel file is empty." };
     }
-
-    // 4. Map the excel rows to match your Prisma Schema
-    // Assumes your Excel columns are named exactly: SKU, Name, Price
-    // const formattedData = rawData.map((row: any) => ({
-    //   sku: String(row.SKU || row.sku),
-    //   name: String(row.Name || row.name),
-    //   price: parseFloat(row.Price || row.price || "0"),
-    // }));
-
-    // 5. Write to PostgreSQL using Prisma
-    // skipDuplicates: true ensures it won't crash if a SKU already exists
-    // const result = await prisma.product.createMany({
-    //   data: formattedData,
-    //   skipDuplicates: true,
-    // });
 
     rawData.forEach((row, i) => (i ? proccessRow(row as Row) : undefined));
 
@@ -123,13 +110,6 @@ const idCardSerie = {
 };
 
 async function proccessRow(row: Row) {
-  // for (const row of rows) {
-  // 1. Upsert Work
-  // const work = await prisma.work.upsert({
-  //   where: { name: row.work },
-  //   update: {},
-  //   create: { name: row.work },
-  // });
   //   // 2. Upsert Company and connect Work
   const company = await prisma.company.upsert({
     where: { name: row.company },
@@ -162,11 +142,13 @@ async function proccessRow(row: Row) {
 
   const data = {
     firstName: row.firstName,
-    middleNameOrPatronymic: row.middleNameOrPatronymic,
+    middleName: row.middleName,
+    patronymic: row.patronymic,
     lastName: row.lastName,
+    fullName: row.fullName,
     idCardNo: String(row.idCardNo),
     idCardPin: row.idCardPin,
-    birthDate: new Date(Date.parse(row.birthDate)),
+    birthDate: row.birthDate ? new Date(Date.parse(row.birthDate)) : undefined,
     phoneNumber: String(row.phoneNumber),
     emergencyPhoneNumber: row.emergencyPhoneNumber,
     hireDate: new Date(Date.parse(row.hireDate)),
