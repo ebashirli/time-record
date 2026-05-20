@@ -6,28 +6,34 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get("limit") || "9");
     const skip = parseInt(searchParams.get("skip") || "0");
+    // const where = { NOT: { isActive: true } };
 
-    const employees = await prisma.employee.findMany({
+    const data = await prisma.employee.findMany({
+      where: { NOT: { isActive: false } },
       orderBy: { createdAt: "desc" },
-      include: {
-        position: true,
+      select: {
         company: true,
         department: true,
+        position: true,
+        fullName: true,
+        id: true,
       },
       take: limit,
       skip: skip,
     });
 
     return NextResponse.json({
-      employees,
+      data,
       total: await prisma.employee.count(),
       skip,
       limit,
     });
   } catch (error) {
-    console.error("Error fetching employees:", error);
+    console.log({ error });
     return NextResponse.json(
-      { error: "Failed to fetch employees" },
+      {
+        error: error instanceof Error ? error.message : "Something went wrong",
+      },
       { status: 500 },
     );
   }

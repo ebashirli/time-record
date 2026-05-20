@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth"; // Your Better Auth instance
 import { headers } from "next/headers";
 import { Direction } from "@/prisma/lib/generated/prisma/enums";
-import { Checkin } from "@/prisma/lib/generated/prisma/browser";
 
 export async function getEmployeeByPin(pin: string) {
   if (!pin) return { error: "PIN not provided" };
@@ -18,7 +17,7 @@ export async function getEmployeeByPin(pin: string) {
 
 type PrevState = {
   error?: string;
-  data?: Checkin;
+  data?: { employee: { fullName: string | null }; id: string };
 };
 
 export async function submitCheckIn(
@@ -50,6 +49,8 @@ export async function submitCheckIn(
         checkedById: user.id,
         dateTime: new Date(),
       },
+      // include: { employee: true },
+      select: { employee: { select: { fullName: true } }, id: true },
     });
     return { data: checkin };
   } catch (error: unknown) {

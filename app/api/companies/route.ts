@@ -6,8 +6,10 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const limit = parseInt(searchParams.get("limit") || "9");
     const skip = parseInt(searchParams.get("skip") || "0");
+    const where = { NOT: { isActive: false } };
 
-    const companies = await prisma.company.findMany({
+    const data = await prisma.company.findMany({
+      where,
       orderBy: { createdAt: "desc" },
       include: {
         works: true,
@@ -17,15 +19,16 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      companies,
-      total: await prisma.company.count(),
+      data,
+      total: await prisma.company.count({ where }),
       skip,
       limit,
     });
   } catch (error) {
-    console.error("Error fetching companies:", error);
     return NextResponse.json(
-      { error: "Failed to fetch companies" },
+      {
+        error: error instanceof Error ? error.message : "Something went wrong",
+      },
       { status: 500 },
     );
   }

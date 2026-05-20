@@ -125,7 +125,7 @@ function Form({
     if (state?.error) toast.error(state.error);
     const checkin = state?.data;
     if (checkin) {
-      toast.success(`${checkin.employee.fullName} checkied in successfully`);
+      toast.success(`${checkin.employee.fullName} checked in successfully`);
       setEmployee(null);
     }
   }, [state, setEmployee]);

@@ -1,3 +1,4 @@
+"use client";
 import { Trash, Trash2Icon } from "lucide-react";
 
 import {
@@ -13,18 +14,44 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Dispatch, SetStateAction, useTransition } from "react";
+import { toast } from "sonner";
 
-export function DeleteDialog() {
+interface I {
+  id: string;
+}
+
+type Props<T extends I> = {
+  setData: Dispatch<SetStateAction<T[]>>;
+  id: string;
+  deleteAction: (id: string) => Promise<{
+    success: boolean;
+    error?: string;
+    data?: { name: string | null; id: string | null };
+  }>;
+};
+
+export function DeleteDialog<T extends I>({
+  deleteAction,
+  id,
+  setData,
+}: Props<T>) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      const { success, error, data: { name } = {} } = await deleteAction(id);
+      if (success) {
+        toast.success(`${name} deleted successfully`);
+        setData((prev: T[]) => prev.filter((d) => d.id !== id));
+      } else toast.error(error);
+    });
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        {/* <Button variant="destructive">Delete</Button> */}
-        <Button
-          // onClick={(e) => handleButtonClick(e, "delete")}
-          asChild
-          variant={"outline"}
-          className="min-w-10 cursor-pointer"
-        >
+        <Button asChild variant={"outline"} className="min-w-10 cursor-pointer">
           <Trash />
         </Button>
       </AlertDialogTrigger>
@@ -39,8 +66,16 @@ export function DeleteDialog() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+          <AlertDialogCancel variant="outline" disabled={isPending}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            variant="destructive"
+            disabled={isPending}
+            onClick={handleDelete}
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

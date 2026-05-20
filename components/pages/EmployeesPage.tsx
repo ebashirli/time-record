@@ -16,6 +16,7 @@ import { Pencil, QrCode } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { DeleteDialog } from "../DeleteDialog";
+import { deleteEmployee } from "@/actions/deleteEmployee";
 
 type Employee = {
   id: string;
@@ -40,16 +41,15 @@ type Employee = {
 const EmployeesPage = () => {
   const [employees, setEmployees] = React.useState<Employee[]>([]);
 
-  function setData(data: { employees: Employee[] }) {
-    const employees = data.employees.map(
-      ({ firstName, fullName, department, lastName, ...props }) => ({
+  function setData(data: Employee[]) {
+    const employees =
+      data.map(({ firstName, fullName, department, lastName, ...props }) => ({
         ...props,
         firstName,
         lastName,
         fullName,
         department,
-      }),
-    );
+      })) ?? [];
     setEmployees((prev: Employee[]) => [...prev, ...employees]);
   }
 
@@ -57,7 +57,11 @@ const EmployeesPage = () => {
     <CustomInfiniteScroll setData={setData} name="employees">
       <>
         {employees.map((employee) => (
-          <EmployeeCard key={employee.id} employee={employee} />
+          <EmployeeCard
+            key={employee.id}
+            employee={employee}
+            setEmployees={setEmployees}
+          />
         ))}
       </>
     </CustomInfiniteScroll>
@@ -66,14 +70,18 @@ const EmployeesPage = () => {
 
 export default EmployeesPage;
 
-export const EmployeeCard = ({ employee }: { employee: Employee }) => {
-  const handleButtonClick = (e: React.MouseEvent, actionType: string) => {
-    e.stopPropagation(); // Stops the event from bubbling up to the Card/Link
-    e.preventDefault(); // Stops Next.js from executing the page redirect
-
-    console.log(`${actionType} button clicked!`);
-    // Your actual button logic goes here (e.g., open modal, delete item)
+export const EmployeeCard = ({
+  employee,
+  setEmployees,
+}: {
+  employee: Employee;
+  setEmployees: React.Dispatch<React.SetStateAction<Employee[]>>;
+}) => {
+  const handlePropogation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
   };
+
   return (
     <Card
       className={cn(
@@ -114,10 +122,7 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
         </CardContent>
         <Separator className="my-3" />
         <CardFooter className="flex justify-end">
-          <div
-            className="flex items-center gap-3"
-            onClick={(e) => handleButtonClick(e, "container")}
-          >
+          <div className="flex items-center gap-3" onClick={handlePropogation}>
             <Button
               asChild
               variant={"outline"}
@@ -132,7 +137,11 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
             >
               <QrCode />
             </Button>
-            <DeleteDialog />
+            <DeleteDialog
+              deleteAction={deleteEmployee}
+              id={employee.id}
+              setData={setEmployees}
+            />
           </div>
         </CardFooter>
       </Link>

@@ -97,6 +97,8 @@ model Company {
   workIds String[]
   works   Work[]
 
+  isActive Boolean?  @default(true)
+
   @@map("company")
 }
 
@@ -152,6 +154,8 @@ model Employee {
 
   positionId String
   position   Position @relation(fields: [positionId], references: [id])
+
+  isActive Boolean?  @default(true)
 
   @@map("employee")
 }

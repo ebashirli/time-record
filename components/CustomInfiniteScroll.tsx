@@ -3,18 +3,15 @@ import React from "react";
 
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-type Props<N extends string, T> = {
+type Props<T> = {
+  setData: (data: T[]) => void;
   children: React.ReactElement;
-  setData: (data: Record<N, T[]>) => void;
   name: string;
 };
 
-const CustomInfiniteScroll = <N extends string, T>({
-  children,
-  setData,
-  name,
-}: Props<N, T>) => {
+const CustomInfiniteScroll = <T,>({ children, setData, name }: Props<T>) => {
   const [page, setPage] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
@@ -27,16 +24,16 @@ const CustomInfiniteScroll = <N extends string, T>({
       const res = await fetch(
         `/api/${name}?limit=${LIMIT}&skip=${LIMIT * page}`,
       );
-      const data = await res.json();
+      const { data, error } = await res.json();
+
+      if (error) {
+        setHasMore(false);
+        return toast.error(error);
+      }
 
       setData(data);
       setPage((prev) => prev + 1);
-
-      console.log({ data });
-
-      if (data[name]?.length < LIMIT) {
-        setHasMore(false);
-      }
+      if (data?.length < LIMIT) setHasMore(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
