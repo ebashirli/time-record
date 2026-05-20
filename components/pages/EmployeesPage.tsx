@@ -4,6 +4,7 @@ import { useState } from "react";
 import CustomInfiniteScroll from "../CustomInfiniteScroll";
 import { EmployeeCard } from "../EmployeeCard";
 import { getEmployees } from "@/actions/getEmployees";
+import { useSearchParams } from "next/navigation";
 
 type Employee = {
   id: string;
@@ -21,10 +22,18 @@ type Employee = {
 };
 
 const EmployeesPage = () => {
+  const searchParams = useSearchParams();
+
   const [employees, setEmployees] = useState<Employee[]>([]);
 
+  const query = searchParams.get("query") || "";
+
   return (
-    <CustomInfiniteScroll setData={setEmployees} getAction={getEmployees}>
+    <CustomInfiniteScroll
+      key={query}
+      setData={setEmployees}
+      getAction={getEmployees}
+    >
       <>
         {employees.map((employee) => {
           return (

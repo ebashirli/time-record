@@ -2,15 +2,39 @@
 
 import prisma from "@/lib/prisma";
 
-export async function getEmployees(params: {
-  [k: string]: null | string | number;
+export async function getEmployees({
+  limit,
+  page,
+  query,
+}: {
+  limit: number;
+  page: number;
+  query: null | string;
 }) {
+  const where = query
+    ? {
+        AND: [
+          { isActive: { not: false } },
+          {
+            OR: [
+              {
+                fullName: {
+                  contains: query,
+                  mode: "insensitive" as const,
+                },
+              },
+            ],
+          },
+        ],
+      }
+    : { isActive: { not: false } };
+
   try {
     const [data, total] = await Promise.all([
       prisma.employee.findMany({
-        where: {},
-        skip: 12 * parseInt((params.page as string) ?? "0"),
-        take: 12,
+        where,
+        skip: limit * page,
+        take: limit,
 
         select: {
           id: true,
@@ -20,7 +44,7 @@ export async function getEmployees(params: {
           position: { select: { name: true } },
         },
       }),
-      prisma.employee.count({ where: {} }),
+      prisma.employee.count({ where }),
     ]);
     return { success: true, data, total };
   } catch (error) {

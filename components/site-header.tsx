@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { HomeIcon, PanelLeftIcon } from "lucide-react";
-// import { SearchForm } from "@/components/search-form";
+import { SearchForm } from "@/components/search-form";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -57,7 +57,7 @@ export function SiteHeader() {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
+        <SearchForm className="w-full sm:ml-auto sm:w-auto" />
       </div>
     </header>
   );
