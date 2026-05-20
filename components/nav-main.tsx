@@ -52,6 +52,7 @@ export function NavMain({
               <Link
                 href={pathname === "/scanner" ? "" : "/scanner"}
                 className=""
+                target="_blank"
               >
                 <QrCodeIcon className="" />
                 <span>Scan QR</span>

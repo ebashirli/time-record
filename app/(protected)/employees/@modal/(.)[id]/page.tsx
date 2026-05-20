@@ -32,7 +32,7 @@ export default function EditEmployeeModal() {
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <p>Editing form for employee {params.id} goes here.</p>
+          {/* <p>Editing form for employee {params.id} goes here.</p> */}
         </div>
       </DialogContent>
     </Dialog>
