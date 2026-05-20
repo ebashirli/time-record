@@ -1,50 +1,63 @@
 "use client";
-import React from "react";
+import React, { useEffect, useTransition } from "react";
 
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 type Props<T> = {
-  setData: (data: T[]) => void;
+  setData: React.Dispatch<React.SetStateAction<T[]>>;
   children: React.ReactElement;
-  name: string;
+  getAction: (params: { [k: string]: null | string | number }) => Promise<{
+    error?: string;
+    success: boolean;
+    data?: T[];
+    total?: number;
+  }>;
 };
 
-const CustomInfiniteScroll = <T,>({ children, setData, name }: Props<T>) => {
+const CustomInfiniteScroll = <T,>({
+  children,
+  setData,
+  getAction,
+}: Props<T>) => {
   const [page, setPage] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
-  const LIMIT = 12;
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
 
-  const next = async () => {
-    // 🛑 GUARD: If we are already loading, break out immediately
-    if (loading) return;
-
-    setLoading(true);
-
-    try {
-      const res = await fetch(
-        `/api/${name}?limit=${LIMIT}&skip=${LIMIT * page}`,
-      );
-      const { data, error } = await res.json();
-
-      if (error) {
-        setHasMore(false);
-        return toast.error(error);
-      }
-
-      // Set data and increment page
-      setData(data);
-      setPage((prev) => prev + 1);
-
-      if (!data || data.length < LIMIT) setHasMore(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
+  const next = () => {
+    setPage((prev) => prev + 1);
   };
+
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    const handleScanSuccess = ({
+      query,
+      page,
+    }: {
+      query: string | null;
+      page: string | number;
+    }) => {
+      startTransition(async () => {
+        const { success, data, error, total } = await getAction({
+          query,
+          page,
+          limit: 12,
+        });
+        if (!success) {
+          setHasMore(false);
+          toast.error(error);
+        }
+        if (!data || (total ?? 0) <= data.length) setHasMore(false);
+        setData((prev) => [...prev, ...(data ?? [])]);
+      });
+    };
+
+    handleScanSuccess({ query, page });
+  }, [query, page, setData, getAction]);
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -54,7 +67,7 @@ const CustomInfiniteScroll = <T,>({ children, setData, name }: Props<T>) => {
         <div className="col-span-full flex justify-center">
           <InfiniteScroll
             hasMore={hasMore}
-            isLoading={loading}
+            isLoading={isPending}
             next={next}
             threshold={1}
           >
