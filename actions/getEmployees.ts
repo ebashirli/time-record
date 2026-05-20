@@ -39,6 +39,7 @@ export async function getEmployees({
         select: {
           id: true,
           fullName: true,
+          cardId: true,
           company: { select: { name: true } },
           department: { select: { name: true } },
           position: { select: { name: true } },

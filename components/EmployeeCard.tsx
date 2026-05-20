@@ -9,15 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Pencil, QrCode } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { DeleteDialog } from "./DeleteDialog";
 import { Button } from "./ui/button";
 import { deleteEmployee } from "@/actions/deleteEmployee";
+import { QRGenerator } from "./QRGenerator";
 
 type Employee = {
   id: string;
+  cardId: string;
   fullName: string | null;
   image?: string;
   position: {
@@ -82,13 +84,7 @@ export const EmployeeCard = ({
             >
               <Pencil />
             </Button>
-            <Button
-              asChild
-              variant={"outline"}
-              className="min-w-10 cursor-pointer"
-            >
-              <QrCode />
-            </Button>
+            <QRGenerator value={employee.cardId} />
             <DeleteDialog
               deleteAction={deleteEmployee}
               id={employee.id}

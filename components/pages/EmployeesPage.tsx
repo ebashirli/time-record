@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 type Employee = {
   id: string;
   fullName: string | null;
+  cardId: string;
   image?: string;
   position: {
     name: string;

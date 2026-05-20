@@ -1,28 +1,13 @@
 "use client";
-
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { QrCode } from "lucide-react";
+import { CopyButton } from "./copy-button";
 
-export function QRGenerator() {
-  const [inputValue, setInputValue] = useState("");
-  const [qrValue, setQrValue] = useState("");
+export function QRGenerator({ value }: { value?: string }) {
   const qrRef = useRef<HTMLDivElement>(null);
-
-  const handleGenerate = () => {
-    if (inputValue.trim()) {
-      setQrValue(inputValue);
-      console.log("QR Code generated for:", inputValue);
-    }
-  };
 
   const handleDownload = () => {
     const canvas = qrRef.current?.querySelector("canvas") as HTMLCanvasElement;
@@ -55,92 +40,46 @@ export function QRGenerator() {
     }
   };
 
-  const handleReset = () => {
-    setInputValue("");
-    setQrValue("");
-  };
-
   return (
-    <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>QR Code Generator</CardTitle>
-          <CardDescription>Convert text or URLs into QR codes</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {/* Input field */}
-          <div className="flex flex-col gap-2">
-            <label htmlFor="qr-input" className="text-sm font-medium">
-              Enter text or URL
-            </label>
-            <Input
-              id="qr-input"
-              placeholder="e.g., https://example.com or Hello World"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
+    <Dialog>
+      <DialogTrigger>
+        <Button asChild variant={"outline"} className="min-w-10 cursor-pointer">
+          <QrCode />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle></DialogTitle>
+        <div className="flex justify-center p-4 bg-gray-50 rounded-lg">
+          <div ref={qrRef}>
+            <QRCodeCanvas
+              value={value!}
+              size={256}
+              level="H"
+              includeMargin={true}
+              fgColor="#000000"
+              bgColor="#ffffff"
             />
           </div>
+        </div>
 
-          {/* Generate button */}
-          <Button onClick={handleGenerate} className="w-full">
-            Generate QR Code
+        {/* Display the encoded value */}
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm font-medium text-blue-900 mb-2">Encoded:</p>
+          <p className="text-sm text-blue-800 break-all font-mono">{value}</p>
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex flex-col gap-2">
+          <Button onClick={handleDownload} variant="outline" className="w-full">
+            Download as PNG
           </Button>
+          {/* <Button onClick={handleCopy} variant="outline" className="w-full">
+            Copy to Clipboard
+          </Button> */}
 
-          {/* QR Code display */}
-          {qrValue && (
-            <>
-              <div className="flex justify-center p-4 bg-gray-50 rounded-lg">
-                <div ref={qrRef}>
-                  <QRCodeCanvas
-                    value={qrValue}
-                    size={256}
-                    level="H"
-                    includeMargin={true}
-                    fgColor="#000000"
-                    bgColor="#ffffff"
-                  />
-                </div>
-              </div>
-
-              {/* Display the encoded value */}
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm font-medium text-blue-900 mb-2">
-                  Encoded:
-                </p>
-                <p className="text-sm text-blue-800 break-all font-mono">
-                  {qrValue}
-                </p>
-              </div>
-
-              {/* Action buttons */}
-              <div className="flex flex-col gap-2">
-                <Button
-                  onClick={handleDownload}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Download as PNG
-                </Button>
-                <Button
-                  onClick={handleCopy}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Copy to Clipboard
-                </Button>
-                <Button
-                  onClick={handleReset}
-                  variant="destructive"
-                  className="w-full"
-                >
-                  Clear
-                </Button>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+          <CopyButton onCopy={handleCopy} />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
