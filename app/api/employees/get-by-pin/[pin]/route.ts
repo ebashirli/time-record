@@ -3,12 +3,12 @@ import prisma from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ pin: string }> },
+  { params }: { params: Promise<{ cardId: string }> },
 ) {
   try {
-    const { pin } = await params;
+    const { cardId } = await params;
     const employee = await prisma.employee.findFirst({
-      where: { idCardPin: pin },
+      where: { cardId },
     });
 
     return NextResponse.json({ employee });
