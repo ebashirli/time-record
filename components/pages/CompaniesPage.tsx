@@ -20,8 +20,8 @@ type Company = {
 const CompaniesPage = () => {
   const [companies, setCompanies] = React.useState<Company[]>([]);
 
-  function setData(data: { companies: Company[] }) {
-    setCompanies((prev: Company[]) => [...prev, ...data.companies]);
+  function setData(companies: Company[]) {
+    setCompanies((prev: Company[]) => [...prev, ...companies]);
   }
 
   return (

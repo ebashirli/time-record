@@ -32,7 +32,7 @@ type Row = {
   shift?: string;
   hireDate?: string;
   cardId: string;
-  isActive?: boolean;
+  isActive?: string;
 };
 
 export async function uploadExcel(formData: FormData) {
