@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { uploadExcel } from "@/actions/uploadEmployeesAction";
+import { uploadExcel } from "@/actions/uploadEmployees";
 import { Button } from "./ui/button";
 import {
   Card,

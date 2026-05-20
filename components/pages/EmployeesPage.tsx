@@ -12,9 +12,10 @@ import {
 import CustomInfiniteScroll from "../CustomInfiniteScroll";
 import { Button } from "../ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Pencil, QrCode, Trash } from "lucide-react";
+import { Pencil, QrCode } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { DeleteDialog } from "../DeleteDialog";
 
 type Employee = {
   id: string;
@@ -118,7 +119,6 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
             onClick={(e) => handleButtonClick(e, "container")}
           >
             <Button
-              onClick={(e) => handleButtonClick(e, "edit")}
               asChild
               variant={"outline"}
               className="min-w-10 cursor-pointer "
@@ -126,21 +126,13 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
               <Pencil />
             </Button>
             <Button
-              onClick={(e) => handleButtonClick(e, "qr")}
               asChild
               variant={"outline"}
               className="min-w-10 cursor-pointer"
             >
               <QrCode />
             </Button>
-            <Button
-              onClick={(e) => handleButtonClick(e, "delete")}
-              asChild
-              variant={"outline"}
-              className="min-w-10 cursor-pointer"
-            >
-              <Trash />
-            </Button>
+            <DeleteDialog />
           </div>
         </CardFooter>
       </Link>
