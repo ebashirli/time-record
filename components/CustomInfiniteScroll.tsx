@@ -18,6 +18,9 @@ const CustomInfiniteScroll = <T,>({ children, setData, name }: Props<T>) => {
   const LIMIT = 12;
 
   const next = async () => {
+    // 🛑 GUARD: If we are already loading, break out immediately
+    if (loading) return;
+
     setLoading(true);
 
     try {
@@ -31,9 +34,11 @@ const CustomInfiniteScroll = <T,>({ children, setData, name }: Props<T>) => {
         return toast.error(error);
       }
 
+      // Set data and increment page
       setData(data);
       setPage((prev) => prev + 1);
-      if (data?.length < LIMIT) setHasMore(false);
+
+      if (!data || data.length < LIMIT) setHasMore(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {

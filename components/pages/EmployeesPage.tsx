@@ -42,27 +42,32 @@ const EmployeesPage = () => {
   const [employees, setEmployees] = React.useState<Employee[]>([]);
 
   function setData(data: Employee[]) {
-    const employees =
-      data.map(({ firstName, fullName, department, lastName, ...props }) => ({
-        ...props,
-        firstName,
-        lastName,
-        fullName,
-        department,
-      })) ?? [];
-    setEmployees((prev: Employee[]) => [...prev, ...employees]);
+    if (!data) return;
+
+    setEmployees((prev: Employee[]) => {
+      // Create a quick lookup map of ids we already have in the UI
+      const currentIds = new Set(prev.map((emp) => emp.id));
+
+      // Filter down to strictly new items
+      const newEmployees = data.filter((emp) => !currentIds.has(emp.id));
+
+      return [...prev, ...newEmployees];
+    });
   }
 
   return (
     <CustomInfiniteScroll setData={setData} name="employees">
       <>
-        {employees.map((employee) => (
-          <EmployeeCard
-            key={employee.id}
-            employee={employee}
-            setEmployees={setEmployees}
-          />
-        ))}
+        {employees.map((employee) => {
+          console.log({ employee: employee.id });
+          return (
+            <EmployeeCard
+              key={employee.id}
+              employee={employee}
+              setEmployees={setEmployees}
+            />
+          );
+        })}
       </>
     </CustomInfiniteScroll>
   );

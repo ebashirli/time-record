@@ -32,6 +32,7 @@ type Row = {
   shift?: string;
   hireDate?: string;
   cardId: string;
+  isActive?: boolean;
 };
 
 export async function uploadExcel(formData: FormData) {
@@ -74,9 +75,13 @@ export async function uploadExcel(formData: FormData) {
       message: `Successfully inserted ${batchPayload.count} rows.`,
     };
   } catch (error) {
+    console.log({ error });
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Something went wrong",
+      error:
+        error instanceof Error
+          ? (error.message as string).split(")").at(2)
+          : "Something went wrong",
     };
   }
 }
@@ -118,6 +123,14 @@ const idCardSerie = {
 
 async function proccessRow(row: Row) {
   // 2. Upsert Company and connect Work
+
+  console.log({
+    company: row.company,
+    position: row.position,
+    department: row.department,
+    isActive: row.isActive,
+  });
+
   const company = await prisma.company.upsert({
     where: { name: row.company },
     update: {
@@ -167,6 +180,7 @@ async function proccessRow(row: Row) {
     nationality: nationality[row.nationality as keyof typeof nationality],
     shift: shift[row.shift as keyof typeof shift],
     sex: sex[row.sex as keyof typeof sex],
+    isActive: row.isActive === "TRUE",
   };
 
   return data;
