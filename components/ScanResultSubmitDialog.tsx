@@ -169,9 +169,9 @@ function InOutButton({
       )}
     >
       {direction === Direction.OUT ? (
-        <LogIn className="w-5 h-5" />
-      ) : (
         <LogOut className="w-5 h-5" />
+      ) : (
+        <LogIn className="w-5 h-5" />
       )}
       {direction === Direction.OUT ? "Exit" : "Entry"}
     </Button>
