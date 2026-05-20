@@ -9,23 +9,20 @@ import {
   CardTitle,
 } from "../ui/card";
 import CustomInfiniteScroll from "../CustomInfiniteScroll";
+import { getCompanies } from "@/actions/getCompanies";
 
 type Company = {
   id: string;
   name: string;
-  works: { id: string; name: string }[];
-  logo?: string;
+  logo: string | null;
+  works: { name: string }[];
 };
 
 const CompaniesPage = () => {
   const [companies, setCompanies] = React.useState<Company[]>([]);
 
-  function setData(companies: Company[]) {
-    setCompanies((prev: Company[]) => [...prev, ...companies]);
-  }
-
   return (
-    <CustomInfiniteScroll setData={setData} name="companies">
+    <CustomInfiniteScroll setData={setCompanies} getAction={getCompanies}>
       <>
         {companies.map((company) => (
           <CompanyCard key={company.id} company={company} />
