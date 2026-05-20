@@ -157,7 +157,7 @@ export function QRScannerNew() {
           </CardContent>
         </Card>
       </div>
-      <ScanResultSubmitDialog pin={scannedCode} setPin={setScannedCode} />
+      <ScanResultSubmitDialog cardId={scannedCode} setPin={setScannedCode} />
     </>
   );
 }

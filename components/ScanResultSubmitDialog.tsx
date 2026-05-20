@@ -1,6 +1,6 @@
 "use client";
 
-import { getEmployeeByPin, submitCheckIn } from "@/actions/scan-actions";
+import { getEmployeeByCardId, submitCheckIn } from "@/actions/scan-actions";
 import {
   Dialog,
   DialogContent,
@@ -37,22 +37,22 @@ type Employee = {
 };
 
 type Props = {
-  pin: string | null;
+  cardId: string | null;
   setPin: Dispatch<SetStateAction<string>>;
 };
 
-export function ScanResultSubmitDialog({ pin, setPin }: Props) {
+export function ScanResultSubmitDialog({ cardId, setPin }: Props) {
   // Step 1: Triggered immediately when QR code hits the lens
 
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (!pin) return;
+    if (!cardId) return;
     const handleScanSuccess = (scannedId: string) => {
       startTransition(async () => {
         try {
-          const { data, error } = await getEmployeeByPin(scannedId);
+          const { data, error } = await getEmployeeByCardId(scannedId);
           if (error) toast.error(error);
           if (data) setEmployee(data as Employee);
         } catch (err) {
@@ -61,8 +61,8 @@ export function ScanResultSubmitDialog({ pin, setPin }: Props) {
       });
     };
 
-    handleScanSuccess(pin);
-  }, [pin]);
+    handleScanSuccess(cardId);
+  }, [cardId]);
 
   function handleClose(open: boolean) {
     if (open) return;

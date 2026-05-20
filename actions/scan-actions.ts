@@ -4,10 +4,10 @@ import { auth } from "@/lib/auth"; // Your Better Auth instance
 import { headers } from "next/headers";
 import { Direction } from "@/prisma/lib/generated/prisma/enums";
 
-export async function getEmployeeByPin(pin: string) {
-  if (!pin) return { error: "PIN not provided" };
+export async function getEmployeeByCardId(cardId: string) {
+  if (!cardId) return { error: "Card ID not provided" };
   const employee = await prisma.employee.findFirst({
-    where: { idCardPin: pin },
+    where: { cardId },
     include: { company: true, position: true, department: true },
   });
 
