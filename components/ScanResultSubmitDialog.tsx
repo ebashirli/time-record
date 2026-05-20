@@ -82,7 +82,7 @@ export function ScanResultSubmitDialog({ pin, setPin }: Props) {
           employee && (
             <div className="flex flex-col gap-6">
               <EmployeeCard employee={employee} />
-              <Form employee={employee} />
+              <Form employee={employee} setEmployee={setEmployee} />
             </div>
           )
         )}
@@ -112,15 +112,23 @@ function EmployeeCard({ employee }: { employee: Employee }) {
   );
 }
 
-function Form({ employee }: { employee: Employee }) {
+function Form({
+  employee,
+  setEmployee,
+}: {
+  employee: Employee;
+  setEmployee: Dispatch<SetStateAction<Employee | null>>;
+}) {
   const [state, formAction, isPending] = useActionState(submitCheckIn, null);
 
   useEffect(() => {
     if (state?.error) toast.error(state.error);
     const checkin = state?.data;
-    if (checkin)
-      toast.success(`${checkin.employeeId} checkied in successfully`);
-  }, [state]);
+    if (checkin) {
+      toast.success(`${checkin.employee.fullName} checkied in successfully`);
+      setEmployee(null);
+    }
+  }, [state, setEmployee]);
 
   return (
     <form action={formAction}>
