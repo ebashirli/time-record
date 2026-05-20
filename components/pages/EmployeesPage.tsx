@@ -75,7 +75,6 @@ export const EmployeeCard = ({ employee }: { employee: Employee }) => {
   };
   return (
     <Card
-      asChild
       className={cn(
         "mx-auto w-full max-w-sm rounded-xl bg-muted/50 border-2 py-3",
         "transition-all hover:bg-accent hover:shadow-md cursor-pointer ",
