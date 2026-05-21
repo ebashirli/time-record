@@ -59,7 +59,7 @@ export default function EmployeeDetails({ employee }: Props) {
             <div className="flex flex-col md:flex-row gap-6">
               {employee.image && (
                 <Image
-                  src={employee.image}
+                  src={`/external-images/`+employee.image}
                   alt={employee.fullName ?? ""}
                   width={100}
                   height={100}

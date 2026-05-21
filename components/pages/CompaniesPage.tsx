@@ -43,7 +43,7 @@ export const CompanyCard = ({ company }: { company: Company }) => {
       <CardHeader>
         <Avatar className="h-8 w-8 rounded-lg">
           {company.logo && (
-            <AvatarImage src={company.logo} alt={company.name} />
+            <AvatarImage src={'/external-images/'+company.logo} alt={company.name} />
           )}
           <AvatarFallback className="rounded-lg">
             {company.name.at(0)}

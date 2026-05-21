@@ -44,3 +44,5 @@ next-env.d.ts
 *.exe
 data.csv
 certificates
+
+external-images/

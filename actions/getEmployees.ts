@@ -40,6 +40,7 @@ export async function getEmployees({
           id: true,
           fullName: true,
           cardId: true,
+          image: true,
           company: { select: { name: true } },
           department: { select: { name: true } },
           position: { select: { name: true } },
