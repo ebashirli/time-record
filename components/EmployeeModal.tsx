@@ -1,7 +1,6 @@
-// app/employees/@modal/(.)[id]/page.tsx
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -9,27 +8,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Employee } from "@/prisma/lib/generated/prisma/browser";
 
-export default function EditEmployeeModal() {
+export default function EmployeeModal({
+  employee,
+}: {
+  employee: Employee | null;
+}) {
   const router = useRouter();
-  const params = useParams();
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      router.back();
-    }
+    if (!open) router.push("/employees", { scroll: false });
   };
 
   return (
     <Dialog open={true} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle>Edit Employee #{params.id}</DialogTitle>
-          <DialogDescription>
-            {
-              "Make changes to the employee profile here. Click save when you're done."
-            }
-          </DialogDescription>
+          <DialogTitle>{employee?.fullName}</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="py-4">
           {/* <p>Editing form for employee {params.id} goes here.</p> */}

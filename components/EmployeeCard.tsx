@@ -11,11 +11,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { DeleteDialog } from "./DeleteDialog";
 import { Button } from "./ui/button";
 import { deleteEmployee } from "@/actions/deleteEmployee";
 import { QRGenerator } from "./QRGenerator";
+import { useRouter } from "next/navigation";
 
 type Employee = {
   id: string;
@@ -40,59 +40,68 @@ export const EmployeeCard = ({
   employee: Employee;
   setEmployees: React.Dispatch<React.SetStateAction<Employee[]>>;
 }) => {
+  const router = useRouter();
   const handlePropogation = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
   };
 
+  const handleClick = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    path?: string,
+  ) => {
+    router.push(`/employees/${employee.id}${path ?? ""}`, {
+      scroll: false,
+    });
+  };
+
   return (
     <Card
+      onClick={(e) => handleClick(e)}
       className={cn(
         "mx-auto w-full max-w-sm rounded-xl bg-muted/50 border-2 py-3",
         "transition-all hover:bg-accent hover:shadow-md cursor-pointer ",
       )}
     >
-      <Link href={`/employees/${employee.id}`}>
-        <CardHeader>
-          <div className="flex items-center gap-3 min-h-14 ">
-            <Avatar className="h-8 w-8 rounded-lg">
-              {employee && (
-                <AvatarImage
-                  src={employee.image}
-                  alt={employee.fullName ?? ""}
-                />
-              )}
-              <AvatarFallback className="rounded-lg">
-                {employee.fullName?.slice(0, 2).toLocaleUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <CardTitle>{employee.fullName}</CardTitle>
-          </div>
-          <CardDescription>{employee.position.name}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>{employee.company.name}</p>
-          <p>{employee.department?.name}</p>
-        </CardContent>
-        <Separator className="my-3" />
-        <CardFooter className="flex justify-end">
-          <div className="flex items-center gap-3" onClick={handlePropogation}>
-            <Button
-              asChild
-              variant={"outline"}
-              className="min-w-10 cursor-pointer "
-            >
-              <Pencil />
-            </Button>
-            <QRGenerator value={employee.cardId} />
-            <DeleteDialog
-              deleteAction={deleteEmployee}
-              id={employee.id}
-              setData={setEmployees}
-            />
-          </div>
-        </CardFooter>
-      </Link>
+      {/* <Link href={`/employees/${employee.id}`}> */}
+      <CardHeader>
+        <div className="flex items-center gap-3 min-h-14 ">
+          <Avatar className="h-8 w-8 rounded-lg">
+            {employee && (
+              <AvatarImage src={employee.image} alt={employee.fullName ?? ""} />
+            )}
+            <AvatarFallback className="rounded-lg">
+              {employee.fullName?.slice(0, 2).toLocaleUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <CardTitle>{employee.fullName}</CardTitle>
+        </div>
+        <CardDescription>{employee.position.name}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>{employee.company.name}</p>
+        <p>{employee.department?.name}</p>
+      </CardContent>
+      <Separator className="my-3" />
+      <CardFooter className="flex justify-end">
+        <div className="flex items-center gap-3" onClick={handlePropogation}>
+          <Button
+            onClick={(e) => handleClick(e, "/edit")}
+            type="button"
+            variant={"outline"}
+            className="min-w-10 cursor-pointer "
+          >
+            <Pencil />
+          </Button>
+          <QRGenerator value={employee.cardId} />
+          <DeleteDialog
+            deleteAction={deleteEmployee}
+            id={employee.id}
+            setData={setEmployees}
+          />
+        </div>
+      </CardFooter>
+      {/* </Link> */}
     </Card>
   );
 };
