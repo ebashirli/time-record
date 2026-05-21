@@ -9,11 +9,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Employee } from "@/prisma/lib/generated/prisma/browser";
+import EmployeeDetails from "./EmployeeDetails";
 
 export default function EmployeeModal({
   employee,
 }: {
-  employee: Employee | null;
+  employee:
+    | ({
+        department: {
+          id: string;
+          name: string;
+        };
+        position: {
+          id: string;
+          name: string;
+        };
+      } & Employee)
+    | null;
 }) {
   const router = useRouter();
 
@@ -28,9 +40,7 @@ export default function EmployeeModal({
           <DialogTitle>{employee?.fullName}</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          {/* <p>Editing form for employee {params.id} goes here.</p> */}
-        </div>
+        <EmployeeDetails employee={employee} />
       </DialogContent>
     </Dialog>
   );
