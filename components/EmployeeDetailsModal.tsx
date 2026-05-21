@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Edit, MapPin, Briefcase, Calendar } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { Employee } from "@/prisma/lib/generated/prisma/browser";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface EmployeeDetailsModalProps {
   employee:
@@ -48,13 +48,17 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           {/* Header with Image and Basic Info */}
           <div className="flex  gap-6">
             {employee.image && (
-              <Image
-                width={100}
-                height={100}
-                src={"/external-images/" + employee.image}
-                alt={employeeName}
-                className="w-32 h-32 rounded-lg object-cover shrink-0"
-              />
+              <Avatar className="h-8 w-8 rounded-lg">
+                {employee.image && (
+                  <AvatarImage
+                    src={"/external-images/" + employee.image}
+                    alt={"profile image" + (employee.fullName ?? "")}
+                  />
+                )}
+                <AvatarFallback className="rounded-lg">
+                  {employee.fullName?.slice(0, 2).toLocaleUpperCase()}
+                </AvatarFallback>
+              </Avatar>
             )}
             <div className="flex-1">
               <h2 className="text-2xl font-bold mb-2">{employeeName}</h2>

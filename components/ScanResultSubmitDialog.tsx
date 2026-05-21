@@ -16,7 +16,6 @@ import React, {
   useState,
   useTransition,
 } from "react";
-import Image from "next/image";
 import { LogIn, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -24,6 +23,7 @@ import { Spinner } from "./ui/spinner";
 import { Direction } from "@/prisma/lib/generated/prisma/browser";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type Employee = {
   id: string;
@@ -95,15 +95,17 @@ function EmployeeCard({ employee }: { employee: Employee }) {
   return (
     <div className="flex flex-col items-center gap-4">
       {employee.image && (
-        <Image
-          width={500}
-          height={500}
-          src={"/external-images/" + employee.image}
-          alt={
-            employee.fullName || `${employee.firstName} ${employee.lastName}`
-          }
-          className="w-24 h-24 rounded-full object-cover border-2 border-slate-200"
-        />
+        <Avatar className="h-8 w-8 rounded-lg">
+          {employee.image && (
+            <AvatarImage
+              src={"/external-images/" + employee.image}
+              alt={"profile image" + (employee.fullName ?? "")}
+            />
+          )}
+          <AvatarFallback className="rounded-lg">
+            {employee.fullName?.slice(0, 2).toLocaleUpperCase()}
+          </AvatarFallback>
+        </Avatar>
       )}
       <div className="text-center">
         <h3 className="font-semibold text-lg">{employee.fullName}</h3>
