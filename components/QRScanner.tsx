@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -12,7 +13,7 @@ import {
 import { Button } from "./ui/button";
 import { ScanResultSubmitDialog } from "./ScanResultSubmitDialog";
 
-export function QRScanner() {
+export function QRScanner({ children }: { children?: React.ReactElement }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [scannedCode, setScannedCode] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -85,13 +86,14 @@ export function QRScanner() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full max-w-md mx-auto">
+      <div className="flex flex-col gap-4 w-full max-w-md mx-auto mb-4">
         <Card>
           <CardHeader>
             <CardTitle>QR Code Scanner</CardTitle>
             <CardDescription>
               Point your camera at a QR code to scan it
             </CardDescription>
+            <CardAction>{children}</CardAction>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             {/* Video element for camera feed */}

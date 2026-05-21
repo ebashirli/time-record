@@ -8,9 +8,19 @@ import {
 import prisma from "@/lib/prisma";
 import { Badge } from "./ui/badge";
 import { Direction } from "@/prisma/lib/generated/prisma/browser";
+import { auth } from "@/lib/auth"; // Your Better Auth instance
+import { headers } from "next/headers";
 
 const LatestCheckins = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
+
   const checkins = await prisma.checkin.findMany({
+    where: {
+      checkedById: user?.id,
+    },
     orderBy: { createdAt: "desc" },
     take: 20,
     include: {

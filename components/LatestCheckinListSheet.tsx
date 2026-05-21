@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,7 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import LatestCheckins from "./LatestCheckins";
 
-export async function CustomSheet() {
+export async function LatestCheckinListSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild className="">
