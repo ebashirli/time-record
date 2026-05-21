@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
+import React, {
   Dispatch,
   SetStateAction,
   useActionState,
@@ -38,12 +38,11 @@ type Employee = {
 
 type Props = {
   cardId: string | null;
-  setPin: Dispatch<SetStateAction<string>>;
+  setIdCard: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-export function ScanResultSubmitDialog({ cardId, setPin }: Props) {
+export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
   // Step 1: Triggered immediately when QR code hits the lens
-
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -66,7 +65,8 @@ export function ScanResultSubmitDialog({ cardId, setPin }: Props) {
 
   function handleClose(open: boolean) {
     if (open) return;
-    setPin("");
+    setIdCard(null);
+    setEmployee(null);
   }
 
   return (
@@ -176,40 +176,4 @@ function InOutButton({
       {direction === Direction.OUT ? "Exit" : "Entry"}
     </Button>
   );
-}
-
-{
-  /* <Button
-disabled={isPending}
-value={Direction.IN}
-type="submit"
-name="direction"
-className={`py-4 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-3 font-semibold text-base ${
-// selectedStatus === "coming"
-//   ? "border-green-500 bg-green-50 text-green-900"
-//   :
-"border-slate-300 bg-white text-slate-700 hover:border-green-300 hover:bg-green-50"
-}`}
->
-<LogIn className="w-5 h-5" />
-Entry
-</Button> */
-}
-
-{
-  /* <Button
-disabled={isPending}
-value={Direction.OUT}
-type="submit"
-name="direction"
-className={`py-4 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-3 font-semibold text-base ${
-// selectedStatus === "going"
-//   ? "border-blue-500 bg-blue-50 text-blue-900"
-//   :
-"border-slate-300 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50"
-}`}
->
-<LogOut className="w-5 h-5" />
-Exit
-</Button>  */
 }

@@ -14,7 +14,7 @@ import { ScanResultSubmitDialog } from "./ScanResultSubmitDialog";
 
 export function QRScannerNew() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [scannedCode, setScannedCode] = useState<string>("");
+  const [scannedCode, setScannedCode] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string>("");
   const scannerRef = useRef<QrScanner | null>(null);
@@ -157,7 +157,7 @@ export function QRScannerNew() {
           </CardContent>
         </Card>
       </div>
-      <ScanResultSubmitDialog cardId={scannedCode} setPin={setScannedCode} />
+      <ScanResultSubmitDialog cardId={scannedCode} setIdCard={setScannedCode} />
     </>
   );
 }
