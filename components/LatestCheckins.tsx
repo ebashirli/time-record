@@ -1,3 +1,6 @@
+import { auth } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { headers } from "next/headers";
 import CheckinDetails from "./CheckinDetails";
 import {
   Accordion,
@@ -6,19 +9,33 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { Badge } from "./ui/badge";
-import { Checkin, Direction } from "@/prisma/lib/generated/prisma/browser";
+import { Direction } from "@/prisma/lib/generated/prisma/browser";
 
-type TCheckin = Checkin & {
-  employee: {
-    image: string | null;
-    fullName: string | null;
-    firstName: string | null;
-    lastName: string | null;
-    company: { name: string };
-  };
-};
+export const LatestCheckins = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const user = session?.user;
 
-export const LatestCheckins = ({ checkins }: { checkins: TCheckin[] }) => {
+  const checkins = await prisma.checkin.findMany({
+    where: {
+      checkedById: user?.id,
+    },
+    orderBy: { createdAt: "desc" },
+    take: 20,
+    include: {
+      employee: {
+        select: {
+          image: true,
+          fullName: true,
+          firstName: true,
+          lastName: true,
+          company: { select: { name: true } },
+        },
+      },
+    },
+  });
+
   return (
     <Accordion
       type="single"

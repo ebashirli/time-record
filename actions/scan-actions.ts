@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth"; // Your Better Auth instance
 import { headers } from "next/headers";
 import { Direction } from "@/prisma/lib/generated/prisma/enums";
+import { revalidatePath } from "next/cache";
 
 export async function getEmployeeByCardId(cardId: string) {
   if (!cardId) return { error: "Card ID not provided" };
@@ -57,6 +58,7 @@ export async function submitCheckIn(
       // include: { employee: true },
       select: { employee: { select: { fullName: true } }, id: true },
     });
+    revalidatePath("/scanner");
     return { data: checkin };
   } catch (error: unknown) {
     console.log({ error });
