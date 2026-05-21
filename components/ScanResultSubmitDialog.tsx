@@ -96,7 +96,9 @@ function EmployeeCard({ employee }: { employee: Employee }) {
     <div className="flex flex-col items-center gap-4">
       {employee.image && (
         <Image
-          src={'/external-images/'+employee.image}
+          width={500}
+          height={500}
+          src={"/external-images/" + employee.image}
           alt={
             employee.fullName || `${employee.firstName} ${employee.lastName}`
           }

@@ -12,7 +12,7 @@ import {
 import { Button } from "./ui/button";
 import { ScanResultSubmitDialog } from "./ScanResultSubmitDialog";
 
-export function QRScannerNew() {
+export function QRScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [scannedCode, setScannedCode] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);

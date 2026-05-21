@@ -1,10 +1,10 @@
 import { CustomSheet } from "@/components/CustomSheet";
-import { QRScannerNew } from "@/components/QRScannerNew";
+import { QRScanner } from "@/components/QRScanner";
 
 export default function ScannerPage() {
   return (
     <div className="flex flex-col h-full p-8 items-center ">
-      <QRScannerNew />
+      <QRScanner />
       <CustomSheet />
     </div>
   );
