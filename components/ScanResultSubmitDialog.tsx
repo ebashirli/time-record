@@ -9,8 +9,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import React, {
-  Dispatch,
-  SetStateAction,
   useActionState,
   useEffect,
   useState,
@@ -48,22 +46,18 @@ export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
 
   useEffect(() => {
     if (!cardId) return;
-    const handleScanSuccess = (scannedId: string) => {
+    const handleScanSuccess = (scanned: string) => {
       startTransition(async () => {
-        try {
-          const { data, error } = await getEmployeeByCardId(scannedId);
-          if (error) toast.error(error);
-          if (data) setEmployee(data as Employee);
-        } catch (err) {
-          console.log({ err });
-        }
+        const { data, error } = await getEmployeeByCardId(scanned);
+        if (error) toast.error(error);
+        if (data) setEmployee(data as Employee);
       });
     };
 
     handleScanSuccess(cardId);
   }, [cardId]);
 
-  function handleClose(open: boolean) {
+  function handleClose(open?: boolean) {
     if (open) return;
     setIdCard(null);
     setEmployee(null);
@@ -82,7 +76,7 @@ export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
           employee && (
             <div className="flex flex-col gap-6">
               <EmployeeCard employee={employee} />
-              <Form employee={employee} setEmployee={setEmployee} />
+              <Form employee={employee} reset={handleClose} />
             </div>
           )
         )}
@@ -118,10 +112,10 @@ function EmployeeCard({ employee }: { employee: Employee }) {
 
 function Form({
   employee,
-  setEmployee,
+  reset,
 }: {
   employee: Employee;
-  setEmployee: Dispatch<SetStateAction<Employee | null>>;
+  reset: (open?: boolean) => void;
 }) {
   const [state, formAction, isPending] = useActionState(submitCheckIn, null);
 
@@ -130,9 +124,9 @@ function Form({
     const checkin = state?.data;
     if (checkin) {
       toast.success(`${checkin.employee.fullName} checked in successfully`);
-      setEmployee(null);
+      reset();
     }
-  }, [state, setEmployee]);
+  }, [state, reset]);
 
   return (
     <form action={formAction}>

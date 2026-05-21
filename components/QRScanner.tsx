@@ -20,6 +20,7 @@ export function QRScanner() {
   const scannerRef = useRef<QrScanner | null>(null);
 
   useEffect(() => {
+    if (!!scannedCode) return; // Prevent re-initializing scanner when a code is scanned
     if (!videoRef.current) return;
 
     const startScanning = async () => {
@@ -61,7 +62,7 @@ export function QRScanner() {
         scannerRef.current.destroy();
       }
     };
-  }, []);
+  }, [scannedCode]);
 
   const handleStop = async () => {
     if (scannerRef.current) {
