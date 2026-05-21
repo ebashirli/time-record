@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import dayjs from "dayjs";
-import React from "react";
 
 const CheckinDetails = async ({ id }: { id: string }) => {
   const checkin = await prisma.checkin.findFirst({

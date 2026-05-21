@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,9 +9,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import LatestCheckins from "./LatestCheckins";
 
-export async function LatestCheckinListSheet() {
+export function CustomRightSheet({
+  children,
+}: {
+  children: React.ReactElement;
+}) {
   return (
     <Sheet>
       <SheetTrigger asChild className="">
@@ -28,9 +30,7 @@ export async function LatestCheckinListSheet() {
           <SheetTitle>Checkin list</SheetTitle>
           <SheetDescription>See last chekins here</SheetDescription>
         </SheetHeader>
-        <div className="no-scrollbar overflow-y-auto px-4">
-          <LatestCheckins />
-        </div>
+        <div className="no-scrollbar overflow-y-auto px-4">{children}</div>
         <SheetFooter>
           <SheetClose asChild>
             <Button variant="outline">Close</Button>

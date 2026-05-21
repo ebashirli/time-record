@@ -5,37 +5,20 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import prisma from "@/lib/prisma";
 import { Badge } from "./ui/badge";
-import { Direction } from "@/prisma/lib/generated/prisma/browser";
-import { auth } from "@/lib/auth"; // Your Better Auth instance
-import { headers } from "next/headers";
+import { Checkin, Direction } from "@/prisma/lib/generated/prisma/browser";
 
-const LatestCheckins = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const user = session?.user;
+type TCheckin = Checkin & {
+  employee: {
+    image: string | null;
+    fullName: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    company: { name: string };
+  };
+};
 
-  const checkins = await prisma.checkin.findMany({
-    where: {
-      checkedById: user?.id,
-    },
-    orderBy: { createdAt: "desc" },
-    take: 20,
-    include: {
-      employee: {
-        select: {
-          image: true,
-          fullName: true,
-          firstName: true,
-          lastName: true,
-          company: { select: { name: true } },
-        },
-      },
-    },
-  });
-
+export const LatestCheckins = ({ checkins }: { checkins: TCheckin[] }) => {
   return (
     <Accordion
       type="single"
@@ -61,8 +44,7 @@ const LatestCheckins = async () => {
               >
                 {checkin.direction}
               </Badge>
-              {checkin.employee.fullName ||
-                `${checkin.employee.firstName} ${checkin.employee.lastName}`}
+              {checkin.employee.fullName}
             </AccordionTrigger>
             <AccordionContent>
               <CheckinDetails id={checkin.id} />
@@ -73,5 +55,3 @@ const LatestCheckins = async () => {
     </Accordion>
   );
 };
-
-export default LatestCheckins;
