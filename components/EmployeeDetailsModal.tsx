@@ -1,5 +1,6 @@
 "use client";
 
+import { FaWhatsapp } from 'react-icons/fa';
 import {
   Dialog,
   DialogClose,
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Edit, MapPin, Briefcase, Calendar } from "lucide-react";
+import { Edit, MapPin, Briefcase, Calendar, PhoneCallIcon } from "lucide-react";
 import Link from "next/link";
 import { Employee } from "@/prisma/lib/generated/prisma/browser";
 import { useRouter } from "next/navigation";
@@ -37,6 +38,8 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
   const employeeName =
     employee.fullName || `${employee.firstName} ${employee.lastName}`;
 
+  const employeeBloodType  =   employee.bloodType?.replace("_POSITIVE","+").replace("_NEGATIVE","-").replace("_I"," (I").replace("_R",") R")
+
   return (
     <Dialog open={true} onOpenChange={handleOpenChange}>
       <DialogContent className="max-h-[70dvh] overflow-y-auto ">
@@ -48,7 +51,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           {/* Header with Image and Basic Info */}
           <div className="flex  gap-6">
             {employee.image && (
-              <Avatar className="rounded-lg">
+              <Avatar className="h-48 w-48 rounded-lg">
                 {employee.image && (
                   <AvatarImage
                     src={"/external-images/" + employee.image}
@@ -132,7 +135,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
               {employee.bloodType && (
                 <div>
                   <p className="text-muted-foreground">Blood Type</p>
-                  <p className="font-medium">{employee.bloodType}</p>
+                  <p className="font-medium">{employeeBloodType}</p>
                 </div>
               )}
             </div>
@@ -166,11 +169,21 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           {/* Contact Information */}
           <Card className="p-4">
             <h3 className="font-semibold">Contact Information</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid gap-4 text-sm">
               {employee.phoneNumber && (
                 <div>
                   <p className="text-muted-foreground">Phone Number</p>
-                  <p className="font-medium">{employee.phoneNumber}</p>
+                  <div className='flex gap-3 w-full'>
+
+                    <p className="font-medium">{employee.phoneNumber}</p>
+                    <Link href={"tel:"+employee.phoneNumber}>
+                      <PhoneCallIcon  size={20}/>
+                    </Link>
+                    <Link href={`https://api.whatsapp.com/send?phone=+${employee.phoneNumber.replace(" ","")}&text=-`} target='_blank'>
+                      <FaWhatsapp color="#25D366" size={20} />
+                    </Link>
+                  </div>
+
                 </div>
               )}
               {employee.emergencyPhoneNumber && (

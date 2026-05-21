@@ -95,7 +95,7 @@ function EmployeeCard({ employee }: { employee: Employee }) {
   return (
     <div className="flex flex-col items-center gap-4">
       {employee.image && (
-        <Avatar className="rounded-lg">
+        <Avatar className="h-36 w-36 rounded-lg">
           {employee.image && (
             <AvatarImage
               src={"/external-images/" + employee.image}
