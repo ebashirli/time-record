@@ -1,4 +1,4 @@
-import EmployeeModal from "@/components/EmployeeModal";
+import { EmployeeDetailsModal } from "@/components/EmployeeDetailsModal";
 import prisma from "@/lib/prisma";
 
 type Props = {
@@ -11,5 +11,5 @@ export default async function Page({ params }: Props) {
     where: { id },
     include: { position: true, department: true },
   });
-  return <EmployeeModal employee={employee} />;
+  return <EmployeeDetailsModal employee={employee} />;
 }
