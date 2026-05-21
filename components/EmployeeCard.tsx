@@ -47,13 +47,15 @@ export const EmployeeCard = ({
   };
 
   const handleClick = (
-    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    _: React.MouseEvent<HTMLElement, MouseEvent>,
     path?: string,
   ) => {
     router.push(`/employees/${employee.id}${path ?? ""}`, {
       scroll: false,
     });
   };
+
+  console.log(employee)
 
   return (
     <Card
@@ -67,8 +69,8 @@ export const EmployeeCard = ({
       <CardHeader>
         <div className="flex items-center gap-3 min-h-14 ">
           <Avatar className="h-8 w-8 rounded-lg">
-            {employee && (
-              <AvatarImage src={employee.image} alt={employee.fullName ?? ""} />
+            {employee.image && (
+              <AvatarImage src={'/api/images/'+employee.image} alt={"profile image" +(employee.fullName ?? "")} />
             )}
             <AvatarFallback className="rounded-lg">
               {employee.fullName?.slice(0, 2).toLocaleUpperCase()}
@@ -101,7 +103,6 @@ export const EmployeeCard = ({
           />
         </div>
       </CardFooter>
-      {/* </Link> */}
     </Card>
   );
 };

@@ -61,6 +61,8 @@ export default function EmployeeDetails({ employee }: Props) {
                 <Image
                   src={employee.image}
                   alt={employee.fullName ?? ""}
+                  width={100}
+                  height={100}
                   className="w-32 h-32 rounded-lg object-cover"
                 />
               )}
