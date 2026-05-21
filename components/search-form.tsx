@@ -16,13 +16,13 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
 
   const handleSearch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("query", term);
-    } else {
-      params.delete("query");
-    }
+    if (term) params.set("query", term);
+    else params.delete("query");
+
     replace(`${pathname}?${params.toString()}`);
   }, 500);
+
+  if (pathname === "/scanner") return null;
 
   return (
     <form {...props} onSubmit={(e) => e.preventDefault()}>
