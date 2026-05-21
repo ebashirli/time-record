@@ -95,7 +95,7 @@ function EmployeeCard({ employee }: { employee: Employee }) {
   return (
     <div className="flex flex-col items-center gap-4">
       {employee.image && (
-        <Avatar className="h-8 w-8 rounded-lg">
+        <Avatar className="rounded-lg">
           {employee.image && (
             <AvatarImage
               src={"/external-images/" + employee.image}
@@ -160,13 +160,11 @@ function InOutButton({
       name="direction"
       className={cn(
         "py-4 px-4 rounded-lg border-2 transition-all flex items-center justify-center gap-3 font-semibold text-base",
-        // selectedStatus === "going"
-        //   ? "border-blue-500 bg-blue-50 text-blue-900"
-        //   :,
-        // selectedStatus === "coming"
-        //   ? "border-green-500 bg-green-50 text-green-900"
-        //   :
-        "border-slate-300 bg-white text-slate-700",
+        direction === Direction.OUT
+          ? "border-blue-500 bg-blue-50 text-blue-900"
+          : direction === Direction.IN
+            ? "border-green-500 bg-green-50 text-green-900"
+            : "border-slate-300 bg-white text-slate-700",
         direction === Direction.OUT
           ? "hover:border-blue-300 hover:bg-blue-50"
           : "hover:border-green-300 hover:bg-green-50",
@@ -177,7 +175,7 @@ function InOutButton({
       ) : (
         <LogIn className="w-5 h-5" />
       )}
-      {direction === Direction.OUT ? "Exit" : "Entry"}
+      {direction === Direction.OUT ? "Çıxış" : "Giriş"}
     </Button>
   );
 }

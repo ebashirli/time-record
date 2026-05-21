@@ -23,7 +23,6 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   }, 500);
 
   if (pathname === "/scanner") return null;
-
   return (
     <form {...props} onSubmit={(e) => e.preventDefault()}>
       <div className="relative">

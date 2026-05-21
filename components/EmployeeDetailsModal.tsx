@@ -48,7 +48,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           {/* Header with Image and Basic Info */}
           <div className="flex  gap-6">
             {employee.image && (
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="rounded-lg">
                 {employee.image && (
                   <AvatarImage
                     src={"/external-images/" + employee.image}
