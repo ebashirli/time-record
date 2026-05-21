@@ -10,7 +10,7 @@ type Employee = {
   id: string;
   fullName: string | null;
   cardId: string;
-  image?: string;
+  image: string | null;
   position: {
     name: string;
   };

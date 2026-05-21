@@ -12,7 +12,7 @@ type Props<T extends I> = {
   getAction: (params: {
     page: number;
     limit: number;
-    query: null | string;
+    query: string | null;
   }) => Promise<{
     error?: string;
     success: boolean;

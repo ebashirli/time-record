@@ -6,13 +6,18 @@ import { Direction } from "@/prisma/lib/generated/prisma/enums";
 
 export async function getEmployeeByCardId(cardId: string) {
   if (!cardId) return { error: "Card ID not provided" };
-  const employee = await prisma.employee.findFirst({
-    where: { cardId },
-    include: { company: true, position: true, department: true },
-  });
 
-  if (!employee) return { error: "Employee not found" };
-  return { data: employee };
+  try {
+    const employee = await prisma.employee.findFirst({
+      where: { cardId },
+      include: { company: true, position: true, department: true },
+    });
+    if (!employee) return { error: "Employee not found" };
+    return { data: employee };
+  } catch (error) {
+    if (error instanceof Error) return { error: error.message };
+    return { error: "An error occurred while fetching employee data" };
+  }
 }
 
 type PrevState = {
