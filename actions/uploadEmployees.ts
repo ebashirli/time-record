@@ -33,6 +33,7 @@ type Row = {
   hireDate?: string;
   cardId: string;
   isActive?: string;
+  image?: string;
 };
 
 export async function uploadExcel(formData: FormData) {
@@ -63,16 +64,24 @@ export async function uploadExcel(formData: FormData) {
       return { success: false, error: "The excel file is empty." };
     }
 
-    const data = await Promise.all(
-      rawData.slice(1).map(async (row) => await proccessRow(row as Row)),
-    );
-
-    const batchPayload = await prisma.employee.createMany({ data });
-    if (!batchPayload?.count) return { error: "Something went wrong!" };
+    let processedCount = 0;
+    for (const row of rawData.slice(1)) {
+      try {
+        await processAndUpsertRow(row);
+        processedCount++;
+        if (processedCount % 100 === 0) console.log(`Count: ${processedCount}`);
+      } catch (rowError) {
+        console.error(
+          `Failed to process row for cardId ${row.cardId}:`,
+          rowError,
+        );
+        // You can choose to throw here or let the loop continue
+      }
+    }
 
     return {
       success: true,
-      message: `Successfully inserted ${batchPayload.count} rows.`,
+      message: `Successfully inserted ${processedCount} rows.`,
     };
   } catch (error) {
     console.log({ error });
@@ -100,8 +109,8 @@ const shift = {
 };
 
 const sex = {
-  MALE: Sex.FEMALE,
-  FEMALE: Sex.MALE,
+  MALE: Sex.MALE,
+  FEMALE: Sex.FEMALE,
 };
 
 const bloodType = {
@@ -121,44 +130,30 @@ const idCardSerie = {
   MYİ: IdCardSerie.MYI,
 };
 
-async function proccessRow(row: Row) {
-  // 2. Upsert Company and connect Work
-
-  console.log({
-    company: row.company,
-    position: row.position,
-    department: row.department,
-    isActive: row.isActive,
-  });
-
+async function processAndUpsertRow(row: Row) {
+  // 1. Upsert Company
   const company = await prisma.company.upsert({
     where: { name: row.company },
-    update: {
-      // works: {
-      //   connect: { id: work.id },
-      // },
-    },
+    update: {},
     create: { name: row.company },
-    // works: {
-    //   connect: { id: work.id },
-    // },
   });
-  // 3. Upsert Department
 
+  // 2. Upsert Department
   const department = await prisma.department.upsert({
     where: { name: row.department },
     update: {},
     create: { name: row.department },
   });
-  // 4. Upsert Position
+
+  // 3. Upsert Position
   const position = await prisma.position.upsert({
     where: { name: row.position },
     update: {},
     create: { name: row.position },
   });
-  // 5. Create Employee
 
-  const data = {
+  // 4. Map data object
+  const employeeData = {
     firstName: row.firstName,
     middleName: row.middleName,
     patronymic: row.patronymic,
@@ -170,7 +165,6 @@ async function proccessRow(row: Row) {
     phoneNumber: String(row.phoneNumber),
     emergencyPhoneNumber: row.emergencyPhoneNumber,
     hireDate: row.hireDate ? new Date(Date.parse(row.hireDate)) : undefined,
-    cardId: row.cardId,
     companyId: company.id,
     departmentId: department.id,
     positionId: position.id,
@@ -181,7 +175,17 @@ async function proccessRow(row: Row) {
     shift: shift[row.shift as keyof typeof shift],
     sex: sex[row.sex as keyof typeof sex],
     isActive: row.isActive === "TRUE",
+    image: row.image,
   };
 
-  return data;
+  // 5. Execute Upsert based on cardId
+  return await prisma.employee.upsert({
+    where: { cardId: row.cardId }, // Looks for existing employee by unique cardId
+    update: employeeData, // If found, update with new Excel details
+    create: {
+      // If not found, create new record
+      ...employeeData,
+      cardId: row.cardId, // cardId is required for creation
+    },
+  });
 }
