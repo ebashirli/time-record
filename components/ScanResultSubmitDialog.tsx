@@ -1,5 +1,6 @@
 "use client";
 
+import { Separator } from "@/components/ui/separator";
 import { getEmployeeByCardId, submitCheckIn } from "@/actions/scan-actions";
 import {
   Dialog,
@@ -22,6 +23,7 @@ import { Direction } from "@/prisma/lib/generated/prisma/browser";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 
 type Employee = {
   id: string;
@@ -106,13 +108,17 @@ function EmployeeCard({ employee }: { employee: Employee }) {
         <h3 className="font-semibold text-lg">{employee.fullName}</h3>
         <p className="text-xs text-slate-500">{employee.company.name}</p>
         <p className="text-sm text-slate-600">{employee.department.name}</p>
-        <p className="text-sm text-slate-600">
-          {employee.checkins.length
-            ? "Hazırda" + employee.checkins.at(0)?.direction === Direction.IN
-              ? "içəridə"
-              : "çöldədir"
-            : ""}
-        </p>
+        <Separator className="my-3" />
+        <div className="flex flex-col items-center ">
+          <p className="mb-2">Sonuncu hərəkət</p>
+          <Badge className="text-xl font-bold p-7 py-6 ">
+            {employee.checkins.length
+              ? employee.checkins.at(0)?.direction === Direction.IN
+                ? "Giriş"
+                : "Çıxış"
+              : "İlk dəfə"}
+          </Badge>
+        </div>
       </div>
     </div>
   );
