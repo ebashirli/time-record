@@ -1,14 +1,17 @@
-import EmployeesPage from "@/components/pages/EmployeesPage";
+import { EmployeesList } from "@/components/pages/EmployeesList";
+import { Spinner } from "@/components/ui/spinner";
+import { Suspense } from "react";
 
 type Props = {
   children: React.ReactNode;
-  modal: React.ReactNode;
 };
 
 export default function Layout({ children }: Props) {
   return (
     <div className="relative">
-      <EmployeesPage />
+      <Suspense fallback={<Spinner />}>
+        <EmployeesList />
+      </Suspense>
 
       {children}
     </div>

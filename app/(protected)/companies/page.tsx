@@ -1,11 +1,11 @@
-import CompaniesPage from "@/components/pages/CompaniesPage";
+import { CompaniesList } from "@/components/pages/CompaniesList";
+import { Spinner } from "@/components/ui/spinner";
+import { Suspense } from "react";
 
 export default async function Page() {
   return (
-    <div
-    //  className="max-h-[calc(100svh-var(--header-height))]!"
-    >
-      <CompaniesPage />
-    </div>
+    <Suspense fallback={<Spinner />}>
+      <CompaniesList />
+    </Suspense>
   );
 }

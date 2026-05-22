@@ -18,7 +18,7 @@ type Company = {
   works: { name: string }[];
 };
 
-const CompaniesPage = () => {
+export const CompaniesList = () => {
   const [companies, setCompanies] = React.useState<Company[]>([]);
 
   return (
@@ -32,8 +32,6 @@ const CompaniesPage = () => {
   );
 };
 
-export default CompaniesPage;
-
 export const CompanyCard = ({ company }: { company: Company }) => {
   return (
     <Card
@@ -43,7 +41,10 @@ export const CompanyCard = ({ company }: { company: Company }) => {
       <CardHeader>
         <Avatar className="h-8 w-8 rounded-lg">
           {company.logo && (
-            <AvatarImage src={'/external-images/'+company.logo} alt={company.name} />
+            <AvatarImage
+              src={"/external-images/" + company.logo}
+              alt={company.name}
+            />
           )}
           <AvatarFallback className="rounded-lg">
             {company.name.at(0)}
