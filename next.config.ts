@@ -9,14 +9,14 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb", // Set this to '2mb', '5mb', '10mb', etc.
     },
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: "/api/images/:filename",
-  //       destination: `${process.env.IMAGE_API_URL}/:filename`,
-  //     },
-  //   ];
-  // },
+  async rewrites() {
+    return [
+      {
+        source: "/api/images/:filename",
+        destination: `${process.env.IMAGE_API_URL}/:filename`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

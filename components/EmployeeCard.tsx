@@ -72,7 +72,7 @@ export const EmployeeCard = ({
             {employee.image && (
               <AvatarImage
                 src={"/api/images/" + employee.image}
-                alt={"profile image" + (employee.fullName ?? "")}
+                alt={"profile image: " + (employee.fullName ?? "")}
               />
             )}
             <AvatarFallback className="rounded-lg">
