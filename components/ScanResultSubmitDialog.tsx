@@ -95,7 +95,7 @@ function EmployeeCard({ employee }: { employee: Employee }) {
         <Avatar className="h-36 w-36 rounded-lg">
           {employee.image && (
             <AvatarImage
-              src={"/external-images/" + employee.image}
+              src={"/api/images/" + employee.image}
               alt={"profile image" + (employee.fullName ?? "")}
             />
           )}

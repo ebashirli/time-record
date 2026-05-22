@@ -71,7 +71,7 @@ export const EmployeeCard = ({
           <Avatar className="h-8 w-8 rounded-lg">
             {employee.image && (
               <AvatarImage
-                src={"/external-images/" + employee.image}
+                src={"/api/images/" + employee.image}
                 alt={"profile image" + (employee.fullName ?? "")}
               />
             )}

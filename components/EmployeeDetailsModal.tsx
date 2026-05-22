@@ -1,6 +1,6 @@
 "use client";
 
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp } from "react-icons/fa";
 import {
   Dialog,
   DialogClose,
@@ -38,7 +38,11 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
   const employeeName =
     employee.fullName || `${employee.firstName} ${employee.lastName}`;
 
-  const employeeBloodType  =   employee.bloodType?.replace("_POSITIVE","+").replace("_NEGATIVE","-").replace("_I"," (I").replace("_R",") R")
+  const employeeBloodType = employee.bloodType
+    ?.replace("_POSITIVE", "+")
+    .replace("_NEGATIVE", "-")
+    .replace("_I", " (I")
+    .replace("_R", ") R");
 
   return (
     <Dialog open={true} onOpenChange={handleOpenChange}>
@@ -54,7 +58,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
               <Avatar className="h-48 w-48 rounded-lg">
                 {employee.image && (
                   <AvatarImage
-                    src={"/external-images/" + employee.image}
+                    src={"/api/images/" + employee.image}
                     alt={"profile image" + (employee.fullName ?? "")}
                   />
                 )}
@@ -173,17 +177,18 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
               {employee.phoneNumber && (
                 <div>
                   <p className="text-muted-foreground">Phone Number</p>
-                  <div className='flex gap-3 w-full'>
-
+                  <div className="flex gap-3 w-full">
                     <p className="font-medium">{employee.phoneNumber}</p>
-                    <Link href={"tel:"+employee.phoneNumber}>
-                      <PhoneCallIcon  size={20}/>
+                    <Link href={"tel:" + employee.phoneNumber}>
+                      <PhoneCallIcon size={20} />
                     </Link>
-                    <Link href={`https://api.whatsapp.com/send?phone=+${employee.phoneNumber.replace(" ","")}&text=-`} target='_blank'>
+                    <Link
+                      href={`https://api.whatsapp.com/send?phone=+${employee.phoneNumber.replace(" ", "")}&text=-`}
+                      target="_blank"
+                    >
                       <FaWhatsapp color="#25D366" size={20} />
                     </Link>
                   </div>
-
                 </div>
               )}
               {employee.emergencyPhoneNumber && (

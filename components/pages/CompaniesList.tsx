@@ -42,7 +42,7 @@ export const CompanyCard = ({ company }: { company: Company }) => {
         <Avatar className="h-8 w-8 rounded-lg">
           {company.logo && (
             <AvatarImage
-              src={"/external-images/" + company.logo}
+              src={"/api/images/" + company.logo}
               alt={company.name}
             />
           )}
