@@ -11,7 +11,20 @@ export async function getEmployeeByCardId(cardId: string) {
   try {
     const employee = await prisma.employee.findFirst({
       where: { cardId },
-      include: { company: true, position: true, department: true },
+      include: {
+        company: true,
+        position: true,
+        department: true,
+        checkins: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+          select: {
+            direction: true,
+          },
+        },
+      },
     });
     if (!employee) return { error: "Employee not found" };
     return { data: employee };

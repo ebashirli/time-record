@@ -32,6 +32,7 @@ type Employee = {
   company: { name: string };
   position: { name: string };
   department: { name: string };
+  checkins: { direction: Direction }[];
 };
 
 type Props = {
@@ -105,6 +106,13 @@ function EmployeeCard({ employee }: { employee: Employee }) {
         <h3 className="font-semibold text-lg">{employee.fullName}</h3>
         <p className="text-xs text-slate-500">{employee.company.name}</p>
         <p className="text-sm text-slate-600">{employee.department.name}</p>
+        <p className="text-sm text-slate-600">
+          {employee.checkins.length
+            ? "Hazırda" + employee.checkins.at(0)?.direction === Direction.IN
+              ? "içəridə"
+              : "çöldədir"
+            : ""}
+        </p>
       </div>
     </div>
   );
