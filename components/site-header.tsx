@@ -14,6 +14,8 @@ import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { HomeIcon, PanelLeftIcon } from "lucide-react";
 import { SearchForm } from "@/components/search-form";
+import { Suspense } from "react";
+import { Spinner } from "./ui/spinner";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -57,7 +59,9 @@ export function SiteHeader() {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <SearchForm className="w-full sm:ml-auto sm:w-auto" />
+        <Suspense fallback={<Spinner />}>
+          <SearchForm className="w-full sm:ml-auto sm:w-auto" />
+        </Suspense>
       </div>
     </header>
   );

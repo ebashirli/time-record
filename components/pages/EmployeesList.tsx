@@ -22,7 +22,7 @@ type Employee = {
   };
 };
 
-const EmployeesPage = () => {
+export const EmployeesList = () => {
   const searchParams = useSearchParams();
 
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -49,5 +49,3 @@ const EmployeesPage = () => {
     </CustomInfiniteScroll>
   );
 };
-
-export default EmployeesPage;
