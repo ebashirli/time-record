@@ -1,25 +1,35 @@
+import {
+  BloodType,
+  Nationality,
+  Sex,
+  Shift,
+} from "@/prisma/lib/generated/prisma/browser";
 import { z } from "zod";
 
 // Enums matching your Prisma schema
 export const IdCardSerieEnum = z.enum(["AZE", "AA", "MYI"]);
 export const NationalityEnum = z.enum([
-  "Azerbaijan",
-  "Turkey",
-  "Russia",
-  "Other",
+  Nationality.AZERBAIJANI,
+  Nationality.TURKISH,
+  Nationality.RUSSIAN,
 ]);
-export const SexEnum = z.enum(["Male", "Female"]);
+export const SexEnum = z.enum([Sex.MALE, Sex.FEMALE]);
 export const BloodTypeEnum = z.enum([
-  "A_POSITIVE",
-  "A_NEGATIVE",
-  "B_POSITIVE",
-  "B_NEGATIVE",
-  "AB_POSITIVE",
-  "AB_NEGATIVE",
-  "O_POSITIVE",
-  "O_NEGATIVE",
+  BloodType.O_I_RH_POSITIVE,
+  BloodType.O_I_RH_NEGATIVE,
+  BloodType.A_II_RH_POSITIVE,
+  BloodType.A_II_RH_NEGATIVE,
+  BloodType.B_III_RH_POSITIVE,
+  BloodType.B_III_RH_NEGATIVE,
+  BloodType.AB_IV_RH_POSITIVE,
+  BloodType.AB_IV_RH_NEGATIVE,
 ]);
-export const ShiftEnum = z.enum(["Day", "Night", "Rotating"]);
+export const ShiftEnum = z.enum([
+  Shift.DAY,
+  Shift.EVENING,
+  Shift.NIGHT,
+  Shift.OFFICE,
+]);
 
 export const employeeFormSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(100),

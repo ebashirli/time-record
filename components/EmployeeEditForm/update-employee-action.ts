@@ -12,6 +12,11 @@ export async function updateEmployee(
   prevState: EmployeeFormState,
   formData: FormData,
 ): Promise<EmployeeFormState> {
+  console.log({
+    employeeId,
+    prevState,
+    formData,
+  });
   try {
     // Convert FormData to object
     const rawData = {
@@ -93,6 +98,9 @@ export async function updateEmployee(
     // Convert date strings to Date objects
     const updateData = {
       ...data,
+      sex: data.sex ? data.sex : null,
+      shift: data.shift ? data.shift : null,
+      bloodType: data.bloodType ? data.bloodType : null,
       birthDate: data.birthDate ? new Date(data.birthDate) : null,
       hireDate: data.hireDate ? new Date(data.hireDate) : null,
       terminationDate: data.terminationDate

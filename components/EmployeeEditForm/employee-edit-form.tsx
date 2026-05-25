@@ -25,6 +25,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { DialogClose } from "../ui/dialog";
+import {
+  BloodType,
+  Nationality,
+  Sex,
+} from "@/prisma/lib/generated/prisma/browser";
 
 interface Employee {
   id: string;
@@ -215,8 +221,8 @@ export function EmployeeEditForm({
                       <SelectValue placeholder="Select sex" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
+                      <SelectItem value={Sex.MALE}>Male</SelectItem>
+                      <SelectItem value={Sex.FEMALE}>Female</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -241,10 +247,15 @@ export function EmployeeEditForm({
                       <SelectValue placeholder="Select nationality" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Azerbaijan">Azerbaijan</SelectItem>
-                      <SelectItem value="Turkey">Turkey</SelectItem>
-                      <SelectItem value="Russia">Russia</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                      <SelectItem value={Nationality.AZERBAIJANI}>
+                        Azerbaijan
+                      </SelectItem>
+                      <SelectItem value={Nationality.TURKISH}>
+                        Turkey
+                      </SelectItem>
+                      <SelectItem value={Nationality.RUSSIAN}>
+                        Russia
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -259,14 +270,30 @@ export function EmployeeEditForm({
                       <SelectValue placeholder="Select blood type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="A_POSITIVE">A+</SelectItem>
-                      <SelectItem value="A_NEGATIVE">A-</SelectItem>
-                      <SelectItem value="B_POSITIVE">B+</SelectItem>
-                      <SelectItem value="B_NEGATIVE">B-</SelectItem>
-                      <SelectItem value="AB_POSITIVE">AB+</SelectItem>
-                      <SelectItem value="AB_NEGATIVE">AB-</SelectItem>
-                      <SelectItem value="O_POSITIVE">O+</SelectItem>
-                      <SelectItem value="O_NEGATIVE">O-</SelectItem>
+                      <SelectItem value={BloodType.O_I_RH_POSITIVE}>
+                        A+
+                      </SelectItem>
+                      <SelectItem value={BloodType.O_I_RH_NEGATIVE}>
+                        A-
+                      </SelectItem>
+                      <SelectItem value={BloodType.A_II_RH_POSITIVE}>
+                        B+
+                      </SelectItem>
+                      <SelectItem value={BloodType.A_II_RH_NEGATIVE}>
+                        B-
+                      </SelectItem>
+                      <SelectItem value={BloodType.B_III_RH_POSITIVE}>
+                        AB+
+                      </SelectItem>
+                      <SelectItem value={BloodType.B_III_RH_NEGATIVE}>
+                        AB-
+                      </SelectItem>
+                      <SelectItem value={BloodType.AB_IV_RH_POSITIVE}>
+                        O+
+                      </SelectItem>
+                      <SelectItem value={BloodType.AB_IV_RH_NEGATIVE}>
+                        O-
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -529,13 +556,15 @@ export function EmployeeEditForm({
       </Tabs>
 
       <div className="flex justify-end gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => window.history.back()}
-        >
-          Cancel
-        </Button>
+        <DialogClose asChild>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => window.history.back()}
+          >
+            Cancel
+          </Button>
+        </DialogClose>
         <SubmitButton />
       </div>
     </form>

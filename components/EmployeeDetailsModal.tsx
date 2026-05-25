@@ -1,28 +1,30 @@
 "use client";
 
 import { FaWhatsapp } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Employee } from "@/prisma/lib/generated/prisma/browser";
+
 import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { notFound, useRouter } from "next/navigation";
 import {
-  Edit,
-  MapPin,
   Briefcase,
   Calendar,
-  PhoneCallIcon,
+  Edit,
   Factory,
+  MapPin,
+  PhoneCallIcon,
 } from "lucide-react";
-import Link from "next/link";
-import { Employee } from "@/prisma/lib/generated/prisma/browser";
-import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Card } from "./ui/card";
 
 interface EmployeeDetailsModalProps {
   employee:
@@ -35,13 +37,13 @@ interface EmployeeDetailsModalProps {
 }
 
 export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
+  if (!employee) notFound();
+
   const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
     if (!open) router.push("/employees", { scroll: false });
   };
-
-  if (!employee) return null;
 
   const employeeName =
     employee.fullName || `${employee.firstName} ${employee.lastName}`;
@@ -52,16 +54,23 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
     .replace("_I", " (I")
     .replace("_R", ") R");
 
+  const phoneNumber = employee.phoneNumber
+    ?.replace(" ", "")
+    .replace("+", "")
+    .split("")
+    .map((n, i) => (i === 0 && n === "0" ? "994" : n))
+    .join("");
+
   return (
-    <Dialog open={true} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[70dvh] overflow-y-auto ">
+    <Dialog open={!!employee} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-fit">
         <DialogHeader>
           <DialogTitle>Employee Details</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-6">
+          <DialogDescription>
+            {/* This dialog has a sticky footer that stays visible while the content scrolls. */}
+          </DialogDescription>
           {/* Header with Image and Basic Info */}
-          <div className="flex  gap-6">
+          <div className="flex  gap-6  mb-4">
             {employee.image && (
               <Avatar className="h-48 w-48 rounded-lg">
                 {employee.image && (
@@ -109,9 +118,10 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
               </span>
             </div>
           </div>
-
+        </DialogHeader>
+        <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4 pb-8 grid grid-cols-3 gap-4 pt-4">
           {/* Personal Information */}
-          <Card className="p-4">
+          <Card className="p-4 mb-4 ">
             <h3 className="font-semibold">Personal Information</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -158,7 +168,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           </Card>
 
           {/* ID Information */}
-          <Card className="p-4">
+          <Card className="p-4 mb-4 ">
             <h3 className="font-semibold">ID Information</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               {employee.idCardSerie && (
@@ -183,7 +193,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           </Card>
 
           {/* Contact Information */}
-          <Card className="p-4">
+          <Card className="p-4 mb-4 ">
             <h3 className="font-semibold">Contact Information</h3>
             <div className="grid gap-4 text-sm">
               {employee.phoneNumber && (
@@ -195,7 +205,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
                       <PhoneCallIcon size={20} />
                     </Link>
                     <Link
-                      href={`https://api.whatsapp.com/send?phone=+${employee.phoneNumber.replace(" ", "")}&text=-`}
+                      href={`https://api.whatsapp.com/send?phone=+${phoneNumber}&text=-`}
                       target="_blank"
                     >
                       <FaWhatsapp color="#25D366" size={20} />
@@ -213,7 +223,7 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
           </Card>
 
           {/* Employment Information */}
-          <Card className="p-4">
+          <Card className="p-4 mb-4 ">
             <h3 className="font-semibold">Employment Information</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -246,20 +256,18 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
               )}
             </div>
           </Card>
-
-          {/* Action Buttons */}
-          <DialogFooter className="sm:justify-start">
-            <Button asChild>
-              <Link href={`/employees/${employee.id}/edit`}>
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
-              </Link>
-            </Button>
-            <DialogClose asChild>
-              <Button type="button">Close</Button>
-            </DialogClose>
-          </DialogFooter>
         </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Close</Button>
+          </DialogClose>
+          <Button asChild type="button">
+            <Link href={`/employees/${employee.id}/edit`}>
+              <Edit />
+              Edit
+            </Link>
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

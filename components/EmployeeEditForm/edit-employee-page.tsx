@@ -48,10 +48,8 @@ export default async function EditEmployeePage({ id }: PageProps) {
       <div className="container mx-auto">
         <DialogHeader>
           <div className="mb-8">
-            <DialogTitle>
-              <h1 className="text-3xl font-bold tracking-tight">
-                Edit Employee
-              </h1>
+            <DialogTitle className="text-3xl font-bold tracking-tight">
+              Edit Employee
             </DialogTitle>
             <DialogDescription>
               <p className="text-muted-foreground">

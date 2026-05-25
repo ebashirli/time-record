@@ -17,9 +17,7 @@ export function EmployeeEditModal({ open, children }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-dvw max-h-[90vh] overflow-y-auto">
-        {children}
-      </DialogContent>
+      <DialogContent className="sm:max-w-fit">{children}</DialogContent>
     </Dialog>
   );
 }
