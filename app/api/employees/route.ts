@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       limit,
     });
   } catch (error) {
-    console.log({ error });
+    console.error({ error });
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Something went wrong",

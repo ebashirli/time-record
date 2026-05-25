@@ -31,53 +31,97 @@ export const ShiftEnum = z.enum([
   Shift.OFFICE,
 ]);
 
-export const employeeFormSchema = z.object({
-  firstName: z.string().min(1, "First name is required").max(100),
-  middleName: z.string().max(100).optional().nullable(),
-  patronymic: z.string().max(100).optional().nullable(),
-  lastName: z.string().min(1, "Last name is required").max(100),
-  fullName: z.string().max(300).optional().nullable(),
+export const TabEnum = z.enum([
+  "personal",
+  "identification",
+  "employment",
+  "contact",
+]);
 
-  idCardSerie: IdCardSerieEnum.optional().nullable(),
-  idCardNo: z.string().max(50).optional().nullable(),
-  idCardPin: z
-    .string()
-    .min(7, "PIN must be at least 7 characters")
-    .max(20)
-    .regex(/^[A-Z0-9]+$/, "PIN must contain only uppercase letters and numbers")
-    .optional()
-    .nullable(),
+export const employeeFormSchema = z
+  .object({
+    tab: TabEnum,
 
-  nationality: NationalityEnum.optional().nullable(),
-  sex: SexEnum.optional().nullable(),
-  birthDate: z.string().optional().nullable(), // ISO date string
-  bloodType: BloodTypeEnum.optional().nullable(),
+    firstName: z.string().optional(),
+    middleName: z.string().optional(),
+    patronymic: z.string().optional(),
+    lastName: z.string().optional(),
+    fullName: z.string().optional(),
 
-  phoneNumber: z
-    .string()
-    .regex(/^[\d\s+()-]*$/, "Invalid phone number format")
-    .max(20)
-    .optional()
-    .nullable(),
-  emergencyPhoneNumber: z
-    .string()
-    .regex(/^[\d\s+()-]*$/, "Invalid phone number format")
-    .max(20)
-    .optional()
-    .nullable(),
+    idCardSerie: IdCardSerieEnum.optional().nullable(),
+    idCardNo: z.string().max(50).optional().nullable(),
+    idCardPin: z
+      .string()
+      .min(7, "PIN must be at least 7 characters")
+      .max(20)
+      .regex(
+        /^[A-Z0-9]+$/,
+        "PIN must contain only uppercase letters and numbers",
+      )
+      .optional()
+      .nullable(),
 
-  shift: ShiftEnum.optional().nullable(),
-  hireDate: z.string().optional().nullable(),
-  terminationDate: z.string().optional().nullable(),
+    nationality: NationalityEnum.optional().nullable(),
+    sex: SexEnum.optional().nullable(),
 
-  cardId: z.string().min(1, "Card ID is required").max(100),
+    birthDate: z.string().optional().nullable(), // ISO date string
+    bloodType: BloodTypeEnum.optional().nullable(),
 
-  departmentId: z.string().min(1, "Department is required"),
-  positionId: z.string().min(1, "Position is required"),
+    phoneNumber: z
+      .string()
+      .regex(/^[\d\s+()-]*$/, "Invalid phone number format")
+      .max(20)
+      .optional()
+      .nullable(),
+    emergencyPhoneNumber: z
+      .string()
+      .regex(/^[\d\s+()-]*$/, "Invalid phone number format")
+      .max(20)
+      .optional()
+      .nullable(),
 
-  image: z.string().optional().nullable(),
-  isActive: z.boolean().default(true),
-});
+    shift: ShiftEnum.optional().nullable(),
+    hireDate: z.string().optional().nullable(),
+    terminationDate: z.string().optional().nullable(),
+
+    cardId: z.string().optional(),
+
+    companyId: z.string().optional().nullable(),
+    departmentId: z.string().optional().nullable(),
+    positionId: z.string().optional().nullable(),
+
+    image: z.string().optional().nullable(),
+    isActive: z.boolean().default(true),
+  })
+  .superRefine((data, ctx) => {
+    const checkRequired = (
+      value: string | undefined | null,
+      fieldName: string,
+      label: string,
+    ) => {
+      if (!value || value.trim() === "") {
+        ctx.addIssue({
+          code: "custom",
+          message: `${label} is required`,
+          path: [fieldName],
+        });
+      }
+    };
+
+    if (data.tab === "personal") {
+      checkRequired(data.fullName, "fullName", "Full name");
+    }
+
+    if (data.tab === "employment") {
+      checkRequired(data.companyId, "companyId", "Company");
+      checkRequired(data.departmentId, "departmentId", "Department");
+      checkRequired(data.positionId, "positionId", "Position");
+    }
+
+    if (data.tab === "identification") {
+      checkRequired(data.cardId, "cardId", "Card ID");
+    }
+  });
 
 export type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
 
@@ -87,6 +131,7 @@ export type EmployeeFormState = {
     lastName?: string[];
     idCardPin?: string[];
     cardId?: string[];
+    companyId?: string[];
     departmentId?: string[];
     positionId?: string[];
     phoneNumber?: string[];

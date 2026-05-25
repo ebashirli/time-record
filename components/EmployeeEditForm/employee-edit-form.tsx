@@ -28,6 +28,7 @@ import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { DialogClose } from "../ui/dialog";
 import {
   BloodType,
+  IdCardSerie,
   Nationality,
   Sex,
 } from "@/prisma/lib/generated/prisma/browser";
@@ -53,9 +54,11 @@ interface Employee {
   terminationDate: Date | null;
   cardId: string;
   image: string | null;
-  departmentId: string;
-  positionId: string;
   isActive: boolean | null;
+
+  department: { name: string; id: string };
+  position: { name: string; id: string };
+  company: { name: string; id: string };
 }
 
 interface Department {
@@ -68,9 +71,15 @@ interface Position {
   name: string;
 }
 
+interface Company {
+  id: string;
+  name: string;
+}
+
 interface EmployeeEditFormProps {
   employee: Employee;
   departments: Department[];
+  companies: Company[];
   positions: Position[];
 }
 
@@ -93,6 +102,7 @@ function SubmitButton() {
 
 export function EmployeeEditForm({
   employee,
+  companies,
   departments,
   positions,
 }: EmployeeEditFormProps) {
@@ -143,6 +153,7 @@ export function EmployeeEditForm({
 
         {/* Personal Information */}
         <TabsContent value="personal">
+          <Input type="hidden" name="tab" value="personal" />
           <Card>
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
@@ -304,6 +315,7 @@ export function EmployeeEditForm({
 
         {/* Identification */}
         <TabsContent value="identification">
+          <Input type="hidden" name="tab" value="identification" />
           <Card>
             <CardHeader>
               <CardTitle>Identification Documents</CardTitle>
@@ -321,9 +333,9 @@ export function EmployeeEditForm({
                       <SelectValue placeholder="Select serie" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="AZE">AZE</SelectItem>
-                      <SelectItem value="AA">AA</SelectItem>
-                      <SelectItem value="MYX">MYX</SelectItem>
+                      <SelectItem value={IdCardSerie.AZE}>AZE</SelectItem>
+                      <SelectItem value={IdCardSerie.AA}>AA</SelectItem>
+                      <SelectItem value={IdCardSerie.MYI}>MYI</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -338,7 +350,7 @@ export function EmployeeEditForm({
                   />
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label htmlFor="idCardPin">ID Card PIN</Label>
                   <Input
                     id="idCardPin"
@@ -353,7 +365,7 @@ export function EmployeeEditForm({
                   )}
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label htmlFor="cardId">
                     Card ID <span className="text-red-500">*</span>
                   </Label>
@@ -376,6 +388,7 @@ export function EmployeeEditForm({
 
         {/* Employment Information */}
         <TabsContent value="employment">
+          <Input type="hidden" name="tab" value="employment" />
           <Card>
             <CardHeader>
               <CardTitle>Employment Details</CardTitle>
@@ -386,12 +399,35 @@ export function EmployeeEditForm({
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
+                  <Label htmlFor="companyId">
+                    Company <span className="text-red-500">*</span>
+                  </Label>
+                  <Select name="companyId" defaultValue={employee.company.id}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select department" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {companies.map((comp) => (
+                        <SelectItem key={comp.id} value={comp.id}>
+                          {comp.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {state.errors?.companyId && (
+                    <p className="text-sm text-red-500">
+                      {state.errors.companyId[0]}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="departmentId">
                     Department <span className="text-red-500">*</span>
                   </Label>
                   <Select
                     name="departmentId"
-                    defaultValue={employee.departmentId}
+                    defaultValue={employee.department.id}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select department" />
@@ -415,7 +451,7 @@ export function EmployeeEditForm({
                   <Label htmlFor="positionId">
                     Position <span className="text-red-500">*</span>
                   </Label>
-                  <Select name="positionId" defaultValue={employee.positionId}>
+                  <Select name="positionId" defaultValue={employee.position.id}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select position" />
                     </SelectTrigger>
@@ -499,6 +535,8 @@ export function EmployeeEditForm({
 
         {/* Contact Information */}
         <TabsContent value="contact">
+          <Input type="hidden" name="tab" value="contact" />
+
           <Card>
             <CardHeader>
               <CardTitle>Contact Information</CardTitle>
@@ -546,7 +584,7 @@ export function EmployeeEditForm({
                     id="image"
                     name="image"
                     defaultValue={employee.image || ""}
-                    placeholder="https://example.com/image.jpg"
+                    placeholder="iDCardNumber.jpg"
                   />
                 </div>
               </div>

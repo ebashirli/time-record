@@ -38,7 +38,6 @@ export function NavSection({
   // const { isMobile } = useSidebar();
 
   function handleClick(url?: string) {
-    console.log({ url });
     if (url === "#") {
       toast.dismiss();
       toast.info("Soon. Under construction 🚧", { position: "bottom-left" });

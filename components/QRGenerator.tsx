@@ -33,7 +33,6 @@ export function QRGenerator({ value }: { value?: string }) {
             "image/png": blob,
           }),
         ]);
-        console.log("QR Code copied to clipboard");
       } catch (err) {
         console.error("Failed to copy:", err);
       }

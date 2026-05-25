@@ -74,7 +74,7 @@ export async function submitCheckIn(
     revalidatePath("/scanner");
     return { data: checkin };
   } catch (error: unknown) {
-    console.log({ error });
+    console.error({ error });
     if (error instanceof Error) return { error: error.message };
     return { error: "Something happened" };
   }

@@ -11,6 +11,11 @@ interface PageProps {
 async function getEmployee(id: string) {
   const employee = await prisma.employee.findUnique({
     where: { id },
+    include: {
+      company: true,
+      department: true,
+      position: true,
+    },
   });
 
   if (!employee) {
@@ -18,6 +23,12 @@ async function getEmployee(id: string) {
   }
 
   return employee;
+}
+
+async function getCompanies() {
+  return await prisma.company.findMany({
+    orderBy: { name: "asc" },
+  });
 }
 
 async function getDepartments() {
@@ -33,8 +44,9 @@ async function getPositions() {
 }
 
 export default async function EditEmployeePage({ id }: PageProps) {
-  const [employee, departments, positions] = await Promise.all([
+  const [employee, companies, departments, positions] = await Promise.all([
     getEmployee(id),
+    getCompanies(),
     getDepartments(),
     getPositions(),
   ]);
@@ -51,11 +63,9 @@ export default async function EditEmployeePage({ id }: PageProps) {
             <DialogTitle className="text-3xl font-bold tracking-tight">
               Edit Employee
             </DialogTitle>
-            <DialogDescription>
-              <p className="text-muted-foreground">
-                Update employee information for {employee.firstName}{" "}
-                {employee.lastName}
-              </p>
+            <DialogDescription className="text-muted-foreground">
+              Update employee information for {employee.firstName}{" "}
+              {employee.lastName}
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -64,6 +74,7 @@ export default async function EditEmployeePage({ id }: PageProps) {
           employee={employee}
           departments={departments}
           positions={positions}
+          companies={companies}
         />
       </div>
     </EmployeeEditModal>

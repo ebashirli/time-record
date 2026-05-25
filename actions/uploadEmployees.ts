@@ -69,7 +69,8 @@ export async function uploadExcel(formData: FormData) {
       try {
         await processAndUpsertRow(row);
         processedCount++;
-        if (processedCount % 100 === 0) console.log(`Count: ${processedCount}`);
+        if (processedCount % 100 === 0)
+          console.info(`Count: ${processedCount}`);
       } catch (rowError) {
         console.error(
           `Failed to process row for cardId ${row.cardId}:`,
@@ -84,7 +85,7 @@ export async function uploadExcel(formData: FormData) {
       message: `Successfully inserted ${processedCount} rows.`,
     };
   } catch (error) {
-    console.log({ error });
+    console.error({ error });
     return {
       success: false,
       error:

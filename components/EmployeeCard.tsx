@@ -55,8 +55,6 @@ export const EmployeeCard = ({
     });
   };
 
-  console.log(employee);
-
   return (
     <Card
       onClick={(e) => handleClick(e)}

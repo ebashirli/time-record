@@ -12,36 +12,40 @@ export async function updateEmployee(
   prevState: EmployeeFormState,
   formData: FormData,
 ): Promise<EmployeeFormState> {
-  console.log({
-    employeeId,
-    prevState,
-    formData,
-  });
   try {
     // Convert FormData to object
+
     const rawData = {
-      firstName: formData.get("firstName"),
-      middleName: formData.get("middleName") || null,
-      patronymic: formData.get("patronymic") || null,
-      lastName: formData.get("lastName"),
-      fullName: formData.get("fullName") || null,
-      idCardSerie: formData.get("idCardSerie") || null,
-      idCardNo: formData.get("idCardNo") || null,
-      idCardPin: formData.get("idCardPin") || null,
-      nationality: formData.get("nationality") || null,
-      sex: formData.get("sex") || null,
-      birthDate: formData.get("birthDate") || null,
-      bloodType: formData.get("bloodType") || null,
-      phoneNumber: formData.get("phoneNumber") || null,
-      emergencyPhoneNumber: formData.get("emergencyPhoneNumber") || null,
-      shift: formData.get("shift") || null,
-      hireDate: formData.get("hireDate") || null,
-      terminationDate: formData.get("terminationDate") || null,
-      cardId: formData.get("cardId"),
-      departmentId: formData.get("departmentId"),
-      positionId: formData.get("positionId"),
-      image: formData.get("image") || null,
-      isActive: formData.get("isActive") === "true",
+      tab: formData.get("tab"),
+
+      firstName: formData.get("firstName") || undefined,
+      middleName: formData.get("middleName") || undefined,
+      patronymic: formData.get("patronymic") || undefined,
+      lastName: formData.get("lastName") || undefined,
+      fullName: formData.get("fullName") || undefined,
+
+      sex: formData.get("sex") || undefined,
+      nationality: formData.get("nationality") || undefined,
+
+      birthDate: formData.get("birthDate") || undefined,
+      bloodType: formData.get("bloodType") || undefined,
+
+      idCardSerie: formData.get("idCardSerie") || undefined,
+      idCardNo: formData.get("idCardNo") || undefined,
+      idCardPin: formData.get("idCardPin") || undefined,
+      cardId: formData.get("cardId") || undefined,
+
+      companyId: formData.get("companyId") || undefined,
+      departmentId: formData.get("departmentId") || undefined,
+      positionId: formData.get("positionId") || undefined,
+      shift: formData.get("shift") || undefined,
+      hireDate: formData.get("hireDate") || undefined,
+      terminationDate: formData.get("terminationDate") || undefined,
+      isActive: formData.get("isActive") || undefined,
+
+      phoneNumber: formData.get("phoneNumber") || undefined,
+      emergencyPhoneNumber: formData.get("emergencyPhoneNumber") || undefined,
+      image: formData.get("image") || undefined,
     };
 
     // Validate with Zod
@@ -51,6 +55,7 @@ export async function updateEmployee(
       return {
         errors: validatedFields.error.flatten().fieldErrors,
         message: "Validation failed. Please check the form.",
+        // rawData,
         success: false,
       };
     }
@@ -58,54 +63,53 @@ export async function updateEmployee(
     const data = validatedFields.data;
 
     // Check if idCardPin is unique (excluding current employee)
-    if (data.idCardPin) {
-      const existingEmployee = await prisma.employee.findFirst({
-        where: {
-          idCardPin: data.idCardPin,
-          NOT: { id: employeeId },
-        },
-      });
 
-      if (existingEmployee) {
-        return {
-          errors: {
-            idCardPin: ["This ID Card PIN is already in use"],
-          },
-          message: "ID Card PIN must be unique",
-          success: false,
-        };
-      }
-    }
-
-    // Check if cardId is unique (excluding current employee)
-    const existingCard = await prisma.employee.findFirst({
+    const employee = await prisma.employee.findUnique({
       where: {
-        cardId: data.cardId,
-        NOT: { id: employeeId },
+        id: employeeId,
       },
     });
 
-    if (existingCard) {
+    if (!employee)
       return {
-        errors: {
-          cardId: ["This Card ID is already in use"],
-        },
-        message: "Card ID must be unique",
+        errors: {},
+        message: "Employee not found",
         success: false,
       };
-    }
+
+    // // Check if cardId is unique (excluding current employee)
+    // const existingCard = await prisma.employee.findFirst({
+    //   where: {
+    //     cardId: data.cardId ,
+    //     NOT: { id: employeeId },
+    //   },
+    // });
+
+    // if (existingCard) {
+    //   return {
+    //     errors: {
+    //       cardId: ["This Card ID is already in use"],
+    //     },
+    //     message: "Card ID must be unique",
+    //     success: false,
+    //   };
+    // }
 
     // Convert date strings to Date objects
     const updateData = {
       ...data,
-      sex: data.sex ? data.sex : null,
-      shift: data.shift ? data.shift : null,
-      bloodType: data.bloodType ? data.bloodType : null,
-      birthDate: data.birthDate ? new Date(data.birthDate) : null,
-      hireDate: data.hireDate ? new Date(data.hireDate) : null,
+      tab: undefined,
+      sex: data.sex ? data.sex : undefined,
+      shift: data.shift ? data.shift : undefined,
+      bloodType: data.bloodType ? data.bloodType : undefined,
+      birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
+      hireDate: data.hireDate ? new Date(data.hireDate) : undefined,
       terminationDate: data.terminationDate
         ? new Date(data.terminationDate)
         : null,
+      companyId: data.companyId ?? undefined,
+      departmentId: data.departmentId ?? undefined,
+      positionId: data.positionId ?? undefined,
     };
 
     // Update employee in database
