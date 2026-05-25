@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "images": "bunx serve . -p 8000",
     "dev": "next dev --experimental-https",
     "start": "NODE_ENV=production node server.ts",
     "dev:https": "node server.js",

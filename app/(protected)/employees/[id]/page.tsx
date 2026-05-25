@@ -9,7 +9,7 @@ export default async function Page({ params }: Props) {
   const { id } = await params;
   const employee = await prisma.employee.findUnique({
     where: { id },
-    include: { position: true, department: true },
+    include: { position: true, department: true, company: true },
   });
   return <EmployeeDetailsModal employee={employee} />;
 }

@@ -11,7 +11,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Edit, MapPin, Briefcase, Calendar, PhoneCallIcon } from "lucide-react";
+import {
+  Edit,
+  MapPin,
+  Briefcase,
+  Calendar,
+  PhoneCallIcon,
+  Factory,
+} from "lucide-react";
 import Link from "next/link";
 import { Employee } from "@/prisma/lib/generated/prisma/browser";
 import { useRouter } from "next/navigation";
@@ -22,6 +29,7 @@ interface EmployeeDetailsModalProps {
     | (Employee & {
         position: { id: string; name: string };
         department: { id: string; name: string };
+        company: { id: string; name: string };
       })
     | null;
 }
@@ -71,12 +79,16 @@ export function EmployeeDetailsModal({ employee }: EmployeeDetailsModalProps) {
               <h2 className="text-2xl font-bold mb-2">{employeeName}</h2>
               <div className="space-y-2 text-sm text-muted-foreground mb-4">
                 <div className="flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 shrink-0" />
-                  <span>{employee.position.name}</span>
+                  <Factory className="w-4 h-4 shrink-0" />
+                  <span>{employee.company.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 shrink-0" />
                   <span>{employee.department.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 shrink-0" />
+                  <span>{employee.position.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 shrink-0" />
