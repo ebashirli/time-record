@@ -21,11 +21,18 @@ import Link from "next/link";
 import * as React from "react";
 import { Suspense } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Control, Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./ui/button";
 import { signIn } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "./ui/input-group";
 
 const formSchema = z.object({
   email: z.email("Invalid email address."),
@@ -83,28 +90,7 @@ function SignInFormInner({ className, ...props }: React.ComponentProps<"div">) {
                   );
                 }}
               />
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => {
-                  return (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="password">Password</FieldLabel>
-                      <Input
-                        {...field}
-                        id="password"
-                        type="password"
-                        required
-                        aria-invalid={fieldState.invalid}
-                        placeholder="••••••••"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  );
-                }}
-              />
+              <PasswordField control={form.control} />
               <Field>
                 <Button type="submit">Login</Button>
                 <FieldDescription className="text-center">
@@ -125,5 +111,62 @@ export function SignInForm(props: React.ComponentProps<"div">) {
     <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
       <SignInFormInner {...props} />
     </Suspense>
+  );
+}
+
+function PasswordField({
+  control,
+}: {
+  control: Control<z.infer<typeof formSchema>>;
+}) {
+  const [showPassword, setShowPassword] = React.useState(false);
+  return (
+    <Controller
+      name="password"
+      control={control}
+      render={({ field, fieldState }) => {
+        return (
+          // <Field data-invalid={fieldState.invalid}>
+          //   <FieldLabel htmlFor="password">Password</FieldLabel>
+          //   <Input
+          //     {...field}
+          //     id="password"
+          //     type="password"
+          //     required
+          //     aria-invalid={fieldState.invalid}
+          //     placeholder="••••••••"
+          //   />
+          //   {fieldState.invalid && (
+          //     <FieldError errors={[fieldState.error]} />
+          //   )}
+          // </Field>
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <InputGroup>
+              <InputGroupInput
+                {...field}
+                type={showPassword ? "text" : "password"}
+                required
+                aria-invalid={fieldState.invalid}
+                id="password"
+                placeholder="••••••••"
+              />
+              <InputGroupAddon>
+                <InputGroupText></InputGroupText>
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                <Button
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  variant="ghost"
+                >
+                  {showPassword ? <EyeClosedIcon /> : <EyeIcon />}
+                </Button>
+              </InputGroupAddon>
+            </InputGroup>
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        );
+      }}
+    />
   );
 }
