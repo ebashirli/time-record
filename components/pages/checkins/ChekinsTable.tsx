@@ -10,7 +10,6 @@ import { Direction } from "@/prisma/lib/generated/prisma/enums";
 
 export const CheckinsTable = async () => {
   const checkins = await getCheckins({});
-  console.dir(checkins, { depth: null });
   // const searchParams = useSearchParams();
 
   // const [checkins, setCheckins] = useState<Checkin[]>([]);

@@ -2,16 +2,17 @@
 
 import prisma from "@/lib/prisma";
 
-export async function getCheckins({
-  // limit = 20,
-  // page = 1,
-  query,
-}: {
-  limit?: number;
-  page?: number;
-  query?: null | string;
-}) {
-  console.log({ query });
+export async function getCheckins(
+  {
+    // limit = 20,
+    // page = 1,
+    // query,
+  }: {
+    limit?: number;
+    page?: number;
+    query?: null | string;
+  },
+) {
   try {
     const [data, total] = await Promise.all([
       prisma.checkin.findMany({
