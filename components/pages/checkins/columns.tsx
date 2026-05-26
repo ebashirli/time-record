@@ -12,6 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 //   DropdownMenuTrigger,
 // } from "@/components/ui/dropdown-menu";
 import { CheckinRow } from "./types";
+import dayjs from "dayjs";
 
 export const columns: ColumnDef<CheckinRow>[] = [
   {
@@ -41,15 +42,17 @@ export const columns: ColumnDef<CheckinRow>[] = [
   },
   {
     accessorKey: "dateTime",
-    header: () => <div className="">Date/Time</div>,
+    header: () => <div className="text-right">Date/Time</div>,
     cell: ({ row }) => {
-      const dateTime = Date.parse(row.getValue("dateTime"));
+      const dateTime = dayjs(Date.parse(row.getValue("dateTime"))).format(
+        "HH:mm",
+      );
       // const formatted = new Intl.NumberFormat("en-US", {
       //   style: "currency",
       //   currency: "USD",
       // }).format(amount);
 
-      return <div className=" font-medium">{dateTime}</div>;
+      return <div className="text-right font-medium">{dateTime}</div>;
     },
   },
   {
