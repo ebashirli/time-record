@@ -72,6 +72,7 @@ export async function submitCheckIn(
       select: { employee: { select: { fullName: true } }, id: true },
     });
     revalidatePath("/scanner");
+    revalidatePath("/attendance-tracking-system");
     return { data: checkin };
   } catch (error: unknown) {
     console.error({ error });

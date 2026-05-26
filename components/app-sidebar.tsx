@@ -50,7 +50,7 @@ const data = {
     },
     {
       title: "Attendance Tracking System",
-      url: "#",
+      url: "/attendance-tracking-system",
       icon: <ChartBarIcon />,
     },
     {

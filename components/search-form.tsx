@@ -22,7 +22,8 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
     replace(`${pathname}?${params.toString()}`);
   }, 500);
 
-  if (pathname === "/scanner") return null;
+  if (!["/employees", "/companies"].includes(pathname)) return null;
+
   return (
     <form {...props} onSubmit={(e) => e.preventDefault()}>
       <div className="relative">
