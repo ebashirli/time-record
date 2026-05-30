@@ -175,7 +175,7 @@ async function processAndUpsertRow(row: Row) {
     nationality: nationality[row.nationality as keyof typeof nationality],
     shift: shift[row.shift as keyof typeof shift],
     sex: sex[row.sex as keyof typeof sex],
-    isActive: row.isActive ? row.isActive !== "TRUE" : undefined,
+    isActive: row.isActive ? row.isActive === "TRUE" : undefined,
     image: row.image,
   };
 
