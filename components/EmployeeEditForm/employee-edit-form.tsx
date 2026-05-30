@@ -32,6 +32,7 @@ import {
   Nationality,
   Sex,
 } from "@/prisma/lib/generated/prisma/browser";
+import { FormSelectField } from "../FormSelectField";
 
 interface Employee {
   id: string;
@@ -398,54 +399,32 @@ export function EmployeeEditForm({
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="companyId">
-                    Company <span className="text-red-500">*</span>
-                  </Label>
-                  <Select name="companyId" defaultValue={employee.company.id}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {companies.map((comp) => (
-                        <SelectItem key={comp.id} value={comp.id}>
-                          {comp.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {state.errors?.companyId && (
-                    <p className="text-sm text-red-500">
-                      {state.errors.companyId[0]}
-                    </p>
-                  )}
-                </div>
+                <FormSelectField
+                  items={companies}
+                  errors={state.errors}
+                  name="companyId"
+                  label="Company"
+                  required
+                  defaultValue={employee.company.id}
+                />
 
-                <div className="space-y-2">
-                  <Label htmlFor="departmentId">
-                    Department <span className="text-red-500">*</span>
-                  </Label>
-                  <Select
-                    name="departmentId"
-                    defaultValue={employee.department.id}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept.id} value={dept.id}>
-                          {dept.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {state.errors?.departmentId && (
-                    <p className="text-sm text-red-500">
-                      {state.errors.departmentId[0]}
-                    </p>
-                  )}
-                </div>
+                <FormSelectField
+                  items={departments}
+                  errors={state.errors}
+                  name="departmentId"
+                  label="Department"
+                  required
+                  defaultValue={employee.department.id}
+                />
+
+                <FormSelectField
+                  items={positions}
+                  errors={state.errors}
+                  name="positionId"
+                  label="Position"
+                  required
+                  defaultValue={employee.position.id}
+                />
 
                 <div className="space-y-2">
                   <Label htmlFor="positionId">
