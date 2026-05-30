@@ -17,18 +17,27 @@ export async function getEmployees({
           { isActive: { not: false } },
           {
             OR: [
-              {
-                fullName: {
+              ...[
+                "firstName",
+                "middleName",
+                "patronymic",
+                "lastName",
+                "fullName",
+                "idCardNo",
+                "idCardPin",
+                "phoneNumber",
+                "emergencyPhoneNumber",
+                "cardId",
+                "image",
+                "companyId",
+                "departmentId",
+                "positionId",
+              ].map((field) => ({
+                [field]: {
                   contains: query,
                   mode: "insensitive" as const,
                 },
-              },
-              {
-                cardId: {
-                  contains: query,
-                  mode: "insensitive" as const,
-                },
-              },
+              })),
             ],
           },
         ],
