@@ -23,6 +23,12 @@ export async function getEmployees({
                   mode: "insensitive" as const,
                 },
               },
+              {
+                cardId: {
+                  contains: query,
+                  mode: "insensitive" as const,
+                },
+              },
             ],
           },
         ],
