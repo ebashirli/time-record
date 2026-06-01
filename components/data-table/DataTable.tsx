@@ -32,7 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "../ui/input";
-// import { DateTimePicker } from "../DateTimePicker";
+import { DateTimePicker } from "../DateTimePicker";
 // import { SearchForm } from "../search-form";
 import ExcelDownload from "../ExcelDownload";
 
@@ -84,15 +84,15 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
 
-        {/* 
         <div className="flex items-center space-x-2">
+          {/* 
           <React.Suspense fallback={<Spinner />}> 
         <SearchForm className="" />
         </React.Suspense>
-        <DateTimePicker name="from" />
-          <DateTimePicker name="to" /> 
+        */}
+          <DateTimePicker name="from" />
+          <DateTimePicker name="to" />
         </div>
-          */}
 
         <div className="flex items-center space-x-2">
           <ExcelDownload />

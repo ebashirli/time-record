@@ -1,9 +1,13 @@
 import { CheckinsTable } from "@/components/pages/checkins/ChekinsTable";
+import { Spinner } from "@/components/ui/spinner";
+import { Suspense } from "react";
 
 export default async function Page() {
   return (
-    <main className="">
-      <CheckinsTable />
-    </main>
+    <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<Spinner />}>
+        <CheckinsTable />
+      </Suspense>
+    </Suspense>
   );
 }
