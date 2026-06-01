@@ -5,9 +5,7 @@ import { Suspense } from "react";
 export default async function Page() {
   return (
     <Suspense fallback={<Spinner />}>
-      <Suspense fallback={<Spinner />}>
-        <CheckinsTable />
-      </Suspense>
+      <CheckinsTable />
     </Suspense>
   );
 }
