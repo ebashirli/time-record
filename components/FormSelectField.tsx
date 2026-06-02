@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 type Option = {
   id: string;
-  name: string;
+  name: string | null;
 };
 
 type Props<T extends Option> = {

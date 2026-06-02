@@ -35,7 +35,7 @@ export async function getUsers(paramsString?: string) {
         },
         orderBy: { name: "asc" },
       }),
-      // prisma.users.count({ where }),
+      prisma.user.count({}),
     ]);
     return { success: true, data, total };
   } catch (error) {
