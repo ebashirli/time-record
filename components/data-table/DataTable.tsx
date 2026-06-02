@@ -81,8 +81,8 @@ export function DataTable<TData, TValue>({
   const { rows } = table.getRowModel();
 
   return (
-    <div className="px-4">
-      <div className="grid md:flex items-center justify-between my-2">
+    <div className="px-2 h-full flex flex-col ">
+      <div className="grid md:flex items-center justify-between my-2 ">
         {filters}
 
         <div className="flex items-center gap-2 mt-2 md:mt-0 w-fit">
@@ -90,63 +90,58 @@ export function DataTable<TData, TValue>({
           {/* <ColumnSelector columns={columnsRefs} /> */}
         </div>
       </div>
-      <div className="overflow-hidden rounded-md border">
-        <div className="max-h-[70vh]">
-          <Table>
-            <TableHeader className="sticky top-0 z-10 bg-muted">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+      <div className="overflow-hidden rounded-md border grow">
+        <Table className="max-h-full">
+          <TableHeader className="sticky top-0 z-10 bg-muted">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody className="overflow-y-scroll">
+            {rows?.length ? (
+              rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className=""
+                >
+                  {row.getVisibleCells().map((cell) => {
                     return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
                     );
                   })}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {rows?.length ? (
-                rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center border"
-                  >
-                    {!!loading ? (
-                      <Spinner className="mx-auto" />
-                    ) : (
-                      "No results."
-                    )}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center border"
+                >
+                  {!!loading ? <Spinner className="mx-auto" /> : "No results."}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

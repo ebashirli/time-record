@@ -28,13 +28,15 @@ export const CheckinsTable = () => {
   }, [searchParams]);
 
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      loading={isPending}
-      filters={<Filters />}
-      actions={<ExcelDownload />}
-    />
+    <div className="w-full h-[calc(100vh-var(--header-height)-var(--spacing)*4.5)] overflow-clip">
+      <DataTable
+        columns={columns}
+        data={data}
+        loading={isPending}
+        filters={<Filters />}
+        actions={<ExcelDownload />}
+      />
+    </div>
   );
 };
 
