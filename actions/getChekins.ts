@@ -62,20 +62,22 @@ export async function getCheckins(
     const page = parseInt(params.get("page") || "0", 10);
     const limitParam = params.get("limit");
     const limit = limitParam ? parseInt(limitParam, 10) : null;
-    const paginate = limit !== null;
+    // const paginate = limit !== null;
+    const paginate = false;
 
     const [data, total] = await Promise.all([
       prisma.checkin.findMany({
         where,
         orderBy: { dateTime: "desc" },
         select: checkinSelect,
-        ...(paginate && { skip: limit * page, take: limit }),
+        // ...(paginate && { skip: limit * page, take: limit }),
       }),
       prisma.checkin.count({ where }),
     ]);
 
     const result: CheckinRow[] =
-      data?.map((checkin) => ({
+      data?.map((checkin, i) => ({
+        "#": i + 1 + (paginate ? page * limit : 0),
         id: checkin.id,
         fullName: checkin.employee.fullName || "Unknown Employee",
         companyName: checkin.employee.company.name || "Unknown Company",
