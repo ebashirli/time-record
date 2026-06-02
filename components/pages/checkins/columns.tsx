@@ -63,15 +63,11 @@ export const columns: ColumnDef<CheckinRow>[] = [
   },
   {
     accessorKey: "dateTime",
-    header: () => <div className="text-right">Date/Time</div>,
+    header: () => <div className="text-center">Date/Time</div>,
     cell: ({ row }) => {
       const dateTime = dayjs(Date.parse(row.getValue("dateTime"))).format(
-        "HH:mm",
+        "DD/MM/YYYY HH:mm",
       );
-      // const formatted = new Intl.NumberFormat("en-US", {
-      //   style: "currency",
-      //   currency: "USD",
-      // }).format(amount);
 
       return <div className="text-right font-medium">{dateTime}</div>;
     },
