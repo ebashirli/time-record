@@ -1,11 +1,13 @@
 "use client";
 
+import { Direction } from "@/prisma/lib/generated/prisma/browser";
 import React, { useState, useTransition, useEffect } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { columns } from "./columns";
 import { useSearchParams } from "next/navigation";
 import { getCheckins } from "@/actions/getChekins";
 import { getCompanies } from "@/actions/getCompanies";
+import { getUsers } from "@/actions/getUsers";
 import { DateTimePicker } from "@/components/DateTimePicker";
 import ExcelDownload from "@/components/ExcelDownload";
 import { FormSelectField } from "@/components/FormSelectField";
@@ -50,13 +52,30 @@ function Filters() {
   }
 
   return (
-    <div className="grid md:grid-cols-4 gap-2 w-fit">
+    <div className="flex flex-col md:flex-row w-fit gap-2">
       <SearchForm />
       <FormSelectField
         name="companyId"
         getItems={getCompanies}
+        placeholder="By company"
+        isFilter
+      />
+
+      <FormSelectField
+        items={[
+          { id: Direction.IN, name: "Giriş" },
+          { id: Direction.OUT, name: "Çıxış" },
+        ]}
+        name="direction"
+        placeholder="By direction"
+        isFilter
+      />
+
+      <FormSelectField
+        name="checkedById"
+        getItems={getUsers}
         required
-        placeholder="Filter by company"
+        placeholder="By terminal"
         isFilter
       />
       <DateTimePicker name="from" defaultValue={getYesterday()} />

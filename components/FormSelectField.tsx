@@ -70,7 +70,7 @@ export const FormSelectField = <T extends Option>({
   };
 
   return (
-    <div className="space-y-2 ">
+    <div className="space-y-2 w-44">
       {label && (
         <Label htmlFor={name}>
           {label} {required && <span className="text-red-500">*</span>}

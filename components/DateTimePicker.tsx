@@ -73,7 +73,7 @@ export function DateTimePicker({
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal",
+            "justify-start text-left font-normal w-44",
             !date && "text-muted-foreground",
           )}
         >

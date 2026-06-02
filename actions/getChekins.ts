@@ -25,6 +25,8 @@ function buildCheckinsWhere(params: URLSearchParams): Prisma.CheckinWhereInput {
   const from = params.get("from");
   const to = params.get("to");
   const companyId = params.get("companyId") || undefined;
+  const checkedById = params.get("checkedById") || undefined;
+  const direction = (params.get("direction") as Direction) || undefined;
 
   const where: Prisma.CheckinWhereInput = {};
 
@@ -35,6 +37,14 @@ function buildCheckinsWhere(params: URLSearchParams): Prisma.CheckinWhereInput {
     };
   }
 
+  if (checkedById) {
+    where.checkedById = checkedById;
+  }
+
+  if (direction) {
+    where.direction = direction;
+  }
+
   const employee: Prisma.EmployeeWhereInput = {};
   if (query) {
     employee.fullName = { contains: query, mode: "insensitive" };
@@ -42,6 +52,7 @@ function buildCheckinsWhere(params: URLSearchParams): Prisma.CheckinWhereInput {
   if (companyId) {
     employee.companyId = companyId;
   }
+
   if (Object.keys(employee).length > 0) {
     where.employee = employee;
   }
