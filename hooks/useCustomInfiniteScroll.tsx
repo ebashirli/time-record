@@ -5,13 +5,13 @@ import { useSearchParams } from "next/navigation";
 export type TGetAction<T> = (params: {
   page: number;
   limit: number;
-  query: string | null;
+  query?: string | null;
 }) => Promise<{
   error?: string;
   success: boolean;
   data?: T[];
   total?: number;
-}>;
+}> | null;
 
 export type TSetData<T> = React.Dispatch<React.SetStateAction<T[]>>;
 
@@ -37,11 +37,11 @@ export const useCustomInfiniteScroll = <T extends { id: string }>(
     if (page === 0) setData([]);
 
     startTransition(async () => {
-      const { success, data, error, total } = await stableGetAction.current({
+      const { success, data, error, total } = (await stableGetAction.current({
         query,
         page,
         limit: 12,
-      });
+      })) ?? { success: false, error: "No getAction provided" };
 
       if (!isMounted) return;
 

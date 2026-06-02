@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  // Table as TableType,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -14,6 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { IconButton } from "../IconButton";
 
 import {
   Table,
@@ -24,26 +25,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "../ui/input";
-import { DateTimePicker } from "../DateTimePicker";
-// import { SearchForm } from "../search-form";
-import ExcelDownload from "../ExcelDownload";
+import { Columns3Icon } from "lucide-react";
+import { Spinner } from "../ui/spinner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading?: boolean;
+  filters?: React.ReactNode;
+  actions?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  loading,
+  filters,
+  actions,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -70,58 +74,20 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const columnsRefs = table
+    .getAllColumns()
+    .filter((column) => column.getCanHide());
+
+  const { rows } = table.getRowModel();
+
   return (
     <div className="px-4">
-      <div className="flex items-center py-4 justify-between w-full">
-        <Input
-          placeholder="Filter names..."
-          value={
-            (table.getColumn("fullName")?.getFilterValue() ?? "") as string
-          }
-          onChange={(event) =>
-            table.getColumn("fullName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+      <div className="grid md:flex items-center justify-between my-2">
+        {filters}
 
-        <div className="flex items-center space-x-2">
-          {/* 
-          <React.Suspense fallback={<Spinner />}> 
-        <SearchForm className="" />
-        </React.Suspense>
-        */}
-          <DateTimePicker name="from" />
-          <DateTimePicker name="to" />
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <ExcelDownload />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex items-center gap-2 mt-2 w-fit">
+          {actions}
+          <ColumnSelector columns={columnsRefs} />
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">
@@ -146,8 +112,8 @@ export function DataTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
+              {rows?.length ? (
+                rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
@@ -168,9 +134,13 @@ export function DataTable<TData, TValue>({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="h-24 text-center border"
                   >
-                    No results.
+                    {!!loading ? (
+                      <Spinner className="mx-auto" />
+                    ) : (
+                      "No results."
+                    )}
                   </TableCell>
                 </TableRow>
               )}
@@ -181,3 +151,35 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
+const ColumnSelector = <TData, TValue>({
+  columns,
+}: {
+  columns: Column<TData, TValue>[];
+}) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <IconButton
+          icon={<Columns3Icon />}
+          variant="outline"
+          className="ml-auto"
+          tooltip="Select columns"
+          asChild
+        />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-44">
+        {columns.map((column) => (
+          <DropdownMenuCheckboxItem
+            key={column.id}
+            className="capitalize"
+            checked={column.getIsVisible()}
+            onCheckedChange={(value) => column.toggleVisibility(!!value)}
+          >
+            {column.id}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};

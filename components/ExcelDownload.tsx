@@ -1,65 +1,54 @@
 "use client";
 
-import { Table } from "lucide-react";
-
-import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { FileDown, Loader2 } from "lucide-react";
 
 export default function ExcelDownload() {
-  const [isDownloading, setIsDownloading] = useState(false);
   const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDownload = async () => {
-    setIsDownloading(true);
+    setIsLoading(true);
     try {
-      // 1. Construct URLSearchParams based on current state
-      const params = new URLSearchParams();
-      const company = searchParams.get("company");
-      const query = searchParams.get("query");
-      const from = searchParams.get("from");
-      const to = searchParams.get("to");
-      if (company) params.append("company", company);
-      if (query) params.append("query", query);
-      if (from) params.append("from", from);
-      if (to) params.append("to", to);
+      // Pass all current filters to the export route
+      const params = searchParams.toString();
+      const url = `/api/checkins/export${params ? `?${params}` : ""}`;
 
-      // 2. Fetch from API route with query string (e.g., /api/checkins?query=john&role=ADMIN)
-      const response = await fetch(`/api/checkins?${params.toString()}`);
-
-      if (!response.ok) throw new Error("Download failed");
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Export failed");
 
       const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `report.xlsx`;
-      document.body.appendChild(a);
-      a.click();
+      const objectUrl = URL.createObjectURL(blob);
 
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to download Excel file");
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = "checkins_report.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Excel export error:", err);
     } finally {
-      setIsDownloading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Button
+      variant="outline"
       onClick={handleDownload}
-      disabled={isDownloading}
-      // asChild
-      className="p-1 flex items-center justify-center "
+      disabled={isLoading}
+      className="gap-2"
     >
-      {isDownloading ? (
-        <Spinner className="h-8 w-8 mr-2" />
+      {isLoading ? (
+        <Loader2 className="size-4 animate-spin" />
       ) : (
-        <Table className="h-8 w-8 mr-2" />
+        <FileDown className="size-4" />
       )}
+      Export Excel
     </Button>
   );
 }

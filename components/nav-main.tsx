@@ -32,6 +32,7 @@ export function NavMain({
   const firstPart = pathParts?.at(0);
 
   function handleClick(url?: string) {
+    console.log({ url });
     if (url === "#") {
       toast.dismiss();
       toast.info("Soon. Under construction 🚧", { position: "bottom-left" });

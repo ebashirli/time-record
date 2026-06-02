@@ -2,15 +2,10 @@
 
 import prisma from "@/lib/prisma";
 
-export async function getCompanies({
-  limit,
-  page,
-  query,
-}: {
-  limit: number;
-  page: number;
-  query: null | string;
-}) {
+export async function getCompanies(paramsString?: string) {
+  const searchParams = new URLSearchParams(paramsString);
+  const query = searchParams.get("query");
+
   const where = query
     ? {
         AND: [
@@ -33,8 +28,8 @@ export async function getCompanies({
     const [data, total] = await Promise.all([
       prisma.company.findMany({
         where,
-        skip: limit * page,
-        take: limit,
+        // skip: limit * page,
+        // take: limit,
 
         select: {
           id: true,
@@ -42,6 +37,7 @@ export async function getCompanies({
           logo: true,
           works: { select: { name: true } },
         },
+        orderBy: { name: "asc" },
       }),
       prisma.company.count({ where }),
     ]);

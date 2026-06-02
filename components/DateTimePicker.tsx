@@ -15,17 +15,32 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CalendarIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export function DateTimePicker({ name }: { name: string }) {
+export function DateTimePicker({
+  name,
+  defaultValue,
+}: {
+  name: string;
+  defaultValue?: Date;
+}) {
   const searchParams = useSearchParams();
   const field = searchParams.get(name);
 
   const [date, setDate] = React.useState<Date>(
-    field ? new Date(field) : new Date(),
+    field ? new Date(field) : defaultValue || new Date(),
   );
   const [isOpen, setIsOpen] = React.useState(false);
 
   const { replace } = useRouter();
   const pathname = usePathname();
+
+  // React.useEffect(() => {
+
+  //   const params = new URLSearchParams(searchParams);
+  //   if (newDate) params.set(name, newDate.toISOString());
+  //   else params.delete(name);
+
+  //   replace(`${pathname}?${params.toString()}`);
+  // }, [field, pathname, replace, name, searchParams]);
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const handleDateSelect = (selectedDate: Date | undefined) => {

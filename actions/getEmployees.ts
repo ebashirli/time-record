@@ -9,7 +9,7 @@ export async function getEmployees({
 }: {
   limit: number;
   page: number;
-  query: null | string;
+  query?: null | string;
 }) {
   const where = query
     ? {
