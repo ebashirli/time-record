@@ -25,6 +25,7 @@ async function generateExcelBuffer(checkins: CheckinRow[]) {
 
   // 3. Define columns and headers
   worksheet.columns = [
+    { header: "#", key: "#", width: 10 },
     { header: "Name", key: "name", width: 25 },
     { header: "Company", key: "company", width: 25 },
     { header: "Position", key: "position", width: 25 },
@@ -52,6 +53,7 @@ async function generateExcelBuffer(checkins: CheckinRow[]) {
   // 5. Add rows from Prisma query result
   checkins.forEach((checkin) => {
     worksheet.addRow({
+      "#": checkin["#"],
       name: checkin.fullName,
       company: checkin.companyName,
       position: checkin.positionName,

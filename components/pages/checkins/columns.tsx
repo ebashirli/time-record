@@ -16,6 +16,13 @@ import dayjs from "dayjs";
 
 export const columns: ColumnDef<CheckinRow>[] = [
   {
+    accessorKey: "#",
+    header: () => <div className="">#</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("#")}</div>;
+    },
+  },
+  {
     accessorKey: "fullName",
     header: () => <div className="">Full Name</div>,
     cell: ({ row }) => {
