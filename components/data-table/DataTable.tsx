@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
       <div className="grid md:flex items-center justify-between my-2">
         {filters}
 
-        <div className="flex items-center gap-2 mt-2 w-fit">
+        <div className="flex items-center gap-2 mt-2 md:mt-0 w-fit">
           {actions}
           <ColumnSelector columns={columnsRefs} />
         </div>

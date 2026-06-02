@@ -24,14 +24,14 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
 
   return (
     <form {...props} onSubmit={(e) => e.preventDefault()}>
-      <div className="relative">
+      <div className="relative ">
         <Label htmlFor="search" className="sr-only">
           Search
         </Label>
         <SidebarInput
           id="search"
           placeholder="Type to search..."
-          className="h-8 pl-7"
+          className="h-9 pl-7"
           onChange={(e) => handleSearch(e.target.value)}
           defaultValue={query ?? ""}
         />
