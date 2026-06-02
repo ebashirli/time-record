@@ -21,8 +21,6 @@ export async function GET(request: NextRequest) {
       employee: { companyId },
     };
 
-    console.log({ where });
-
     const checkins = await prisma.checkin.findMany({
       where,
       include: {

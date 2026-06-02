@@ -17,27 +17,7 @@ export const CheckinsTable = () => {
   const [isPending, startTransition] = useTransition();
 
   const [data, setData] = useState<CheckinRow[]>([]);
-  // const didInjectDefaultFrom = React.useRef(false);
-
-  // Ensure we have a default `from` in the URL exactly once.
-  // useEffect(() => {
-  //   if (searchParams.get("from")) return;
-  //   if (didInjectDefaultFrom.current) return;
-  //   didInjectDefaultFrom.current = true;
-
-  //   const params = new URLSearchParams(searchParams.toString());
-  //   const yesterday = new Date();
-  //   yesterday.setDate(yesterday.getDate() - 1);
-  //   yesterday.setHours(17, 0, 0, 0);
-
-  //   params.set("from", yesterday.toISOString());
-  //   replace(`${pathname}?${params.toString()}`, { scroll: false });
-  // }, [pathname, replace, searchParams]);
-
-  // // 2. Handle Data Fetching (Only runs when searchParams actually exist/change)
   useEffect(() => {
-    const from = searchParams.get("from");
-    if (!from) return;
     startTransition(async () => {
       const result = await getCheckins(searchParams.toString());
       if (result instanceof Response) return;
@@ -57,6 +37,18 @@ export const CheckinsTable = () => {
 };
 
 function Filters() {
+  const searchParams = useSearchParams();
+
+  function getYesterday() {
+    const from = searchParams.get("from");
+    if (from) return;
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(17, 0, 0, 0);
+    return yesterday;
+  }
+
   return (
     <div className="grid md:grid-cols-4 gap-2 w-fit">
       <SearchForm />
@@ -71,11 +63,4 @@ function Filters() {
       <DateTimePicker name="to" />
     </div>
   );
-}
-
-function getYesterday() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  yesterday.setHours(17, 0, 0, 0);
-  return yesterday;
 }
