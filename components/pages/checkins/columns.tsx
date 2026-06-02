@@ -23,12 +23,26 @@ export const columns: ColumnDef<CheckinRow>[] = [
     },
   },
   {
+    accessorKey: "companyName",
+    header: () => <div className="">Company</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("companyName")}</div>;
+    },
+  },
+  {
     accessorKey: "departmentName",
     header: () => <div className="">Department</div>,
     cell: ({ row }) => {
       return (
         <div className="font-medium">{row.getValue("departmentName")}</div>
       );
+    },
+  },
+  {
+    accessorKey: "positionName",
+    header: () => <div className="">Position</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("positionName")}</div>;
     },
   },
   {
