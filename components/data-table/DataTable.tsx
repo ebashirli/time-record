@@ -91,9 +91,9 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">
-        <div className="overflow-hidden rounded-md border">
+        <div className="max-h-[70vh]">
           <Table>
-            <TableHeader>
+            <TableHeader className="sticky top-0 z-10 bg-muted">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -176,8 +176,8 @@ export function DataTable<TData, TValue>({
 //             checked={column.getIsVisible()}
 //             onCheckedChange={(value) => column.toggleVisibility(!!value)}
 //           >
-//             {(typeof column.columnDef?.header === 'function' 
-//                 ? column.columnDef.header(column.getContext())?.props?.children 
+//             {(typeof column.columnDef?.header === 'function'
+//                 ? column.columnDef.header(column.getContext())?.props?.children
 //                 : column.columnDef?.header) ?? column.id}
 //           </DropdownMenuCheckboxItem>
 //         ))}
