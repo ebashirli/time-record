@@ -176,7 +176,7 @@ const ColumnSelector = <TData, TValue>({
             checked={column.getIsVisible()}
             onCheckedChange={(value) => column.toggleVisibility(!!value)}
           >
-            {column.id}
+            {column.columnDef.header().props.children}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>
