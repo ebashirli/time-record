@@ -17,7 +17,6 @@ import {
 // import { IconButton } from "../IconButton";
 
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -81,7 +80,7 @@ export function DataTable<TData, TValue>({
   const { rows } = table.getRowModel();
 
   return (
-    <div className="px-2 h-full flex flex-col ">
+    <div className="px-2 h-full">
       <div className="grid md:flex items-center justify-between my-2 ">
         {filters}
 
@@ -90,58 +89,67 @@ export function DataTable<TData, TValue>({
           {/* <ColumnSelector columns={columnsRefs} /> */}
         </div>
       </div>
-      <div className="overflow-hidden rounded-md border grow">
-        <Table className="max-h-full">
-          <TableHeader className="sticky top-0 z-10 bg-muted">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody className="overflow-y-scroll">
-            {rows?.length ? (
-              rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className=""
-                >
-                  {row.getVisibleCells().map((cell) => {
+      <div className="rounded-md border overflow-hidden">
+        <div className="h-[86vh] overflow-auto">
+          <table className="w-full caption-bottom text-sm">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
                     return (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
+                      <TableHead
+                        key={header.id}
+                        className="sticky top-0 z-10 bg-muted shadow-[inset_0_-1px_0_hsl(var(--border))]"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
                     );
                   })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center border"
-                >
-                  {!!loading ? <Spinner className="mx-auto" /> : "No results."}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {rows?.length ? (
+                rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className=""
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center border"
+                  >
+                    {!!loading ? (
+                      <Spinner className="mx-auto" />
+                    ) : (
+                      "No results."
+                    )}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </table>
+        </div>
       </div>
     </div>
   );
