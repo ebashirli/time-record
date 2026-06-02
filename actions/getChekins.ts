@@ -53,7 +53,7 @@ export async function getCheckins(
   paramsString: string,
 ): Promise<
   | { success: true; data: CheckinRow[]; total: number }
-  | { success: false; error: string }
+  | { success: false; error: string; data: undefined }
 > {
   try {
     const params = new URLSearchParams(paramsString);
@@ -77,7 +77,7 @@ export async function getCheckins(
 
     const result: CheckinRow[] =
       data?.map((checkin, i) => ({
-        "#": i + 1 + (paginate ? page * limit : 0),
+        "#": i + 1 + (paginate ? page * (limit ?? 0) : 0),
         id: checkin.id,
         fullName: checkin.employee.fullName || "Unknown Employee",
         companyName: checkin.employee.company.name || "Unknown Company",
@@ -94,6 +94,7 @@ export async function getCheckins(
   } catch (error) {
     return {
       success: false,
+      data: undefined,
       error: error instanceof Error ? error.message : "Something went wrong",
     };
   }

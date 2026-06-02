@@ -1,10 +1,12 @@
 import { getCheckins } from "@/actions/getChekins";
 import { NextRequest } from "next/server";
 import ExcelJS from "exceljs";
+import { CheckinRow } from "@/components/pages/checkins/types";
+
 
 export async function GET(request: NextRequest) {
   const paramsString = request.nextUrl.searchParams.toString();
-  const { data } = await getCheckins(paramsString, true);
+  const { data } = await getCheckins(paramsString);
 
   const buffer = await generateExcelBuffer(data);
 
@@ -19,7 +21,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-async function generateExcelBuffer(checkins: CheckinRow[]) {
+async function generateExcelBuffer(checkins?: CheckinRow[]) {
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet("results");
 
@@ -51,7 +53,7 @@ async function generateExcelBuffer(checkins: CheckinRow[]) {
   // headerRow.alignment = { vertical: "middle", horizontal: "center" };
 
   // 5. Add rows from Prisma query result
-  checkins.forEach((checkin) => {
+  checkins?.forEach((checkin) => {
     worksheet.addRow({
       "#": checkin["#"],
       name: checkin.fullName,

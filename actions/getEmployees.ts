@@ -2,15 +2,12 @@
 
 import prisma from "@/lib/prisma";
 
-export async function getEmployees({
-  limit,
-  page,
-  query,
-}: {
-  limit: number;
-  page: number;
-  query?: null | string;
-}) {
+export async function getEmployees(paramsString?: string) {
+  const searchParams = new URLSearchParams(paramsString);
+  const query = searchParams.get("query");
+  const limit = Number(searchParams.get("limit") ?? 20);
+  const page = Number(searchParams.get("page") ?? 0);
+
   const where = query
     ? {
         AND: [

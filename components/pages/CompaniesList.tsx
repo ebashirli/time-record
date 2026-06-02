@@ -22,7 +22,10 @@ export const CompaniesList = () => {
   const [companies, setCompanies] = React.useState<Company[]>([]);
 
   return (
-    <CustomInfiniteScroll setData={setCompanies} getAction={getCompanies}>
+    <CustomInfiniteScroll
+      setData={setCompanies}
+      getAction={getCompanies}
+    >
       <>
         {companies.map((company) => (
           <CompanyCard key={company.id} company={company} />

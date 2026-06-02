@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
-  Column,
+  // Column,
   ColumnDef,
   ColumnFiltersState,
   SortingState,
@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { IconButton } from "../IconButton";
+// import { IconButton } from "../IconButton";
 
 import {
   Table,
@@ -25,13 +25,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Columns3Icon } from "lucide-react";
+// import {
+//   DropdownMenu,
+//   DropdownMenuCheckboxItem,
+//   DropdownMenuContent,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import { Columns3Icon } from "lucide-react";
 import { Spinner } from "../ui/spinner";
 
 interface DataTableProps<TData, TValue> {
@@ -74,9 +74,9 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const columnsRefs = table
-    .getAllColumns()
-    .filter((column) => column.getCanHide());
+  // const columnsRefs = table
+  //   .getAllColumns()
+  //   .filter((column) => column.getCanHide());
 
   const { rows } = table.getRowModel();
 
@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
 
         <div className="flex items-center gap-2 mt-2 md:mt-0 w-fit">
           {actions}
-          <ColumnSelector columns={columnsRefs} />
+          {/* <ColumnSelector columns={columnsRefs} /> */}
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">
@@ -152,34 +152,36 @@ export function DataTable<TData, TValue>({
   );
 }
 
-const ColumnSelector = <TData, TValue>({
-  columns,
-}: {
-  columns: Column<TData, TValue>[];
-}) => {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <IconButton
-          icon={<Columns3Icon />}
-          variant="outline"
-          className="ml-auto"
-          tooltip="Select columns"
-          asChild
-        />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-44">
-        {columns.map((column) => (
-          <DropdownMenuCheckboxItem
-            key={column.id}
-            className="capitalize"
-            checked={column.getIsVisible()}
-            onCheckedChange={(value) => column.toggleVisibility(!!value)}
-          >
-            {column.columnDef.header().props.children}
-          </DropdownMenuCheckboxItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
+// const ColumnSelector = <TData, TValue>({
+//   columns,
+// }: {
+//   columns: Column<TData, TValue>[];
+// }) => {
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger>
+//         <IconButton
+//           icon={<Columns3Icon />}
+//           variant="outline"
+//           className="ml-auto"
+//           tooltip="Select columns"
+//           asChild
+//         />
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent align="end" className="min-w-44">
+//         {columns.map((column) => (
+//           <DropdownMenuCheckboxItem
+//             key={column.id}
+//             className="capitalize"
+//             checked={column.getIsVisible()}
+//             onCheckedChange={(value) => column.toggleVisibility(!!value)}
+//           >
+//             {(typeof column.columnDef?.header === 'function' 
+//                 ? column.columnDef.header(column.getContext())?.props?.children 
+//                 : column.columnDef?.header) ?? column.id}
+//           </DropdownMenuCheckboxItem>
+//         ))}
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   );
+// };

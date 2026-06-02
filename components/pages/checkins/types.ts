@@ -1,4 +1,5 @@
 export type CheckinRow = {
+  "#": number;
   id: string;
   fullName: string;
   companyName: string;
