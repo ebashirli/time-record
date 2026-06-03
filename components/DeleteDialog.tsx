@@ -52,7 +52,7 @@ export function DeleteDialog<T extends I>({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          asChild
+          // asChild
           variant={"outline"}
           className="cursor-pointer"
           size="icon"
