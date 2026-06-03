@@ -31,6 +31,7 @@ import {
   IdCardSerie,
   Nationality,
   Sex,
+  Shift,
 } from "@/prisma/lib/generated/prisma/browser";
 import { FormSelectField } from "../FormSelectField";
 
@@ -426,28 +427,17 @@ export function EmployeeEditForm({
                   defaultValue={employee.position.id}
                 />
 
-                <div className="space-y-2">
-                  <Label htmlFor="positionId">
-                    Position <span className="text-red-500">*</span>
-                  </Label>
-                  <Select name="positionId" defaultValue={employee.position.id}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select position" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {positions.map((pos) => (
-                        <SelectItem key={pos.id} value={pos.id}>
-                          {pos.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {state.errors?.positionId && (
-                    <p className="text-sm text-red-500">
-                      {state.errors.positionId[0]}
-                    </p>
-                  )}
-                </div>
+                <FormSelectField
+                  items={Object.keys(Shift).map((k) => ({
+                    id: k,
+                    name: k,
+                  }))}
+                  errors={state.errors}
+                  name="shift"
+                  label="Shift"
+                  required
+                  defaultValue={employee.shift ?? "Day"}
+                />
 
                 <div className="space-y-2">
                   <Label htmlFor="shift">Shift</Label>

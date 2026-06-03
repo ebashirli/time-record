@@ -92,7 +92,8 @@ export const EmployeeCard = ({
             onClick={(e) => handleClick(e, "/edit")}
             type="button"
             variant={"outline"}
-            className="min-w-10 cursor-pointer "
+            className="cursor-pointer"
+            size="icon"
           >
             <Pencil />
           </Button>

@@ -53,7 +53,8 @@ export function SiteHeader() {
             {pathParts?.map((part) => (
               <BreadcrumbItem key={part}>
                 <BreadcrumbPage>
-                  {part.at(0)?.toLocaleUpperCase() + part.slice(1)}
+                  {part.at(0)?.toLocaleUpperCase() +
+                    part.slice(1).replaceAll("-", " ")}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             ))}

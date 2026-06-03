@@ -154,18 +154,18 @@ export function DataTable<TData extends I, TValue>({
   const { rows } = table.getRowModel();
 
   return (
-    <div className="px-2 h-full">
-      <div className="grid md:flex items-center justify-between my-2 ">
-        {filters}
+    <div className="flex flex-col gap-2 px-2 sm:px-4 h-full min-h-0">
+      <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4 min-w-0">
+        <div className="min-w-0 flex-1">{filters}</div>
 
-        <div className="flex items-center gap-2 mt-2 md:mt-0 w-fit">
+        <div className="flex shrink-0 items-center gap-2 self-end sm:self-auto">
           {actions}
           {/* <ColumnSelector columns={columnsRefs} /> */}
         </div>
       </div>
-      <div className="rounded-md border overflow-hidden grid gap-2 mb-2">
-        <div className="h-[82.5vh] overflow-auto" key={pageIndex}>
-          <table className="w-full caption-bottom text-sm">
+      <div className="flex min-h-0 flex-1 flex-col rounded-md border overflow-hidden">
+        <div className="min-h-0 flex-1 overflow-auto" key={pageIndex}>
+          <table className="w-full min-w-3xl caption-bottom text-sm">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -224,8 +224,10 @@ export function DataTable<TData extends I, TValue>({
             </TableBody>
           </table>
         </div>
+        <div className="shrink-0 border-t bg-background py-2">
+          <DataTablePagination table={table} />
+        </div>
       </div>
-      <DataTablePagination table={table} />
     </div>
   );
 }

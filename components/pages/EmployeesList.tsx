@@ -34,6 +34,7 @@ export const EmployeesList = () => {
       key={query}
       setData={setEmployees}
       getAction={getEmployees}
+      className="grid-cols-2"
     >
       <>
         {employees.map((employee) => {

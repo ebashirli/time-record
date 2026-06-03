@@ -1,5 +1,5 @@
 "use client";
-import { Trash, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 
 import {
   AlertDialog,
@@ -51,8 +51,13 @@ export function DeleteDialog<T extends I>({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button asChild variant={"outline"} className="min-w-10 cursor-pointer">
-          <Trash />
+        <Button
+          asChild
+          variant={"outline"}
+          className="cursor-pointer"
+          size="icon"
+        >
+          <Trash2Icon />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent size="sm">

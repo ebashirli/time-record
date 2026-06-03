@@ -91,6 +91,7 @@ export const FormSelectField = <T extends Option>({
           )}
         >
           <SelectValue
+            className="text-xs"
             placeholder={placeholder || "Select " + label?.toLowerCase()}
           />
           {paramValue !== null ? (

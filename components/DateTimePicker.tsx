@@ -93,16 +93,16 @@ export function DateTimePicker({
         <Button
           variant="outline"
           className={cn(
-            "justify-start text-left font-normal w-44",
+            "justify-between text-left font-normal w-44",
             !committedDate && "text-muted-foreground",
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
           {committedDate ? (
             format(committedDate, "dd/MM/yyyy HH:mm")
           ) : (
             <span className="text-xs">DD/MM/YYYY HH:mm</span>
           )}
+          <CalendarIcon className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

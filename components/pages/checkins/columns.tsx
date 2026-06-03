@@ -13,6 +13,7 @@ import { ColumnDef } from "@tanstack/react-table";
 // } from "@/components/ui/dropdown-menu";
 import { CheckinRow } from "./types";
 import dayjs from "dayjs";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<CheckinRow>[] = [
   {
@@ -78,17 +79,19 @@ export const columns: ColumnDef<CheckinRow>[] = [
   },
   {
     accessorKey: "direction",
-    header: () => <div className="text-right">Direction</div>,
+    header: () => <div className="text-center">Direction</div>,
     cell: ({ row }) => {
       // const dateTime = Date.parse(row.getValue("dateTime"));
       // const formatted = new Intl.NumberFormat("en-US", {
       //   style: "currency",
       //   currency: "USD",
       // }).format(amount);
-
+      const isIn: boolean = row.getValue("direction") === "In";
       return (
-        <div className="text-right font-medium">
-          {row.getValue("direction")}
+        <div className="text-center text-xs">
+          <Badge variant={isIn ? "outline" : "destructive"}>
+            {isIn ? "Giriş" : "Çıxış"}
+          </Badge>
         </div>
       );
     },

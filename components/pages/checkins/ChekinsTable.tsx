@@ -32,7 +32,7 @@ export const CheckinsTable = () => {
   }, [searchParams]);
 
   return (
-    <div className="w-full h-[calc(100vh-var(--header-height)-var(--spacing)*4.5)] overflow-clip">
+    <div className="flex h-[calc(100dvh-var(--header-height)-var(--spacing)*4.5)] min-h-0 w-full flex-col overflow-hidden">
       <DataTable
         columns={columns}
         data={data}
@@ -47,7 +47,7 @@ export const CheckinsTable = () => {
 
 function Filters() {
   return (
-    <div className="flex flex-col md:flex-row w-fit gap-2">
+    <div className="grid grid-cols-2 sm:flex flex-col md:flex-row w-fit gap-2">
       <SearchForm />
       <FormSelectField
         name="companyId"

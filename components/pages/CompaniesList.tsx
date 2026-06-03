@@ -25,6 +25,7 @@ export const CompaniesList = () => {
     <CustomInfiniteScroll
       setData={setCompanies}
       getAction={getCompanies}
+      className="grid-cols-2"
     >
       <>
         {companies.map((company) => (

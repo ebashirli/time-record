@@ -27,9 +27,11 @@ import {
   LayoutDashboardIcon,
   UsersIcon,
   Settings2Icon,
-  CommandIcon,
+  // CommandIcon,
   Building2Icon,
 } from "lucide-react";
+import { MdChangeCircle } from "react-icons/md";
+import Link from "next/link";
 
 const data = {
   navMain: [
@@ -194,10 +196,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
-                <CommandIcon className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Link href="/">
+                <MdChangeCircle className="size-5!" />
+                <span className="text-base font-semibold">Shift</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
