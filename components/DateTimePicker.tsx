@@ -24,65 +24,84 @@ export function DateTimePicker({
 }) {
   const searchParams = useSearchParams();
   const field = searchParams.get(name);
+  const committedDate = field ? new Date(field) : null;
 
-  const [date, setDate] = React.useState<Date>(
-    field ? new Date(field) : defaultValue || new Date(),
-  );
+  const [draftDate, setDraftDate] = React.useState<Date | null>(committedDate);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const { replace } = useRouter();
   const pathname = usePathname();
 
-  // React.useEffect(() => {
-
-  //   const params = new URLSearchParams(searchParams);
-  //   if (newDate) params.set(name, newDate.toISOString());
-  //   else params.delete(name);
-
-  //   replace(`${pathname}?${params.toString()}`);
-  // }, [field, pathname, replace, name, searchParams]);
-
   const hours = Array.from({ length: 24 }, (_, i) => i);
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      setDate(selectedDate);
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open) {
+      setDraftDate(committedDate ?? defaultValue ?? null);
     }
+  };
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    if (!selectedDate) return;
+
+    const next = new Date(selectedDate);
+    if (draftDate) {
+      next.setHours(
+        draftDate.getHours(),
+        draftDate.getMinutes(),
+        draftDate.getSeconds(),
+        draftDate.getMilliseconds(),
+      );
+    }
+    setDraftDate(next);
   };
 
   const handleTimeChange = (type: "hour" | "minute", value: string) => {
-    if (date) {
-      const newDate = new Date(date);
-      if (type === "hour") {
-        newDate.setHours(parseInt(value));
-      } else if (type === "minute") {
-        newDate.setMinutes(parseInt(value));
-      }
-      setDate(newDate);
-
-      const params = new URLSearchParams(searchParams);
-      if (newDate) params.set(name, newDate.toISOString());
-      else params.delete(name);
-      params.delete("page");
-
-      replace(`${pathname}?${params.toString()}`);
+    const base = draftDate ?? new Date();
+    const next = new Date(base);
+    if (type === "hour") {
+      next.setHours(parseInt(value, 10));
+    } else {
+      next.setMinutes(parseInt(value, 10));
     }
+    setDraftDate(next);
+  };
+
+  const applyParams = (date: Date | null) => {
+    const params = new URLSearchParams(searchParams);
+    if (date) params.set(name, date.toISOString());
+    else params.delete(name);
+    params.delete("page");
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleConfirm = () => {
+    if (!draftDate) return;
+    applyParams(draftDate);
+    setIsOpen(false);
+  };
+
+  const handleClear = () => {
+    applyParams(null);
+    setDraftDate(null);
+    setIsOpen(false);
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
+    <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           className={cn(
             "justify-start text-left font-normal w-44",
-            !date && "text-muted-foreground",
+            !committedDate && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, "dd/MM/yyyy HH:mm")
+          {committedDate ? (
+            format(committedDate, "dd/MM/yyyy HH:mm")
           ) : (
-            <span>DD/MM/YYYY HH:mm</span>
+            <span className="text-xs">DD/MM/YYYY HH:mm</span>
           )}
         </Button>
       </PopoverTrigger>
@@ -90,10 +109,8 @@ export function DateTimePicker({
         <div className="sm:flex">
           <Calendar
             mode="single"
-            selected={date}
+            selected={draftDate ?? undefined}
             onSelect={handleDateSelect}
-
-            // initialFocus={true}
           />
           <div className="flex flex-col sm:flex-row sm:h-75 divide-y sm:divide-y-0 sm:divide-x">
             <ScrollArea className="w-64 sm:w-auto">
@@ -103,7 +120,9 @@ export function DateTimePicker({
                     key={hour}
                     size="icon"
                     variant={
-                      date && date.getHours() === hour ? "default" : "ghost"
+                      draftDate && draftDate.getHours() === hour
+                        ? "default"
+                        : "ghost"
                     }
                     className="sm:w-full shrink-0 aspect-square"
                     onClick={() => handleTimeChange("hour", hour.toString())}
@@ -121,7 +140,9 @@ export function DateTimePicker({
                     key={minute}
                     size="icon"
                     variant={
-                      date && date.getMinutes() === minute ? "default" : "ghost"
+                      draftDate && draftDate.getMinutes() === minute
+                        ? "default"
+                        : "ghost"
                     }
                     className="sm:w-full shrink-0 aspect-square"
                     onClick={() =>
@@ -135,6 +156,14 @@ export function DateTimePicker({
               <ScrollBar orientation="horizontal" className="sm:hidden" />
             </ScrollArea>
           </div>
+        </div>
+        <div className="flex items-center justify-end gap-2 border-t p-2">
+          <Button variant="ghost" size="sm" onClick={handleClear}>
+            Clear
+          </Button>
+          <Button size="sm" onClick={handleConfirm} disabled={!draftDate}>
+            Ok
+          </Button>
         </div>
       </PopoverContent>
     </Popover>

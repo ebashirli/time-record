@@ -5,6 +5,13 @@ import prisma from "@/lib/prisma";
 import { Direction } from "@/prisma/lib/generated/prisma/enums";
 import type { Prisma } from "@/prisma/lib/generated/prisma/client";
 
+function getYesterday(hour: number = 17) {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(hour, 0, 0, 0);
+  return yesterday;
+}
+
 const checkinSelect = {
   id: true,
   employee: {
@@ -20,7 +27,10 @@ const checkinSelect = {
   direction: true,
 } satisfies Prisma.CheckinSelect;
 
-function buildCheckinsWhere(params: URLSearchParams): Prisma.CheckinWhereInput {
+function buildCheckinsWhere(
+  params: URLSearchParams,
+  paginate: boolean = true,
+): Prisma.CheckinWhereInput {
   const query = params.get("query") || undefined;
   const from = params.get("from");
   const to = params.get("to");
@@ -35,6 +45,8 @@ function buildCheckinsWhere(params: URLSearchParams): Prisma.CheckinWhereInput {
       ...(from && { gte: new Date(from) }),
       ...(to && { lte: new Date(to) }),
     };
+  } else {
+    if (!paginate) where.dateTime = { gte: getYesterday() };
   }
 
   if (checkedById) {
@@ -71,7 +83,7 @@ export async function getCheckins(
 }> {
   try {
     const params = new URLSearchParams(paramsString);
-    const where = buildCheckinsWhere(params);
+    const where = buildCheckinsWhere(params, paginate);
 
     const page = Math.max(0, parseInt(params.get("page") || "0", 10) || 0);
     const limit = Math.max(1, parseInt(params.get("limit") || "30", 10) || 30);

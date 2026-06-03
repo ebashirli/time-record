@@ -46,18 +46,6 @@ export const CheckinsTable = () => {
 };
 
 function Filters() {
-  const searchParams = useSearchParams();
-
-  function getYesterday() {
-    const from = searchParams.get("from");
-    if (from) return;
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    yesterday.setHours(17, 0, 0, 0);
-    return yesterday;
-  }
-
   return (
     <div className="flex flex-col md:flex-row w-fit gap-2">
       <SearchForm />
@@ -85,7 +73,7 @@ function Filters() {
         placeholder="By terminal"
         isFilter
       />
-      <DateTimePicker name="from" defaultValue={getYesterday()} />
+      <DateTimePicker name="from" />
       <DateTimePicker name="to" />
     </div>
   );
