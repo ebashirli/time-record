@@ -122,3 +122,45 @@ export async function getCheckins(
     };
   }
 }
+
+type StatsData = { date: Date; in: number; out: number }[];
+export async function getCheckinsStats(timeRange: string): Promise<{
+  success: boolean;
+  error?: string;
+  data?: StatsData;
+}> {
+  try {
+    const data = await prisma.$queryRaw`
+      SELECT 
+        DATE_TRUNC('day', "dateTime") AS "date",
+        SUM(CASE WHEN direction = 'IN' THEN 1 ELSE 0 END)::int AS "in",
+        SUM(CASE WHEN direction = 'OUT' THEN 1 ELSE 0 END)::int AS "out"
+      FROM "checkin"
+      WHERE "dateTime" >= ${getStartDate(timeRange)}
+      GROUP BY DATE_TRUNC('day', "dateTime")
+      ORDER BY "date" ASC;
+    `;
+
+    return { success: true, data: data as StatsData };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      data: undefined,
+      error: error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+}
+
+const getStartDate = (timeRange: string) => {
+  const referenceDate = new Date();
+  let daysToSubtract = 90;
+  if (timeRange === "30d") {
+    daysToSubtract = 30;
+  } else if (timeRange === "7d") {
+    daysToSubtract = 7;
+  }
+  const startDate = new Date(referenceDate);
+  startDate.setDate(startDate.getDate() - daysToSubtract);
+  return startDate;
+};
