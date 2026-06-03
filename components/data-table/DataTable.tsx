@@ -16,7 +16,6 @@ import {
   type PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-// import { IconButton } from "../IconButton";
 
 import {
   TableBody,
@@ -240,8 +239,8 @@ export function DataTable<TData extends I, TValue>({
 //   return (
 //     <DropdownMenu>
 //       <DropdownMenuTrigger>
-//         <IconButton
-//           icon={<Columns3Icon />}
+//         <Button
+//           size="icon"
 //           variant="outline"
 //           className="ml-auto"
 //           tooltip="Select columns"

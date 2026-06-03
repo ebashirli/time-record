@@ -41,13 +41,8 @@ export function QRGenerator({ value }: { value?: string }) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button
-          // asChild
-          variant={"outline"}
-          className="cursor-pointer"
-          size="icon"
-        >
+      <DialogTrigger asChild>
+        <Button variant={"outline"} className="cursor-pointer" size="icon">
           <QrCode className="" />
         </Button>
       </DialogTrigger>

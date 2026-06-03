@@ -24,6 +24,7 @@ export const IconButton = ({
   return (
     <Tooltip content={tooltip}>
       <Button
+        size="icon"
         asChild={asChild}
         variant={variant}
         className={cn("min-w-10 cursor-pointer", className)}

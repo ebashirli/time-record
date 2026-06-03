@@ -51,12 +51,7 @@ export function DeleteDialog<T extends I>({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          // asChild
-          variant={"outline"}
-          className="cursor-pointer"
-          size="icon"
-        >
+        <Button variant={"outline"} className="cursor-pointer" size="icon">
           <Trash2Icon />
         </Button>
       </AlertDialogTrigger>
