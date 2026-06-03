@@ -62,6 +62,7 @@ export function DateTimePicker({
       const params = new URLSearchParams(searchParams);
       if (newDate) params.set(name, newDate.toISOString());
       else params.delete(name);
+      params.delete("page");
 
       replace(`${pathname}?${params.toString()}`);
     }

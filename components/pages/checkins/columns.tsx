@@ -19,7 +19,7 @@ export const columns: ColumnDef<CheckinRow>[] = [
     accessorKey: "#",
     header: () => <div className="">#</div>,
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("#")}</div>;
+      return <div className="font-medium text-right">{row.getValue("#")}</div>;
     },
   },
   {

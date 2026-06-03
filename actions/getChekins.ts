@@ -62,26 +62,26 @@ function buildCheckinsWhere(params: URLSearchParams): Prisma.CheckinWhereInput {
 
 export async function getCheckins(
   paramsString: string,
-): Promise<
-  | { success: true; data: CheckinRow[]; total: number }
-  | { success: false; error: string; data: undefined }
-> {
+  paginate: boolean = true,
+): Promise<{
+  success: boolean;
+  error?: string;
+  data?: CheckinRow[];
+  total?: number;
+}> {
   try {
     const params = new URLSearchParams(paramsString);
     const where = buildCheckinsWhere(params);
 
-    const page = parseInt(params.get("page") || "0", 10);
-    const limitParam = params.get("limit");
-    const limit = limitParam ? parseInt(limitParam, 10) : null;
-    // const paginate = limit !== null;
-    const paginate = false;
+    const page = Math.max(0, parseInt(params.get("page") || "0", 10) || 0);
+    const limit = Math.max(1, parseInt(params.get("limit") || "30", 10) || 30);
 
     const [data, total] = await Promise.all([
       prisma.checkin.findMany({
         where,
         orderBy: { dateTime: "desc" },
         select: checkinSelect,
-        // ...(paginate && { skip: limit * page, take: limit }),
+        ...(paginate && { skip: limit * page, take: limit }),
       }),
       prisma.checkin.count({ where }),
     ]);

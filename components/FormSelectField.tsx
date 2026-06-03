@@ -66,6 +66,7 @@ export const FormSelectField = <T extends Option>({
     const params = new URLSearchParams(searchParams);
     if (value) params.set(name, value);
     else params.delete(name);
+    params.delete("page");
     replace(`${pathname}?${params.toString()}`);
   };
 

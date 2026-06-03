@@ -18,6 +18,7 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
     const params = new URLSearchParams(searchParams);
     if (term) params.set("query", term);
     else params.delete("query");
+    params.delete("page");
 
     replace(`${pathname}?${params.toString()}`);
   }, 500);

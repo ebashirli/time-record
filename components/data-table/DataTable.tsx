@@ -5,13 +5,15 @@ import {
   // Column,
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
+  // SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  // getPaginationRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
+  type OnChangeFn,
+  type PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
 // import { IconButton } from "../IconButton";
@@ -32,45 +34,117 @@ import {
 // } from "@/components/ui/dropdown-menu";
 // import { Columns3Icon } from "lucide-react";
 import { Spinner } from "../ui/spinner";
+import { DataTablePagination } from "./DataTablePagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-interface DataTableProps<TData, TValue> {
+interface I {
+  id: string;
+}
+
+interface DataTableProps<TData extends I, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  rowCount?: number;
   loading?: boolean;
   filters?: React.ReactNode;
   actions?: React.ReactNode;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends I, TValue>({
   columns,
   data,
+  rowCount,
   loading,
   filters,
   actions,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const pageIndex = Math.max(
+    0,
+    parseInt(searchParams.get("page") || "0", 10) || 0,
+  );
+  const pageSize = Math.max(
+    1,
+    parseInt(searchParams.get("limit") || "30", 10) || 30,
+  );
+  const manualPagination = rowCount !== undefined;
+  const pageCount = manualPagination
+    ? Math.max(1, Math.ceil(rowCount / pageSize))
+    : undefined;
+
+  const setPagination = React.useCallback<OnChangeFn<PaginationState>>(
+    (updater) => {
+      const next =
+        typeof updater === "function"
+          ? updater({ pageIndex, pageSize })
+          : updater;
+
+      const params = new URLSearchParams(searchParams);
+
+      if (next.pageIndex <= 0) params.delete("page");
+      else params.set("page", String(next.pageIndex));
+
+      if (next.pageSize === 30) params.delete("limit");
+      else params.set("limit", String(next.pageSize));
+
+      replace(`${pathname}?${params.toString()}`);
+    },
+    [pageIndex, pageSize, pathname, replace, searchParams],
+  );
+
+  React.useEffect(() => {
+    if (!manualPagination || pageCount === undefined) return;
+
+    const maxPageIndex = pageCount - 1;
+    if (pageIndex <= maxPageIndex) return;
+
+    const params = new URLSearchParams(searchParams);
+    if (maxPageIndex <= 0) params.delete("page");
+    else params.set("page", String(maxPageIndex));
+
+    replace(`${pathname}?${params.toString()}`);
+  }, [manualPagination, pageCount, pageIndex, pathname, replace, searchParams]);
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     state: {
-      sorting,
-      columnFilters,
+      // sorting,
       columnVisibility,
+      // rowSelection,
+      columnFilters,
+      pagination: { pageIndex, pageSize },
     },
+    pageCount,
+    rowCount,
+    manualPagination,
+    autoResetPageIndex: false,
+    getRowId: (row) => row.id.toString(),
+    enableRowSelection: true,
+    // onRowSelectionChange: setRowSelection,
+    // onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    ...(manualPagination
+      ? {}
+      : { getPaginationRowModel: getPaginationRowModel() }),
+    getSortedRowModel: getSortedRowModel(),
+    // getFacetedRowModel: getFacetedRowModel(),
+    // getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
   // const columnsRefs = table
@@ -89,8 +163,8 @@ export function DataTable<TData, TValue>({
           {/* <ColumnSelector columns={columnsRefs} /> */}
         </div>
       </div>
-      <div className="rounded-md border overflow-hidden">
-        <div className="h-[86vh] overflow-auto">
+      <div className="rounded-md border overflow-hidden grid gap-2 pb-2">
+        <div className="h-[81vh] overflow-auto" key={pageIndex}>
           <table className="w-full caption-bottom text-sm">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -150,6 +224,7 @@ export function DataTable<TData, TValue>({
             </TableBody>
           </table>
         </div>
+        <DataTablePagination table={table} />
       </div>
     </div>
   );

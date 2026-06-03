@@ -19,11 +19,15 @@ export const CheckinsTable = () => {
   const [isPending, startTransition] = useTransition();
 
   const [data, setData] = useState<CheckinRow[]>([]);
+  const [total, setTotal] = useState(0);
   useEffect(() => {
     startTransition(async () => {
-      const result = await getCheckins(searchParams.toString());
-      if (result instanceof Response) return;
-      if (result.success) setData(result.data ?? []);
+      const { data, success, total } = await getCheckins(
+        searchParams.toString(),
+      );
+      if (!success) return;
+      setData(data ?? []);
+      setTotal(total ?? 0);
     });
   }, [searchParams]);
 
@@ -32,6 +36,7 @@ export const CheckinsTable = () => {
       <DataTable
         columns={columns}
         data={data}
+        rowCount={total}
         loading={isPending}
         filters={<Filters />}
         actions={<ExcelDownload />}

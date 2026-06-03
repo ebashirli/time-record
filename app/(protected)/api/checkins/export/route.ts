@@ -3,10 +3,9 @@ import { NextRequest } from "next/server";
 import ExcelJS from "exceljs";
 import { CheckinRow } from "@/components/pages/checkins/types";
 
-
 export async function GET(request: NextRequest) {
   const paramsString = request.nextUrl.searchParams.toString();
-  const { data } = await getCheckins(paramsString);
+  const { data } = await getCheckins(paramsString, false);
 
   const buffer = await generateExcelBuffer(data);
 
@@ -33,7 +32,12 @@ async function generateExcelBuffer(checkins?: CheckinRow[]) {
     { header: "Position", key: "position", width: 25 },
     { header: "Department", key: "department", width: 25 },
     { header: "Terminal", key: "terminal", width: 25 },
-    { header: "Date and Time", key: "dateTime", width: 25 },
+    {
+      header: "Date and Time",
+      key: "dateTime",
+      width: 25,
+      style: { numFmt: "yyyy-mm-dd hh:mm:ss" },
+    },
     { header: "Direction", key: "direction", width: 25 },
   ];
 
