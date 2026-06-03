@@ -75,7 +75,7 @@ export function DataTable<TData extends I, TValue>({
   );
   const pageSize = Math.max(
     1,
-    parseInt(searchParams.get("limit") || "30", 10) || 30,
+    parseInt(searchParams.get("limit") || "20", 10) || 20,
   );
   const manualPagination = rowCount !== undefined;
   const pageCount = manualPagination
@@ -94,7 +94,7 @@ export function DataTable<TData extends I, TValue>({
       if (next.pageIndex <= 0) params.delete("page");
       else params.set("page", String(next.pageIndex));
 
-      if (next.pageSize === 30) params.delete("limit");
+      if (next.pageSize === 20) params.delete("limit");
       else params.set("limit", String(next.pageSize));
 
       replace(`${pathname}?${params.toString()}`);
@@ -163,8 +163,8 @@ export function DataTable<TData extends I, TValue>({
           {/* <ColumnSelector columns={columnsRefs} /> */}
         </div>
       </div>
-      <div className="rounded-md border overflow-hidden grid gap-2 pb-2">
-        <div className="h-[81vh] overflow-auto" key={pageIndex}>
+      <div className="rounded-md border overflow-hidden grid gap-2 mb-2">
+        <div className="h-[82.5vh] overflow-auto" key={pageIndex}>
           <table className="w-full caption-bottom text-sm">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -224,8 +224,8 @@ export function DataTable<TData extends I, TValue>({
             </TableBody>
           </table>
         </div>
-        <DataTablePagination table={table} />
       </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }

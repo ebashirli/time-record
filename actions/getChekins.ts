@@ -86,7 +86,7 @@ export async function getCheckins(
     const where = buildCheckinsWhere(params, paginate);
 
     const page = Math.max(0, parseInt(params.get("page") || "0", 10) || 0);
-    const limit = Math.max(1, parseInt(params.get("limit") || "30", 10) || 30);
+    const limit = Math.max(1, parseInt(params.get("limit") || "20", 10) || 20);
 
     const [data, total] = await Promise.all([
       prisma.checkin.findMany({
