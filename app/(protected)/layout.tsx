@@ -1,18 +1,22 @@
-// import { Metadata } from "next";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/site-header";
+import { getServerSession, isTerminalRole } from "@/lib/auth-session";
 
-// export const metadata: Metadata = {
-//   title: "Kolin Construction | SPP2 Project",
-//   description: "SPP2 Project",
-// };
-
-export default function Layout({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession();
+  const isTerminal = isTerminalRole(session?.user.role);
+
+  if (isTerminal) {
+    return (
+      <div className="flex min-h-svh flex-col bg-background">{children}</div>
+    );
+  }
+
   return (
     <SidebarProvider
       className="flex flex-col"

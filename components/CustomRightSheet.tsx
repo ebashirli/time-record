@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ListIcon } from "lucide-react";
 
 export function CustomRightSheet({
   children,
@@ -17,9 +20,9 @@ export function CustomRightSheet({
 }) {
   return (
     <Sheet>
-      <SheetTrigger asChild className="">
-        <Button variant="outline" className="capitalize ">
-          Open List
+      <SheetTrigger className="" asChild>
+        <Button variant="outline">
+          <ListIcon />
         </Button>
       </SheetTrigger>
       <SheetContent
