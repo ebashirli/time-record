@@ -17,18 +17,18 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-  CameraIcon,
-  ChartBarIcon,
-  DatabaseIcon,
-  FileChartColumnIcon,
-  FileIcon,
-  FileTextIcon,
-  FolderIcon,
   LayoutDashboardIcon,
   UsersIcon,
-  Settings2Icon,
-  // CommandIcon,
+  ChartBarIcon,
+  FileIcon,
   Building2Icon,
+  // CameraIcon,
+  // DatabaseIcon,
+  // FileChartColumnIcon,
+  // FileTextIcon,
+  // FolderIcon,
+  // Settings2Icon,
+  // CommandIcon,
 } from "lucide-react";
 import { MdChangeCircle } from "react-icons/md";
 import Link from "next/link";
@@ -55,134 +55,134 @@ const data = {
       url: "/attendance-tracking-system",
       icon: <ChartBarIcon />,
     },
-    {
-      title: "Time Sheet",
-      url: "#",
-      icon: <FolderIcon />,
-    },
-    {
-      title: "Personnel Movements",
-      url: "#",
-      icon: <ChartBarIcon />,
-    },
-    {
-      title: "Leave Management",
-      url: "#",
-      icon: <ChartBarIcon />,
-    },
-    {
-      title: "Entry/Exit Records",
-      url: "#",
-      icon: <FolderIcon />,
-    },
+    // {
+    //   title: "Time Sheet",
+    //   url: "#",
+    //   icon: <FolderIcon />,
+    // },
+    // {
+    //   title: "Personnel Movements",
+    //   url: "#",
+    //   icon: <ChartBarIcon />,
+    // },
+    // {
+    //   title: "Leave Management",
+    //   url: "#",
+    //   icon: <ChartBarIcon />,
+    // },
+    // {
+    //   title: "Entry/Exit Records",
+    //   url: "#",
+    //   icon: <FolderIcon />,
+    // },
   ],
   navClouds: [
-    {
-      title: "Capture",
-      icon: <CameraIcon />,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: <FileTextIcon />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: <FileTextIcon />,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Capture",
+    //   icon: <CameraIcon />,
+    //   isActive: true,
+    //   url: "#",
+    //   items: [
+    //     {
+    //       title: "Active Proposals",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Archived",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Proposal",
+    //   icon: <FileTextIcon />,
+    //   url: "#",
+    //   items: [
+    //     {
+    //       title: "Active Proposals",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Archived",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Prompts",
+    //   icon: <FileTextIcon />,
+    //   url: "#",
+    //   items: [
+    //     {
+    //       title: "Active Proposals",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Archived",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
   ],
 
   configurations: [
-    {
-      name: "Shift Planning",
-      url: "#",
-      icon: <DatabaseIcon />,
-    },
-    {
-      name: "Departments",
-      url: "#",
-      icon: <FileChartColumnIcon />,
-    },
-    {
-      name: "Public Holidays",
-      url: "#",
-      icon: <FileIcon />,
-    },
-    {
-      name: "Terminal Management",
-      url: "#",
-      icon: <FileIcon />,
-    },
-    {
-      name: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-    },
+    // {
+    //   name: "Shift Planning",
+    //   url: "#",
+    //   icon: <DatabaseIcon />,
+    // },
+    // {
+    //   name: "Departments",
+    //   url: "#",
+    //   icon: <FileChartColumnIcon />,
+    // },
+    // {
+    //   name: "Public Holidays",
+    //   url: "#",
+    //   icon: <FileIcon />,
+    // },
+    // {
+    //   name: "Terminal Management",
+    //   url: "#",
+    //   icon: <FileIcon />,
+    // },
+    // {
+    //   name: "Settings",
+    //   url: "#",
+    //   icon: <Settings2Icon />,
+    // },
   ],
   tools: [
-    {
-      name: "Strategic Reports",
-      url: "#",
-      icon: <DatabaseIcon />,
-    },
-    {
-      name: "Personnel Details Table",
-      url: "#",
-      icon: <FileChartColumnIcon />,
-    },
-    {
-      name: "Announcements",
-      url: "#",
-      icon: <FileIcon />,
-    },
+    // {
+    //   name: "Strategic Reports",
+    //   url: "#",
+    //   icon: <DatabaseIcon />,
+    // },
+    // {
+    //   name: "Personnel Details Table",
+    //   url: "#",
+    //   icon: <FileChartColumnIcon />,
+    // },
+    // {
+    //   name: "Announcements",
+    //   url: "#",
+    //   icon: <FileIcon />,
+    // },
     {
       name: "Bulk Personnel Import",
       url: "/bulk-personnel-import",
       icon: <FileIcon />,
     },
-    {
-      name: "Working Hours",
-      url: "#",
-      icon: <FileIcon />,
-    },
-    {
-      name: "Security Records",
-      url: "#",
-      icon: <FileIcon />,
-    },
+    // {
+    //   name: "Working Hours",
+    //   url: "#",
+    //   icon: <FileIcon />,
+    // },
+    // {
+    //   name: "Security Records",
+    //   url: "#",
+    //   icon: <FileIcon />,
+    // },
   ],
 };
 

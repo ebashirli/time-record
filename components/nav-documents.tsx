@@ -44,6 +44,8 @@ export function NavSection({
     }
   }
 
+  if (!items.length) return null;
+
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>{name ?? "Configuration"}</SidebarGroupLabel>
