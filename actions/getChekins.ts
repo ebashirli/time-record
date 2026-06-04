@@ -46,7 +46,7 @@ function buildCheckinsWhere(
       ...(to && { lte: new Date(to) }),
     };
   } else {
-    if (!paginate) where.dateTime = { gte: getYesterday() };
+    if (paginate) where.dateTime = { gte: getYesterday() };
   }
 
   if (checkedById) {

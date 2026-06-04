@@ -14,7 +14,10 @@ import { FormSelectField } from "@/components/FormSelectField";
 import { SearchForm } from "@/components/search-form";
 import { CheckinRow } from "./types";
 
-export const CheckinsTable = () => {
+type Props = {
+  page?: "dashboard";
+};
+export const CheckinsTable = ({ page }: Props) => {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
@@ -38,8 +41,8 @@ export const CheckinsTable = () => {
         data={data}
         rowCount={total}
         loading={isPending}
-        filters={<Filters />}
-        actions={<ExcelDownload />}
+        filters={!page && <Filters />}
+        actions={!page && <ExcelDownload />}
       />
     </div>
   );

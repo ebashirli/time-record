@@ -1,9 +1,20 @@
 // export const iframeHeight = "800px";
 
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
+// import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
-import data from "./data.json";
+// import data from "./data.json";
+import { CheckinsTable } from "@/components/pages/checkins/ChekinsTable";
+
+// {
+//   "id": 2,
+//   "header": "Table of contents",
+//   "type": "Table of contents",
+//   "status": "Done",
+//   "target": "29",
+//   "limit": "24",
+//   "reviewer": "Eddie Lake"
+// },
 
 export const description = "A sidebar with a header and a search form.";
 
@@ -16,7 +27,8 @@ export default function Page() {
           <div className="px-4 lg:px-6">
             <ChartAreaInteractive />
           </div>
-          <DataTable data={data} />
+          {/* <DataTable data={data} /> */}
+          <CheckinsTable page="dashboard" />
         </div>
       </div>
     </div>
