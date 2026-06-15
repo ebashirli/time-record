@@ -25,7 +25,6 @@ export async function proxy(request: NextRequest) {
   const isImagePath = pathname.startsWith("/api/images/");
 
   if (isTerminalRole(role) && !isScannerPath && !isImagePath) {
-    console.log({ "request.url": request.url });
     return NextResponse.redirect(new URL("/scanner", request.url));
   }
 
