@@ -161,7 +161,7 @@ async function processAndUpsertRow(row: Row) {
     lastName: row.lastName,
     fullName: row.fullName,
     idCardNo: row.idCardNo ? String(row.idCardNo) : undefined,
-    idCardPin: row.idCardNo ? String(row.idCardPin) : undefined,
+    idCardPin: row.idCardPin ? String(row.idCardPin) : undefined,
     birthDate: row.birthDate ? new Date(Date.parse(row.birthDate)) : undefined,
     phoneNumber: row.phoneNumber ? String(row.phoneNumber) : undefined,
     emergencyPhoneNumber: row.emergencyPhoneNumber ? String(row.emergencyPhoneNumber) : undefined,
