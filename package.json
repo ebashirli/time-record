@@ -5,10 +5,8 @@
   "type": "module",
   "scripts": {
     "images": "bunx serve \"D:/DataServer/Idari Ishler/Vusal Abdullayev/backup/KART/Images\" -p 8000",
-    "start:app": "NODE_ENV=production node server.ts",
-    "start": "concurrently \"bun run images\" \"bun run start:app\"",
-    
     "dev": "next dev --experimental-https",
+    "start": "NODE_ENV=production node server.ts",
     "dev:https": "node server.js",
     "dev-old": "next dev",
     "build": "next build",
@@ -77,7 +75,6 @@
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "concurrently": "^10.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "prisma": "^7.8.0",
