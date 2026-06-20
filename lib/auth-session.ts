@@ -8,7 +8,7 @@ export async function getServerSession() {
   });
 }
 
-export function isTerminalRole(role: Role) {
+export function isTerminalRole(role?: Role) {
   return role === Role.TERMINAL;
 }
 
@@ -16,6 +16,6 @@ export function isAdminRole(role: Role) {
   return role === Role.ADMIN;
 }
 
-export function getDefaultRouteForRole(role: Role) {
+export function getDefaultRouteForRole(role?: Role) {
   return isTerminalRole(role) ? "/scanner" : "/dashboard";
 }

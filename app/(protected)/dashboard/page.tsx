@@ -5,6 +5,8 @@ import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { SectionCards } from "@/components/section-cards";
 // import data from "./data.json";
 import { CheckinsTable } from "@/components/pages/checkins/ChekinsTable";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 // {
 //   "id": 2,
@@ -28,7 +30,9 @@ export default function Page() {
             <ChartAreaInteractive />
           </div>
           {/* <DataTable data={data} /> */}
-          <CheckinsTable page="dashboard" />
+          <Suspense fallback={<Spinner />}>
+            <CheckinsTable page="dashboard" />
+          </Suspense>
         </div>
       </div>
     </div>

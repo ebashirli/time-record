@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getSessionCookie } from "better-auth/cookies";
 import { isTerminalRole } from "@/lib/auth-session";
+import { Role } from "./prisma/lib/generated/prisma/enums";
 
 export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
@@ -24,7 +25,7 @@ export async function proxy(request: NextRequest) {
 
   const isImagePath = pathname.startsWith("/api/images/");
 
-  if (isTerminalRole(role) && !isScannerPath && !isImagePath) {
+  if (isTerminalRole(role as Role) && !isScannerPath && !isImagePath) {
     return NextResponse.redirect(new URL("/scanner", request.url));
   }
 
