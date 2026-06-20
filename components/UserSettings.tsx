@@ -3,17 +3,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import { CircleUserRoundIcon, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { useSession } from "@/lib/auth-client";
+import { Badge } from "./ui/badge";
 
 export const UserSettings = ({ isMobile }: { isMobile?: boolean }) => {
   const session = useSession();
@@ -38,8 +37,13 @@ export const UserSettings = ({ isMobile }: { isMobile?: boolean }) => {
             )}
             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
           </Avatar>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{user?.name}</span>
+          <div className="grid flex-1 text-left text-sm leading-tight py-2">
+            <div className="flex justify-between">
+              <span className="truncate font-medium">{user?.name}</span>
+              <Badge>
+                <span className="truncate font-medium">{user?.role}</span>
+              </Badge>
+            </div>
             <span className="truncate text-xs text-muted-foreground">
               {user?.email}
             </span>

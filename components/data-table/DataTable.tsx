@@ -192,7 +192,11 @@ export function DataTable<TData extends I, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className=""
+                    className="cursor-pointer"
+                    onClick={() => {
+                      const params = new URLSearchParams(searchParams);
+                      replace(`${pathname}/${row.id}?${params.toString()}`);
+                    }}
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (

@@ -72,10 +72,14 @@ export async function uploadExcel(formData: FormData) {
         if (processedCount % 100 === 0)
           console.info(`Count: ${processedCount}`);
       } catch (rowError) {
-        console.error(
-          `Failed to process row for cardId ${row.cardId}:`,
-          rowError,
-        );
+        return {
+          success: false,
+          error:
+            rowError instanceof Error
+              ? rowError.message.split("\n").at(-1)
+              : "Unexpected error",
+        };
+
         // You can choose to throw here or let the loop continue
       }
     }
@@ -164,7 +168,9 @@ async function processAndUpsertRow(row: Row) {
     idCardPin: row.idCardPin ? String(row.idCardPin) : undefined,
     birthDate: row.birthDate ? new Date(Date.parse(row.birthDate)) : undefined,
     phoneNumber: row.phoneNumber ? String(row.phoneNumber) : undefined,
-    emergencyPhoneNumber: row.emergencyPhoneNumber ? String(row.emergencyPhoneNumber) : undefined,
+    emergencyPhoneNumber: row.emergencyPhoneNumber
+      ? String(row.emergencyPhoneNumber)
+      : undefined,
     hireDate: row.hireDate ? new Date(Date.parse(row.hireDate)) : undefined,
     companyId: company.id,
     departmentId: department.id,

@@ -1,10 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import {
-  employeeFormSchema,
-  type EmployeeFormState,
-} from "./employee-form-schema";
+import { formSchema, type EmployeeFormState } from "./employee-form-schema";
 import prisma from "@/lib/prisma";
 
 export async function updateEmployee(
@@ -49,7 +46,7 @@ export async function updateEmployee(
     };
 
     // Validate with Zod
-    const validatedFields = employeeFormSchema.safeParse(rawData);
+    const validatedFields = formSchema.safeParse(rawData);
 
     if (!validatedFields.success) {
       return {

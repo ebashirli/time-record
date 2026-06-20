@@ -8,18 +8,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Label } from "./ui/label";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Field, FieldDescription, FieldError, FieldLabel } from "./ui/field";
+import {
+  ControllerFieldState,
+  ControllerRenderProps,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 
 type Option = {
   id: string;
   name: string | null;
 };
 
-type Props<T extends Option> = {
+type Props<
+  T extends Option,
+  TName extends Path<TFieldValues>,
+  TFieldValues extends FieldValues = FieldValues,
+> = {
   items?: T[];
   getItems?: (paramsString?: string) => Promise<{ data?: T[] }>;
   errors?: Record<string, string[]>;
@@ -29,9 +39,16 @@ type Props<T extends Option> = {
   defaultValue?: string;
   placeholder?: string;
   isFilter?: boolean;
+  fieldState?: ControllerFieldState;
+  field?: ControllerRenderProps<TFieldValues, TName>;
+  description?: string;
 };
 
-export const FormSelectField = <T extends Option>({
+export const FormSelectField = <
+  T extends Option,
+  TName extends Path<TFieldValues>,
+  TFieldValues extends FieldValues = FieldValues,
+>({
   items,
   getItems,
   errors,
@@ -41,7 +58,10 @@ export const FormSelectField = <T extends Option>({
   defaultValue,
   placeholder,
   isFilter,
-}: Props<T>) => {
+  description,
+  fieldState,
+  field,
+}: Props<T, TName, TFieldValues>) => {
   const [isPending, startTransition] = useTransition();
 
   const [itemsState, setItemsState] = React.useState<T[]>(items || []);
@@ -71,13 +91,15 @@ export const FormSelectField = <T extends Option>({
   };
 
   return (
-    <div className="space-y-2 w-44">
+    <Field data-invalid={fieldState?.invalid}>
       {label && (
-        <Label htmlFor={name}>
+        <FieldLabel htmlFor={name}>
           {label} {required && <span className="text-red-500">*</span>}
-        </Label>
+        </FieldLabel>
       )}
+
       <Select
+        {...(field ?? {})}
         name={name}
         key={paramValue || "__empty__"}
         defaultValue={paramValue || defaultValue}
@@ -85,6 +107,7 @@ export const FormSelectField = <T extends Option>({
         disabled={isPending}
       >
         <SelectTrigger
+          key={1}
           className={cn(
             "w-full py-0",
             paramValue !== null && "[&>svg:last-child]:hidden!",
@@ -110,7 +133,7 @@ export const FormSelectField = <T extends Option>({
             </div>
           ) : null}
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent key={2}>
           {itemsState?.map((item) => (
             <SelectItem key={item.id} value={item.id}>
               {item.name}
@@ -118,9 +141,12 @@ export const FormSelectField = <T extends Option>({
           ))}
         </SelectContent>
       </Select>
+      {description && <FieldDescription>{description}</FieldDescription>}
       {errors?.[name] && (
         <p className="text-sm text-red-500">{errors[name][0]}</p>
       )}
-    </div>
+
+      {fieldState?.error && <FieldError errors={[fieldState?.error]} />}
+    </Field>
   );
 };

@@ -16,7 +16,10 @@ import {
   SidebarMenuItem,
   // useSidebar,
 } from "@/components/ui/sidebar";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
+import { Role } from "@/prisma/lib/generated/prisma/browser";
 import { toast } from "sonner";
+import { NavItem } from "./app-sidebar";
 // import {
 //   MoreHorizontalIcon,
 //   FolderIcon,
@@ -29,12 +32,9 @@ export function NavSection({
   name,
 }: {
   name?: string;
-  items: {
-    name: string;
-    url: string;
-    icon: React.ReactNode;
-  }[];
+  items: NavItem[];
 }) {
+  const { user } = useCurrentSession();
   // const { isMobile } = useSidebar();
 
   function handleClick(url?: string) {
@@ -48,17 +48,28 @@ export function NavSection({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>{name ?? "Configuration"}</SidebarGroupLabel>
+      {items.some((i) =>
+        [...(i.roles ?? []), Role.ADMIN, Role.MANAGER]?.includes(
+          user?.role as Role,
+        ),
+      ) && <SidebarGroupLabel>{name ?? "Configuration"}</SidebarGroupLabel>}
       <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild onClick={() => handleClick(item.url)}>
-              <a href={item.url}>
-                {item.icon}
-                <span>{item.name}</span>
-              </a>
-            </SidebarMenuButton>
-            {/* <DropdownMenu>
+        {items.map(
+          (item) =>
+            [...(item?.roles ?? []), Role.ADMIN, Role.MANAGER].includes(
+              user?.role as Role,
+            ) && (
+              <SidebarMenuItem key={item.name}>
+                <SidebarMenuButton
+                  asChild
+                  onClick={() => handleClick(item.url)}
+                >
+                  <a href={item.url}>
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </a>
+                </SidebarMenuButton>
+                {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
                   showOnHover
@@ -88,8 +99,9 @@ export function NavSection({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu> */}
-          </SidebarMenuItem>
-        ))}
+              </SidebarMenuItem>
+            ),
+        )}
         {/* <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <MoreHorizontalIcon className="text-sidebar-foreground/70" />

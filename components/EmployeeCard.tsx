@@ -11,9 +11,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DeleteDialog } from "./DeleteDialog";
 import { Button } from "./ui/button";
-import { deleteEmployee } from "@/actions/deleteEmployee";
 import { QRGenerator } from "./QRGenerator";
 import { useRouter } from "next/navigation";
 
@@ -35,10 +33,10 @@ type Employee = {
 
 export const EmployeeCard = ({
   employee,
-  setEmployees,
+  children,
 }: {
   employee: Employee;
-  setEmployees: React.Dispatch<React.SetStateAction<Employee[]>>;
+  children: React.ReactElement;
 }) => {
   const router = useRouter();
   const handlePropogation = (e: React.MouseEvent) => {
@@ -98,11 +96,7 @@ export const EmployeeCard = ({
             <Pencil />
           </Button>
           <QRGenerator value={employee.cardId} />
-          <DeleteDialog
-            deleteAction={deleteEmployee}
-            id={employee.id}
-            setData={setEmployees}
-          />
+          {children}
         </div>
       </CardFooter>
     </Card>

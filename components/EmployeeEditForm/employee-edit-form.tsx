@@ -325,22 +325,17 @@ export function EmployeeEditForm({
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="idCardSerie">ID Card Serie</Label>
-                  <Select
-                    name="idCardSerie"
-                    defaultValue={employee.idCardSerie || undefined}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select serie" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={IdCardSerie.AZE}>AZE</SelectItem>
-                      <SelectItem value={IdCardSerie.AA}>AA</SelectItem>
-                      <SelectItem value={IdCardSerie.MYI}>MYI</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <FormSelectField
+                  items={Object.keys(IdCardSerie).map((k) => ({
+                    id: k,
+                    name: k,
+                  }))}
+                  errors={state.errors}
+                  name="idCardSerie"
+                  label="ID Card Serie"
+                  required
+                  defaultValue={employee.idCardSerie ?? ""}
+                />
 
                 <div className="space-y-2">
                   <Label htmlFor="idCardNo">ID Card Number</Label>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useTransition, useState } from "react";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type TGetAction<T> = (paramsString: string) => Promise<{
   error?: string;
@@ -18,6 +18,8 @@ export const useCustomInfiniteScroll = <T extends { id: string }>(
   const [hasMore, setHasMore] = useState(true);
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
+  const { replace } = useRouter();
 
   const stableGetAction = useRef(getAction);
   useEffect(() => {
@@ -73,6 +75,7 @@ export const useCustomInfiniteScroll = <T extends { id: string }>(
     const page = Number(params.get("page") ?? 0);
     if (!isPending && hasMore) params.set("page", String(page + 1));
     else params.delete("page");
+    replace(`${pathname}?${params.toString()}`);
   };
 
   return { hasMore, isPending, next };

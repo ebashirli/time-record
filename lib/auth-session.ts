@@ -1,3 +1,4 @@
+import { Role } from "@/prisma/lib/generated/prisma/enums";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -7,10 +8,14 @@ export async function getServerSession() {
   });
 }
 
-export function isTerminalRole(role: string | undefined | null) {
-  return role === "TERMINAL";
+export function isTerminalRole(role: Role) {
+  return role === Role.TERMINAL;
 }
 
-export function getDefaultRouteForRole(role: string | undefined | null) {
+export function isAdminRole(role: Role) {
+  return role === Role.ADMIN;
+}
+
+export function getDefaultRouteForRole(role: Role) {
   return isTerminalRole(role) ? "/scanner" : "/dashboard";
 }

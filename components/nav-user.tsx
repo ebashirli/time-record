@@ -12,13 +12,13 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { EllipsisVerticalIcon } from "lucide-react";
-import { useSession } from "@/lib/auth-client";
 
 import { UserSettings } from "./UserSettings";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
+import { Badge } from "./ui/badge";
 
 export function NavUser() {
-  const session = useSession();
-  const user = session?.data?.user;
+  const { session, user } = useCurrentSession();
   const { isMobile } = useSidebar();
 
   if (!session || !user) return null;
@@ -42,7 +42,12 @@ export function NavUser() {
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <div className="flex w-full justify-between">
+                  <span className="truncate font-medium">{user.name}</span>
+                  <Badge>
+                    <span className="truncate font-medium">{user.role}</span>
+                  </Badge>
+                </div>
                 <span className="truncate text-xs text-muted-foreground">
                   {user.email}
                 </span>

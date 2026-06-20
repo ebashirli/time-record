@@ -38,7 +38,7 @@ export const TabEnum = z.enum([
   "contact",
 ]);
 
-export const employeeFormSchema = z
+export const formSchema = z
   .object({
     tab: TabEnum,
 
@@ -123,7 +123,7 @@ export const employeeFormSchema = z
     }
   });
 
-export type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
+export type EmployeeFormValues = z.infer<typeof formSchema>;
 
 export type EmployeeFormState = {
   errors?: {

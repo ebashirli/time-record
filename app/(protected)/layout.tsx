@@ -1,15 +1,16 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteHeader } from "@/components/site-header";
-import { getServerSession, isTerminalRole } from "@/lib/auth-session";
+// import { getServerSession, isTerminalRole } from "@/lib/auth-session";
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
-  const isTerminal = isTerminalRole(session?.user.role);
+  // const session = await getServerSession();
+  const isTerminal = false;
+  // isTerminalRole(session?.user.role);
 
   if (isTerminal) {
     return (

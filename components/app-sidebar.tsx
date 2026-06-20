@@ -22,6 +22,7 @@ import {
   ChartBarIcon,
   FileIcon,
   Building2Icon,
+  GroupIcon,
   // CameraIcon,
   // DatabaseIcon,
   // FileChartColumnIcon,
@@ -32,8 +33,24 @@ import {
 } from "lucide-react";
 import { MdChangeCircle } from "react-icons/md";
 import Link from "next/link";
+import { Role } from "@/prisma/lib/generated/prisma/browser";
 
-const data = {
+export type NavItem = {
+  name?: string;
+  title?: string;
+  url: string;
+  icon: React.ReactElement;
+  roles?: Role[];
+};
+
+type NavItems = NavItem[];
+
+const data: {
+  navMain: NavItems;
+  navClouds: NavItems;
+  configurations: NavItems;
+  tools: NavItems;
+} = {
   navMain: [
     {
       title: "Dashboard",
@@ -54,6 +71,11 @@ const data = {
       title: "Attendance Tracking System",
       url: "/attendance-tracking-system",
       icon: <ChartBarIcon />,
+    },
+    {
+      title: "Users",
+      url: "/users",
+      icon: <GroupIcon />,
     },
     // {
     //   title: "Time Sheet",

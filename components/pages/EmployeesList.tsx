@@ -5,6 +5,8 @@ import CustomInfiniteScroll from "../CustomInfiniteScroll";
 import { EmployeeCard } from "../EmployeeCard";
 import { getEmployees } from "@/actions/getEmployees";
 import { useSearchParams } from "next/navigation";
+import { DeleteDialog } from "../DeleteDialog";
+import { deleteEmployee } from "@/actions/deleteEmployee";
 
 type Employee = {
   id: string;
@@ -37,15 +39,15 @@ export const EmployeesList = () => {
       className="grid-cols-2"
     >
       <>
-        {employees.map((employee) => {
-          return (
-            <EmployeeCard
-              key={employee.id}
-              employee={employee}
-              setEmployees={setEmployees}
+        {employees.map((employee) => (
+          <EmployeeCard key={employee.id} employee={employee}>
+            <DeleteDialog
+              deleteAction={deleteEmployee}
+              id={employee.id}
+              setData={setEmployees}
             />
-          );
-        })}
+          </EmployeeCard>
+        ))}
       </>
     </CustomInfiniteScroll>
   );

@@ -111,10 +111,7 @@ function SignUpFormInner({ ...props }: React.ComponentProps<typeof Card>) {
                     placeholder="m@example.com"
                     required
                   />
-                  <FieldDescription>
-                    We&apos;ll use this to contact you. We will not share your
-                    email with anyone else.
-                  </FieldDescription>
+                  <FieldDescription></FieldDescription>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}

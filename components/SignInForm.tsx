@@ -158,6 +158,7 @@ function PasswordField({
                 <Button
                   onClick={() => setShowPassword((prev) => !prev)}
                   variant="ghost"
+                  type="button"
                 >
                   {showPassword ? <EyeClosedIcon /> : <EyeIcon />}
                 </Button>

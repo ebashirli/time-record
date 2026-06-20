@@ -12,16 +12,12 @@ import { QrCodeIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
+import { NavItem } from "./app-sidebar";
+import { Role } from "@/prisma/lib/generated/prisma/browser";
+import { useCurrentSession } from "@/hooks/useCurrentSession";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon?: React.ReactNode;
-  }[];
-}) {
+export function NavMain({ items }: { items: NavItem[] }) {
+  const { user } = useCurrentSession();
   const pathname = usePathname();
   const pathParts = pathname
     .split("?")
@@ -69,21 +65,27 @@ export function NavMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                isActive={`/${firstPart}` === item.url}
-                asChild
-                tooltip={item.title}
-                onClick={() => handleClick(item.url)}
-              >
-                <Link href={item.url}>
-                  {item.icon}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            return (
+              [...(item?.roles ?? []), Role.ADMIN, Role.MANAGER].includes(
+                user?.role as Role,
+              ) && (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    isActive={`/${firstPart}` === item.url}
+                    asChild
+                    tooltip={item.title}
+                    onClick={() => handleClick(item.url)}
+                  >
+                    <Link href={item.url}>
+                      {item.icon}
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

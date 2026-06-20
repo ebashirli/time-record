@@ -44,6 +44,7 @@ export default function InfiniteScroll({
       // Create a new IntersectionObserver instance because hasMore or next may be changed.
       observer.current = new IntersectionObserver(
         (entries) => {
+          console.log({ isIntersecting: entries[0].isIntersecting, hasMore });
           if (entries[0].isIntersecting && hasMore) {
             next();
           }
