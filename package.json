@@ -10,7 +10,7 @@
     "start": "start /b bun run images && bun run start:app",
     "dev:https": "node server.js",
     "dev-old": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "lint": "eslint",
     "posti": "prisma generate",
     "db:migrate": "prisma migrate dev",

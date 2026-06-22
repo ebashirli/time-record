@@ -9,6 +9,15 @@ export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
   const { pathname } = request.nextUrl;
 
+  // Allow PWA assets through without auth
+  if (
+    pathname === "/manifest.webmanifest" ||
+    pathname === "/sw.js" ||
+    pathname.startsWith("/icons/")
+  ) {
+    return NextResponse.next();
+  }
+
   if (!sessionCookie) {
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
@@ -34,7 +43,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next|_next/image|favicon.ico|sign-in|sign-up|api/auth).*)",
+    "/((?!_next/static|_next|_next/image|favicon.ico|sign-in|sign-up|api/auth|manifest.webmanifest|sw.js|icons).*)",
   ],
 };
 
