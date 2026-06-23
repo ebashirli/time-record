@@ -1,9 +1,9 @@
-import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 import ExcelJS from "exceljs";
 import { Direction } from "@/prisma/lib/generated/prisma/enums";
+import getCurrentSession from "@/lib/getCurrentSession";
 
 export async function GET(request: NextRequest) {
   try {
@@ -108,9 +108,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Optional: Check if user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
+    const { session } = await getCurrentSession();
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

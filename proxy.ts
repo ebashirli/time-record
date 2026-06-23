@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { getSessionCookie } from "better-auth/cookies";
 import { isTerminalRole } from "@/lib/auth-session";
 import { Role } from "./prisma/lib/generated/prisma/enums";
+import getCurrentSession from "./lib/getCurrentSession";
 
 export async function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
@@ -16,7 +15,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const { session } = await getCurrentSession();
+
   if (!session) return NextResponse.redirect(new URL("/sign-in", request.url));
 
   const role = session.user.role;

@@ -4,9 +4,8 @@ import { revalidatePath } from "next/cache";
 import { formSchema, type UserFormState } from "./user-form-schema";
 import prisma from "@/lib/prisma";
 import { Role } from "@/prisma/lib/generated/prisma/enums";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { hashPassword } from "better-auth/crypto";
+import getCurrentSession from "@/lib/getCurrentSession";
 // import { generatePassword } from "@/lib/helpers/passwordGenerator";
 
 export async function userAddUpdateAction(
@@ -17,8 +16,7 @@ export async function userAddUpdateAction(
   try {
     // Convert FormData to object
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    const user = session?.user;
+    const { user } = await getCurrentSession();
 
     const rawData = {
       id,
