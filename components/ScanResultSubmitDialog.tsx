@@ -24,18 +24,8 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
-
-type Employee = {
-  id: string;
-  firstName: string;
-  fullName: string;
-  lastName: string;
-  image: string;
-  company: { name: string };
-  position: { name: string };
-  department: { name: string };
-  checkins: { direction: Direction }[];
-};
+import { CachedEmployee, db } from "@/lib/dexie/db";
+import { fetchAndSaveEmployeeImage } from "@/lib/dexie/fetchAndSaveEmployeeImage";
 
 type Props = {
   cardId: string | null;
@@ -44,20 +34,31 @@ type Props = {
 
 export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
   // Step 1: Triggered immediately when QR code hits the lens
-  const [employee, setEmployee] = useState<Employee | null>(null);
+  const [employee, setEmployee] = useState<CachedEmployee | null>(null);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (!cardId) return;
-    const handleScanSuccess = (scanned: string) => {
+    const handleScanSuccess = async (scanned: string) => {
+      const cached = await db.employees.get(scanned);
+      if (cached) return setEmployee(cached);
+
       startTransition(async () => {
         const { data, error } = await getEmployeeByCardId(scanned);
+
         if (error) toast.error(error);
-        if (data) setEmployee(data as Employee);
+        if (data) {
+          const imageBlob = await fetchAndSaveEmployeeImage(data.image);
+          const employee = { ...data, imageBlob };
+          await db.employees.put(employee);
+          setEmployee(employee);
+        }
       });
     };
 
-    handleScanSuccess(cardId);
+    (async () => {
+      await handleScanSuccess(cardId);
+    })();
   }, [cardId]);
 
   function handleClose(open?: boolean) {
@@ -88,35 +89,25 @@ export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
   );
 }
 
-function EmployeeCard({ employee }: { employee: Employee }) {
+function EmployeeCard({ employee }: { employee: CachedEmployee }) {
   return (
     <div className="flex flex-col items-center gap-4">
-      {employee.image && (
-        <Avatar className="h-36 w-36 rounded-lg">
-          {employee.image && (
-            <AvatarImage
-              src={"/api/images/" + employee.image}
-              alt={"profile image" + (employee.fullName ?? "")}
-            />
-          )}
-          <AvatarFallback className="rounded-lg">
-            {employee.fullName?.slice(0, 2).toLocaleUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      )}
+      <EmployeeImage
+        image={employee.image}
+        fullName={employee.fullName}
+        blob={employee.imageBlob}
+      />
+
       <div className="text-center">
         <h3 className="font-semibold text-lg">{employee.fullName}</h3>
-        <p className="text-xs text-slate-500">{employee.company.name}</p>
-        <p className="text-sm text-slate-600">{employee.department.name}</p>
+        <p className="text-xs text-slate-500">{employee.companyName}</p>
+        <p className="text-sm text-slate-600">{employee.departmentName}</p>
+        <p className="text-xs text-slate-500">{employee.positionName}</p>
         <Separator className="my-3" />
         <div className="flex flex-col items-center ">
           <p className="mb-2">Sonuncu hərəkət</p>
           <Badge className="text-xl font-bold p-7 py-6 ">
-            {employee.checkins.length
-              ? employee.checkins.at(0)?.direction === Direction.IN
-                ? "Giriş"
-                : "Çıxış"
-              : "İlk dəfə"}
+            {employee.lastAction ?? "İlk dəfə"}
           </Badge>
         </div>
       </div>
@@ -128,7 +119,7 @@ function Form({
   employee,
   reset,
 }: {
-  employee: Employee;
+  employee: CachedEmployee;
   reset: (open?: boolean) => void;
 }) {
   const [state, formAction, isPending] = useActionState(submitCheckIn, null);
@@ -185,5 +176,50 @@ function InOutButton({
       )}
       {direction === Direction.OUT ? "Çıxış" : "Giriş"}
     </Button>
+  );
+}
+
+interface EmployeeImageProps {
+  image?: string | null;
+  fullName: string;
+  blob?: Blob | null;
+}
+
+export default function EmployeeImage({
+  blob,
+  fullName,
+  image,
+}: EmployeeImageProps) {
+  const [imgSrc, setImgSrc] = useState<string>("");
+
+  console.log({ blob, fullName, image, imgSrc });
+
+  useEffect(() => {
+    if (!blob) return;
+
+    // 1. Blob-dan müvəqqəti URL yaradırıq (məs: blob:http://localhost:3000/...)
+    const url = URL.createObjectURL(blob);
+    console.log({ url });
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setImgSrc(url);
+
+    // 2. CLEANUP: Komponent ekrandan itəndə yaddaşı mütləq təmizləyirik
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [blob]);
+
+  return (
+    <Avatar className="h-36 w-36 rounded-lg">
+      {image && (
+        <AvatarImage
+          src={imgSrc ?? "/api/images/" + image}
+          alt={"profile image" + (fullName ?? "")}
+        />
+      )}
+      <AvatarFallback className="rounded-lg">
+        {fullName?.slice(0, 2).toLocaleUpperCase()}
+      </AvatarFallback>
+    </Avatar>
   );
 }

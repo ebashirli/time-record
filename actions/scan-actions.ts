@@ -22,12 +22,26 @@ export async function getEmployeeByCardId(cardId: string) {
           take: 1,
           select: {
             direction: true,
+            dateTime: true,
           },
         },
       },
     });
     if (!employee) return { error: "Employee not found" };
-    return { data: employee };
+    return {
+      data: {
+        id: employee.id,
+        cardId: employee.cardId,
+        fullName: employee.fullName ?? "",
+        companyName: employee.company.name,
+        departmentName: employee.department.name,
+        positionName: employee.position.name,
+        lastAction: employee.checkins.at(-1)?.direction ?? null,
+        lastActionAt: employee.checkins.at(-1)?.dateTime.toDateString() ?? null,
+        cachedAt: new Date().toISOString(),
+        image: employee.image,
+      },
+    };
   } catch (error) {
     if (error instanceof Error) return { error: error.message };
     return { error: "An error occurred while fetching employee data" };
@@ -51,6 +65,7 @@ export async function submitCheckIn(
   if (!user) return { error: "Unauthorized" };
   const employeeId = formData.get("employeeId") as string;
   const direction = formData.get("direction") as Direction;
+  // const dateTime = formData.get("dateTime") as Date ?? new Date();
 
   if (!employeeId || !direction)
     return { error: "Employee ID and direction is required" };
