@@ -1,6 +1,7 @@
 export type CheckinRow = {
   "#": number;
   id: string;
+  cardId: string;
   fullName: string;
   companyName: string;
   departmentName: string;

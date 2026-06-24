@@ -60,7 +60,7 @@ export function SiteHeader() {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        {["/employees", "/companies"].includes(pathname) && (
+        {["/companies"].includes(pathname) && (
           <Suspense fallback={<Spinner />}>
             <SearchForm className="w-full sm:ml-auto sm:w-auto" />
           </Suspense>
