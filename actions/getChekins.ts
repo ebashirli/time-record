@@ -22,7 +22,7 @@ const checkinSelect = {
       position: { select: { name: true } },
     },
   },
-  checkedBy: { select: { name: true } },
+  checkedBy: { select: { name: true, gate: { select: { name: true } } } },
   dateTime: true,
   direction: true,
 } satisfies Prisma.CheckinSelect;
@@ -107,6 +107,7 @@ export async function getCheckins(
         departmentName: checkin.employee.department.name,
         positionName: checkin.employee.position.name,
         checkedByName: checkin.checkedBy.name || "Unknown Terminal",
+        gateName: checkin.checkedBy.gate?.name || "Unknown Gate",
         dateTime: checkin.dateTime,
         direction: (checkin.direction === Direction.IN ? "In" : "Out") as
           | "In"

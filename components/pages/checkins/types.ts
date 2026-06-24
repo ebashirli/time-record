@@ -6,6 +6,7 @@ export type CheckinRow = {
   departmentName: string;
   positionName: string;
   checkedByName: string;
+  gateName: string;
   dateTime: Date;
   direction: "In" | "Out";
 };

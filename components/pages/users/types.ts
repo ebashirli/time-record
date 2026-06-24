@@ -8,4 +8,5 @@ export type User = {
   role: Role;
   image: string | null;
   createdAt: Date;
+  gateName?: string | null;
 };

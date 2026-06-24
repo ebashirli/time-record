@@ -25,7 +25,7 @@ export async function getUsers(
       prisma.user.findMany({
         where,
         // orderBy: { dateTime: "desc" },
-        // select: checkinSelect,
+        include: { gate: { select: { name: true } } },
         ...(paginate && { skip: limit * page, take: limit }),
       }),
       prisma.user.count({ where }),
@@ -40,6 +40,7 @@ export async function getUsers(
         role: user.role,
         image: user.image,
         createdAt: user.createdAt,
+        gateName: user.gate?.name ?? null,
       })) ?? [];
 
     return { success: true, data: result, total };

@@ -67,6 +67,13 @@ export const columns: ColumnDef<CheckinRow>[] = [
     },
   },
   {
+    accessorKey: "gateName",
+    header: () => <div className="">Post</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("gateName")}</div>;
+    },
+  },
+  {
     accessorKey: "dateTime",
     header: () => <div className="text-center">Date/Time</div>,
     cell: ({ row }) => {

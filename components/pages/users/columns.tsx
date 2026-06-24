@@ -38,6 +38,14 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
+    id: "gateName",
+    accessorFn: (row) => row.gateName,
+    header: () => <div className="">Gate</div>,
+    cell: ({ row }) => {
+      return <div className="font-medium">{row.getValue("gateName")}</div>;
+    },
+  },
+  {
     accessorKey: "createdAt",
     header: () => <div className="text-right">Created at</div>,
     cell: ({ row }) => {

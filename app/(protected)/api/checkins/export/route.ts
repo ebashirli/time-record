@@ -31,6 +31,7 @@ async function generateExcelBuffer(checkins?: CheckinRow[]) {
     { header: "Company", key: "company", width: 25 },
     { header: "Position", key: "position", width: 25 },
     { header: "Department", key: "department", width: 25 },
+    { header: "Post", key: "gate", width: 25 },
     { header: "Terminal", key: "terminal", width: 25 },
     {
       header: "Date and Time",
@@ -64,6 +65,7 @@ async function generateExcelBuffer(checkins?: CheckinRow[]) {
       company: checkin.companyName,
       position: checkin.positionName,
       department: checkin.departmentName,
+      gate: checkin.gateName,
       terminal: checkin.checkedByName,
       dateTime: checkin.dateTime,
       direction: checkin.direction === "In" ? "Giriş" : "Çıxış",
