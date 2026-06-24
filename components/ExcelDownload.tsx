@@ -5,7 +5,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileDown, Loader2 } from "lucide-react";
 
-export default function ExcelDownload() {
+type Props = {
+  endpoint?: string;
+  filename?: string;
+};
+
+export default function ExcelDownload({
+  endpoint = "/api/checkins/export",
+  filename = "checkins_report.xlsx",
+}: Props) {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,7 +22,7 @@ export default function ExcelDownload() {
     try {
       // Pass all current filters to the export route
       const params = searchParams.toString();
-      const url = `/api/checkins/export${params ? `?${params}` : ""}`;
+      const url = `${endpoint}${params ? `?${params}` : ""}`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error("Export failed");
@@ -24,7 +32,7 @@ export default function ExcelDownload() {
 
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = "checkins_report.xlsx";
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       link.remove();
