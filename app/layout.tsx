@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Providers from "@/components/Providers";
+import { RegisterSW } from "@/components/register-sw";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -17,11 +18,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  icons: {
-    icon: "./icon.png",
-  },
+  // icons: {
+  //   icon: "./icon.png",
+  // },
   title: "Kolin Construction | SPP2 Project",
   description: "SPP2 Project",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Time Record",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0f172a",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -44,6 +57,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
+        <RegisterSW />
       </body>
     </html>
   );

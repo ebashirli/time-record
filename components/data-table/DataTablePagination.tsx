@@ -24,9 +24,8 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex gap-3 px-2 ">
-      <div className="hidden flex-1 text-sm text-muted-foreground sm:block">
-        {/* {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected. */}
+      <div className="hidden flex-1 text-sm text-muted-foreground sm:block py-2">
+        {table.getRowCount()} result(s) total
       </div>
       <div className="flex justify-between w-full gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4 lg:gap-6">
         <div className="flex items-center justify-between gap-2 sm:justify-start">

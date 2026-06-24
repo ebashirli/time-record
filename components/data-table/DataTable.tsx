@@ -32,7 +32,7 @@ import {
 //   DropdownMenuTrigger,
 // } from "@/components/ui/dropdown-menu";
 // import { Columns3Icon } from "lucide-react";
-import { Spinner } from "../ui/spinner";
+import { Skeleton } from "../ui/skeleton";
 import { DataTablePagination } from "./DataTablePagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -187,7 +187,17 @@ export function DataTable<TData extends I, TValue>({
               ))}
             </TableHeader>
             <TableBody>
-              {rows?.length ? (
+              {loading ? (
+                Array.from({ length: Math.min(pageSize, 15) }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`}>
+                    {columns.map((_, j) => (
+                      <TableCell key={j}>
+                        <Skeleton className="h-8 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : rows?.length ? (
                 rows.map((row) => (
                   <TableRow
                     key={row.id}
@@ -216,11 +226,7 @@ export function DataTable<TData extends I, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center border"
                   >
-                    {!!loading ? (
-                      <Spinner className="mx-auto" />
-                    ) : (
-                      "No results."
-                    )}
+                    No results.
                   </TableCell>
                 </TableRow>
               )}

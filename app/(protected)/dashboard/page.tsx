@@ -18,7 +18,7 @@ import { Spinner } from "@/components/ui/spinner";
 //   "reviewer": "Eddie Lake"
 // },
 
-export const description = "A sidebar with a header and a search form.";
+// export const description = "A sidebar with a header and a search form.";
 
 export default function Page() {
   return (

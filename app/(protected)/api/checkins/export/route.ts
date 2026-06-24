@@ -27,6 +27,7 @@ async function generateExcelBuffer(checkins?: CheckinRow[]) {
   // 3. Define columns and headers
   worksheet.columns = [
     { header: "#", key: "#", width: 10 },
+    { header: "Card ID", key: "cardId", width: 25 },
     { header: "Name", key: "name", width: 25 },
     { header: "Company", key: "company", width: 25 },
     { header: "Position", key: "position", width: 25 },
@@ -61,6 +62,7 @@ async function generateExcelBuffer(checkins?: CheckinRow[]) {
   checkins?.forEach((checkin) => {
     worksheet.addRow({
       "#": checkin["#"],
+      cardId: checkin.cardId,
       name: checkin.fullName,
       company: checkin.companyName,
       position: checkin.positionName,

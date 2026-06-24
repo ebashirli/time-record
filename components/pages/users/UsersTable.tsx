@@ -1,7 +1,7 @@
 "use client";
 
 // import { Direction } from "@/prisma/lib/generated/prisma/browser";
-import { useState, useTransition, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { columns } from "./columns";
 import { useSearchParams } from "next/navigation";
@@ -32,19 +32,28 @@ type User = {
 
 export const UsersTable = () => {
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const paramsString = searchParams.toString();
   const { isAdmin } = useCurrentSession();
 
   const [data, setData] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
+  const [loadedParams, setLoadedParams] = useState<string | null>(null);
+
   useEffect(() => {
-    startTransition(async () => {
-      const { data, success, total } = await getUsers(searchParams.toString());
-      if (!success || !data) return;
+    let cancelled = false;
+    (async () => {
+      const { data, success, total } = await getUsers(paramsString);
+      if (cancelled || !success || !data) return;
       setData(data);
       setTotal(total ?? 0);
-    });
-  }, [searchParams]);
+      setLoadedParams(paramsString);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [paramsString]);
+
+  const loading = loadedParams !== paramsString;
 
   return (
     <div className="flex h-[calc(100dvh-var(--header-height)-var(--spacing)*4.5)] min-h-0 w-full flex-col overflow-hidden">
@@ -52,7 +61,7 @@ export const UsersTable = () => {
         columns={columns}
         data={data}
         rowCount={total}
-        loading={isPending}
+        loading={loading}
         // filters={!page && <Filters />}
         actions={
           isAdmin && (

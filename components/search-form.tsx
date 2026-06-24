@@ -25,7 +25,7 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
 
   return (
     <form {...props} onSubmit={(e) => e.preventDefault()}>
-      <div className="relative ">
+      <div className="relative min-w-80 ">
         <Label htmlFor="search" className="sr-only">
           Search
         </Label>

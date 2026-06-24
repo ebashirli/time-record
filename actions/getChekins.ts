@@ -17,6 +17,7 @@ const checkinSelect = {
   employee: {
     select: {
       fullName: true,
+      cardId: true,
       department: { select: { name: true } },
       company: { select: { name: true } },
       position: { select: { name: true } },
@@ -102,6 +103,7 @@ export async function getCheckins(
       data?.map((checkin, i) => ({
         "#": i + 1 + (paginate ? page * (limit ?? 0) : 0),
         id: checkin.id,
+        cardId: checkin.employee.cardId || "Unknown Employee",
         fullName: checkin.employee.fullName || "Unknown Employee",
         companyName: checkin.employee.company.name || "Unknown Company",
         departmentName: checkin.employee.department.name,
