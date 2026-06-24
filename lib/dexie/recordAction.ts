@@ -42,10 +42,11 @@ export async function checkAction(
   }
 
   // Different from last action (or no prior action recorded) — go straight through.
-  return commitAction(employee.id, action);
+  return commitAction(cardId, employee.id, action);
 }
 
 export async function commitAction(
+  cardId: string,
   employeeId: string,
   action: Direction,
   // gateId: string = getGateId(),
@@ -58,13 +59,12 @@ export async function commitAction(
       clientEventId,
       employeeId,
       action,
-      // gateId,
       dateTime,
       syncStatus: "pending",
       retryCount: 0,
     });
 
-    await db.employees.update(employeeId, {
+    await db.employees.update(cardId, {
       lastAction: action,
       lastActionAt: dateTime,
     });

@@ -18,10 +18,11 @@ import { Input } from "@base-ui/react";
 
 interface CheckInFormProps {
   cardId: string; // this should be the cardId your scan flow already resolved
+  employeeId: string; // the Employee.id sent to the server, distinct from cardId
   reset: (open?: boolean) => void;
 }
 
-export function CheckInForm({ cardId, reset }: CheckInFormProps) {
+export function CheckInForm({ cardId, employeeId, reset }: CheckInFormProps) {
   const [isPending, setIsPending] = useState(false);
   const [confirmState, setConfirmState] = useState<{
     direction: Direction;
@@ -57,7 +58,7 @@ export function CheckInForm({ cardId, reset }: CheckInFormProps) {
     if (!confirmState) return;
     setIsPending(true);
     try {
-      await commitAction(cardId, confirmState.direction);
+      await commitAction(cardId, employeeId, confirmState.direction);
       setConfirmState(null);
       reset();
     } finally {

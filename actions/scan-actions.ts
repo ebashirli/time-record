@@ -61,29 +61,21 @@ export async function submitCheckIn({
 }) {
   const { user } = await getCurrentSession();
 
-  if (!user) return { error: "Unauthorized" };
-  // const dateTime = formData.get("dateTime") as Date ?? new Date();
+  if (!user) throw new Error("Unauthorized");
 
   if (!employeeId || !direction)
-    return { error: "Employee ID and direction is required" };
+    throw new Error("Employee ID and direction is required");
 
   const employee = await prisma.employee.findUnique({
     where: { id: employeeId },
   });
-  if (!employee) return { error: "Employee not found" };
+  if (!employee) throw new Error("Employee not found");
 
-  try {
-    const checkin = await prisma.checkin.create({
-      data: { employeeId, direction, checkedById: user.id, dateTime },
-      // include: { employee: true },
-      select: { employee: { select: { fullName: true } }, id: true },
-    });
-    revalidatePath("/scanner");
-    revalidatePath("/attendance-tracking-system");
-    return { data: checkin };
-  } catch (error: unknown) {
-    console.error({ error });
-    if (error instanceof Error) return { error: error.message };
-    return { error: "Something happened" };
-  }
+  const checkin = await prisma.checkin.create({
+    data: { employeeId, direction, checkedById: user.id, dateTime },
+    select: { employee: { select: { fullName: true } }, id: true },
+  });
+  revalidatePath("/scanner");
+  revalidatePath("/attendance-tracking-system");
+  return { data: checkin };
 }

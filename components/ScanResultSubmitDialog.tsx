@@ -71,7 +71,11 @@ export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
           employee && (
             <div className="flex flex-col gap-6">
               <EmployeeCard employee={employee} />
-              <CheckInForm cardId={employee.cardId} reset={handleClose} />
+              <CheckInForm
+                cardId={employee.cardId}
+                employeeId={employee.id}
+                reset={handleClose}
+              />
             </div>
           )
         )}
