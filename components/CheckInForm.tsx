@@ -54,6 +54,9 @@ export function CheckInForm({ cardId, reset }: CheckInFormProps) {
       // internally since there was no duplicate.
       toast.success(`${DIRECTION_LABEL[direction]} qeydə alındı`);
       reset();
+    } catch (err) {
+      console.error(err);
+      toast.error("Qeyd edilmədi, yenidən cəhd edin");
     } finally {
       setIsPending(false);
     }
@@ -66,6 +69,9 @@ export function CheckInForm({ cardId, reset }: CheckInFormProps) {
       await commitAction(cardId, confirmState.direction);
       setConfirmState(null);
       reset();
+    } catch (err) {
+      console.error(err);
+      toast.error("Qeyd edilmədi, yenidən cəhd edin");
     } finally {
       setIsPending(false);
     }
