@@ -14,11 +14,13 @@ datasource db {
 
 model Gate {
   id        String   @id @default(cuid())
-  name      String   
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users     User[]   
+  users     User[]
+
+  @@map("gate")
 }
 
 model User {
