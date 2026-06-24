@@ -73,25 +73,10 @@ export async function triggerImmediateSync(): Promise<void> {
   await syncPendingActions();
 }
 
-/**
- * Returns a live count of unsynced actions, for the pending-sync badge.
- * Pair with dexie-react-hooks' useLiveQuery in the component, e.g.:
- *
- *   const pendingCount = useLiveQuery(() => db.pendingActions.count(), [], 0);
- */
 export async function getPendingCount(): Promise<number> {
   return db.pendingActions.count();
 }
 
-/**
- * Wire this up once, e.g. in a top-level client component (layout or a
- * dedicated <SyncManager /> mounted alongside <RegisterSW />):
- *
- *   useEffect(() => {
- *     startSyncManager();
- *     return () => stopSyncManager();
- *   }, []);
- */
 export function startSyncManager(): void {
   if (typeof window === "undefined") return;
 

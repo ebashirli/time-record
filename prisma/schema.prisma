@@ -12,7 +12,15 @@ datasource db {
   provider = "postgresql"
 }
 
-// @default(autoincrement())
+model Gate {
+  id        String   @id @default(cuid())
+  name      String   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]   
+}
+
 model User {
   id            String    @id @default(uuid())
   createdAt     DateTime  @default(now())
@@ -26,7 +34,11 @@ model User {
   accounts      Account[]
   checkedins    Checkin[]
 
+  gateId String?
+  gate   Gate?   @relation(fields: [gateId], references: [id])
+
   @@map("user")
+  @@index([gateId])
 }
 
 model Session {
@@ -172,6 +184,7 @@ model Checkin {
   updatedAt   DateTime  @updatedAt
 
   @@map("checkin")
+  @@index([employeeId, dateTime])
 }
 
 enum Nationality {

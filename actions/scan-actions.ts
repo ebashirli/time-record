@@ -1,9 +1,8 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { auth } from "@/lib/auth"; // Your Better Auth instance
-import { headers } from "next/headers";
 import { Direction } from "@/prisma/lib/generated/prisma/enums";
 import { revalidatePath } from "next/cache";
+import getCurrentSession from "@/lib/getCurrentSession";
 
 export async function getEmployeeByCardId(cardId: string) {
   if (!cardId) return { error: "Card ID not provided" };
@@ -16,6 +15,9 @@ export async function getEmployeeByCardId(cardId: string) {
         position: true,
         department: true,
         checkins: {
+          //  where: {
+          //   checkedBy: { gateId },
+          // },
           orderBy: {
             createdAt: "desc",
           },
@@ -36,8 +38,8 @@ export async function getEmployeeByCardId(cardId: string) {
         companyName: employee.company.name,
         departmentName: employee.department.name,
         positionName: employee.position.name,
-        lastAction: employee.checkins.at(-1)?.direction ?? null,
-        lastActionAt: employee.checkins.at(-1)?.dateTime.toDateString() ?? null,
+        lastAction: employee.checkins.at(0)?.direction ?? null,
+        lastActionAt: employee.checkins.at(0)?.dateTime.toISOString() ?? null,
         cachedAt: new Date().toISOString(),
         image: employee.image,
       },
@@ -57,11 +59,8 @@ export async function submitCheckIn(
   prevState: PrevState | null,
   formData: FormData,
 ) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const { user } = await getCurrentSession();
 
-  const user = session?.user;
   if (!user) return { error: "Unauthorized" };
   const employeeId = formData.get("employeeId") as string;
   const direction = formData.get("direction") as Direction;

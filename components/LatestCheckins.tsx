@@ -1,6 +1,4 @@
-import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { headers } from "next/headers";
 import CheckinDetails from "./CheckinDetails";
 import {
   Accordion,
@@ -10,16 +8,14 @@ import {
 } from "./ui/accordion";
 import { Badge } from "./ui/badge";
 import { Direction } from "@/prisma/lib/generated/prisma/browser";
+import getCurrentSession from "@/lib/getCurrentSession";
 
 export const LatestCheckins = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const user = session?.user;
+  const { user } = await getCurrentSession();
 
   const checkins = await prisma.checkin.findMany({
     where: {
-      checkedById: user?.id,
+      checkedBy: { gateId: user?.gateId },
     },
     orderBy: { createdAt: "desc" },
     take: 20,
