@@ -2,6 +2,7 @@
 
 import { Separator } from "@/components/ui/separator";
 import { getEmployeeByCardId } from "@/actions/scan-actions";
+import { Direction } from "@/prisma/lib/generated/prisma/browser";
 import {
   Dialog,
   DialogContent,
@@ -102,7 +103,7 @@ function EmployeeCard({ employee }: { employee: CachedEmployee }) {
         <div className="flex flex-col items-center ">
           <p className="mb-2">Sonuncu hərəkət</p>
           <Badge className="text-xl font-bold p-7 py-6 ">
-            {employee.lastAction ?? "İlk dəfə"}
+            {employee.lastAction ? employee.lastAction === Direction.IN ? "Giriş" : "Çıxış" : "İlk dəfə"}
           </Badge>
         </div>
       </div>
