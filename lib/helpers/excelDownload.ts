@@ -43,7 +43,8 @@ export async function generateExcelBuffer<T, U>(
 
   // const filePath = path.join(__dirname, "my_excel_file.xlsx");
 
-  const targetFolder = "G:/My Drive/3-S2 Project/6. Reports/STP/1-Daily Report";
+  // const targetFolder = "G:/My Drive/3-S2 Project/6. Reports/STP/1-Daily Report";
+  const targetFolder = "D:/DataServer/Idari Ishler/Vusal Abdullayev/backup/KART/Images";
   const fileName = "daily_report.xlsx"; // Change this to whatever you want to name the file
 
   const filePath = path.join(targetFolder, fileName);
