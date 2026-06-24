@@ -1,7 +1,7 @@
 "use client";
 
 import { Direction } from "@/prisma/lib/generated/prisma/browser";
-import React, { useState, useTransition, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "@/components/data-table/DataTable";
 import { columns } from "./columns";
 import { useSearchParams } from "next/navigation";
@@ -19,20 +19,27 @@ type Props = {
 };
 export const CheckinsTable = ({ page }: Props) => {
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const paramsString = searchParams.toString();
 
   const [data, setData] = useState<CheckinRow[]>([]);
   const [total, setTotal] = useState(0);
+  const [loadedParams, setLoadedParams] = useState<string | null>(null);
+
   useEffect(() => {
-    startTransition(async () => {
-      const { data, success, total } = await getCheckins(
-        searchParams.toString(),
-      );
-      if (!success) return;
+    let cancelled = false;
+    (async () => {
+      const { data, success, total } = await getCheckins(paramsString);
+      if (cancelled || !success) return;
       setData(data ?? []);
       setTotal(total ?? 0);
-    });
-  }, [searchParams]);
+      setLoadedParams(paramsString);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [paramsString]);
+
+  const loading = loadedParams !== paramsString;
 
   return (
     <div className="flex h-[calc(100dvh-var(--header-height)-var(--spacing)*4.5)] min-h-0 w-full flex-col overflow-hidden">
@@ -40,7 +47,7 @@ export const CheckinsTable = ({ page }: Props) => {
         columns={columns}
         data={data}
         rowCount={total}
-        loading={isPending}
+        loading={loading}
         filters={!page && <Filters />}
         actions={!page && <ExcelDownload />}
       />
