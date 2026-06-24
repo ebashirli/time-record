@@ -33,12 +33,11 @@ export async function syncPendingActions(): Promise<void> {
       });
 
       try {
-        const formData = new FormData();
-        formData.set("employeeId", item.employeeId);
-        formData.set("direction", item.action);
-        formData.set("dateTime", item.dateTime);
-
-        await submitCheckIn(null, formData);
+        await submitCheckIn({
+          employeeId: item.employeeId,
+          direction: item.action,
+          dateTime: new Date(item.dateTime),
+        });
 
         // Success — remove from the queue entirely (server is now source of truth).
         await db.pendingActions.delete(item.clientEventId);

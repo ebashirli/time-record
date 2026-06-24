@@ -50,20 +50,18 @@ export async function getEmployeeByCardId(cardId: string) {
   }
 }
 
-type PrevState = {
-  error?: string;
-  data?: { employee: { fullName: string | null }; id: string };
-};
-
-export async function submitCheckIn(
-  prevState: PrevState | null,
-  formData: FormData,
-) {
+export async function submitCheckIn({
+  employeeId,
+  direction,
+  dateTime,
+}: {
+  employeeId: string;
+  direction: Direction;
+  dateTime: Date;
+}) {
   const { user } = await getCurrentSession();
 
   if (!user) return { error: "Unauthorized" };
-  const employeeId = formData.get("employeeId") as string;
-  const direction = formData.get("direction") as Direction;
   // const dateTime = formData.get("dateTime") as Date ?? new Date();
 
   if (!employeeId || !direction)
@@ -76,12 +74,7 @@ export async function submitCheckIn(
 
   try {
     const checkin = await prisma.checkin.create({
-      data: {
-        employeeId,
-        direction,
-        checkedById: user.id,
-        dateTime: new Date(),
-      },
+      data: { employeeId, direction, checkedById: user.id, dateTime },
       // include: { employee: true },
       select: { employee: { select: { fullName: true } }, id: true },
     });

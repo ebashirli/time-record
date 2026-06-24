@@ -49,7 +49,7 @@ class DB extends Dexie {
       //  - syncStatus: to quickly query all non-synced rows for the badge + retry loop
       //  - cardId: to look up an employee's own pending history (for the duplicate-warning check)
       //  - occurredAt: to order the retry queue and pending-list display chronologically
-      pendingActions: "clientEventId, syncStatus, cardId, occurredAt",
+      pendingActions: "clientEventId, syncStatus, cardId, dateTime",
     });
   }
 }
