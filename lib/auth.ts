@@ -14,6 +14,11 @@ export const auth = betterAuth({
         defaultValue: Role.TERMINAL,
         input: false,
       },
+      gateId: {
+        type: "string",
+        required: false,
+        input: false,
+      },
     },
   },
 });
