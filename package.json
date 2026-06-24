@@ -7,7 +7,7 @@
     "images": "bunx serve \"D:/DataServer/Idari Ishler/Vusal Abdullayev/backup/KART/Images\" -p 8000",
     "dev": "next dev --experimental-https",
     "start:app": "NODE_ENV=production node server.ts",
-    "start": "start /b bun run images && bun run start:app",
+    "start": "next start",
     "dev:https": "node server.js",
     "dev-old": "next dev",
     "build": "next build --webpack",
