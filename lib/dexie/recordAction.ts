@@ -42,31 +42,29 @@ export async function checkAction(
   }
 
   // Different from last action (or no prior action recorded) — go straight through.
-  return commitAction(cardId, employee.id, action);
+  return commitAction(cardId, action);
 }
 
 export async function commitAction(
   cardId: string,
-  employeeId: string,
   action: Direction,
-  // gateId: string = getGateId(),
 ): Promise<RecordActionResult> {
   const clientEventId = crypto.randomUUID();
-  const dateTime = new Date().toISOString();
+  const occurredAt = new Date().toISOString();
 
   await db.transaction("rw", db.pendingActions, db.employees, async () => {
     await db.pendingActions.add({
       clientEventId,
-      employeeId,
+      cardId,
       action,
-      dateTime,
+      occurredAt,
       syncStatus: "pending",
       retryCount: 0,
     });
 
     await db.employees.update(cardId, {
       lastAction: action,
-      lastActionAt: dateTime,
+      lastActionAt: occurredAt,
     });
   });
 

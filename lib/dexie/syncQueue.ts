@@ -1,8 +1,5 @@
-import { submitCheckIn } from "@/actions/scan-actions";
+import { submitCheckin } from "@/actions/scan-actions";
 import { db } from "./db";
-
-// Replace with your actual existing Server Action import, e.g.:
-// import { submitCheckin } from "@/actions/checkin";
 
 const POLL_INTERVAL_MS = 15_000; // periodic safety-net sweep, in case events are missed
 
@@ -21,7 +18,7 @@ export async function syncPendingActions(): Promise<void> {
 
   syncInFlight = true;
   try {
-    const queued = await db.pendingActions.orderBy("dateTime").toArray();
+    const queued = await db.pendingActions.orderBy("occurredAt").toArray();
 
     for (const item of queued) {
       // Skip items already mid-flight from a previous overlapping call
@@ -33,10 +30,11 @@ export async function syncPendingActions(): Promise<void> {
       });
 
       try {
-        await submitCheckIn({
-          employeeId: item.employeeId,
-          direction: item.action,
-          dateTime: new Date(item.dateTime),
+        await submitCheckin({
+          clientEventId: item.clientEventId,
+          cardId: item.cardId,
+          action: item.action,
+          occurredAt: item.occurredAt,
         });
 
         // Success — remove from the queue entirely (server is now source of truth).

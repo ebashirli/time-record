@@ -4,25 +4,25 @@ import { LogIn, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   checkAction,
   commitAction,
   describeLastAction,
 } from "@/lib/dexie/recordAction";
 import { Direction } from "@/prisma/lib/generated/prisma/browser";
-import { Input } from "@base-ui/react";
 
-// Map your existing Direction enum to the ActionType used by recordAction.ts.
-// If Direction.IN / Direction.OUT already match "ENTRY" / "LEAVE" 1:1,
-// you can simplify this — shown explicitly here for clarity.
+const DIRECTION_LABEL: Record<Direction, string> = {
+  IN: "Giriş",
+  OUT: "Çıxış",
+};
 
 interface CheckInFormProps {
   cardId: string; // this should be the cardId your scan flow already resolved
-  employeeId: string; // the Employee.id sent to the server, distinct from cardId
   reset: (open?: boolean) => void;
 }
 
-export function CheckInForm({ cardId, employeeId, reset }: CheckInFormProps) {
+export function CheckInForm({ cardId, reset }: CheckInFormProps) {
   const [isPending, setIsPending] = useState(false);
   const [confirmState, setConfirmState] = useState<{
     direction: Direction;
@@ -45,10 +45,15 @@ export function CheckInForm({ cardId, employeeId, reset }: CheckInFormProps) {
         return; // wait for explicit confirm — nothing written yet
       }
 
+      if (result.status === "employee_not_cached") {
+        toast.error("İşçi məlumatı tapılmadı, kartı yenidən oxudun");
+        return;
+      }
+
       // status === "recorded" — checkAction already called commitAction
-      // internally since there was no duplicate. Nothing left to do here;
-      // the UI feedback ("✓ Entry recorded") is driven by recordAction's
-      // result / your screen-level state, not by this form component.
+      // internally since there was no duplicate.
+      toast.success(`${DIRECTION_LABEL[direction]} qeydə alındı`);
+      reset();
     } finally {
       setIsPending(false);
     }
@@ -58,7 +63,7 @@ export function CheckInForm({ cardId, employeeId, reset }: CheckInFormProps) {
     if (!confirmState) return;
     setIsPending(true);
     try {
-      await commitAction(cardId, employeeId, confirmState.direction);
+      await commitAction(cardId, confirmState.direction);
       setConfirmState(null);
       reset();
     } finally {
@@ -84,7 +89,6 @@ export function CheckInForm({ cardId, employeeId, reset }: CheckInFormProps) {
 
   return (
     <div className="flex w-full justify-between gap-3">
-      <Input type="hidden" name="employeeId" value={cardId} />
       <div className="flex w-full justify-between  gap-3">
         <InOutButton
           direction={Direction.IN}

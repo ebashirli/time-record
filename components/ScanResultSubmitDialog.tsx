@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { getEmployeeByCardId } from "@/actions/scan-actions";
+import { lookupEmployee } from "@/lib/dexie/lookupEmployee";
 import { Direction } from "@/prisma/lib/generated/prisma/browser";
 import {
   Dialog,
@@ -12,11 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import React, { useEffect, useState, useTransition } from "react";
 import { Spinner } from "./ui/spinner";
-import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
-import { CachedEmployee, db } from "@/lib/dexie/db";
-import { fetchAndSaveEmployeeImage } from "@/lib/dexie/fetchAndSaveEmployeeImage";
+import { CachedEmployee } from "@/lib/dexie/db";
 import { CheckInForm } from "./CheckInForm";
 
 type Props = {
@@ -24,43 +22,39 @@ type Props = {
   setIdCard: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
+type ScanState =
+  | { status: "idle" }
+  | { status: "found"; employee: CachedEmployee }
+  | { status: "not_found" }
+  | { status: "network_error" }
+  | { status: "no_gate"; message: string };
+
 export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
-  // Step 1: Triggered immediately when QR code hits the lens
-  const [employee, setEmployee] = useState<CachedEmployee | null>(null);
+  const [scanState, setScanState] = useState<ScanState>({ status: "idle" });
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (!cardId) return;
-    const handleScanSuccess = async (scanned: string) => {
-      const cached = await db.employees.get(scanned);
-      if (cached) return setEmployee(cached);
 
-      startTransition(async () => {
-        const { data, error } = await getEmployeeByCardId(scanned);
+    startTransition(async () => {
+      const result = await lookupEmployee(cardId);
 
-        if (error) toast.error(error);
-        if (data) {
-          const imageBlob = await fetchAndSaveEmployeeImage(data.image);
-          const employee = { ...data, imageBlob };
-          await db.employees.put(employee);
-          setEmployee(employee);
-        }
-      });
-    };
-
-    (async () => {
-      await handleScanSuccess(cardId);
-    })();
+      if (result.status === "found") {
+        setScanState({ status: "found", employee: result.employee });
+      } else {
+        setScanState(result);
+      }
+    });
   }, [cardId]);
 
   function handleClose(open?: boolean) {
     if (open) return;
     setIdCard(null);
-    setEmployee(null);
+    setScanState({ status: "idle" });
   }
 
   return (
-    <Dialog open={!!employee} onOpenChange={handleClose}>
+    <Dialog open={!!cardId} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Employee Check-in</DialogTitle>
@@ -69,20 +63,41 @@ export function ScanResultSubmitDialog({ cardId, setIdCard }: Props) {
         {isPending ? (
           <Spinner />
         ) : (
-          employee && (
-            <div className="flex flex-col gap-6">
-              <EmployeeCard employee={employee} />
-              <CheckInForm
-                cardId={employee.cardId}
-                employeeId={employee.id}
-                reset={handleClose}
-              />
-            </div>
-          )
+          <ScanResultBody scanState={scanState} onClose={handleClose} />
         )}
       </DialogContent>
     </Dialog>
   );
+}
+
+function ScanResultBody({
+  scanState,
+  onClose,
+}: {
+  scanState: ScanState;
+  onClose: (open?: boolean) => void;
+}) {
+  switch (scanState.status) {
+    case "idle":
+      return null;
+    case "not_found":
+      return <p className="text-destructive">Kart tanınmadı</p>;
+    case "network_error":
+      return (
+        <p className="text-destructive">
+          Serverlə əlaqə yoxdur — bağlantını yoxlayıb kartı yenidən oxudun
+        </p>
+      );
+    case "no_gate":
+      return <p className="text-destructive">{scanState.message}</p>;
+    case "found":
+      return (
+        <div className="flex flex-col gap-6">
+          <EmployeeCard employee={scanState.employee} />
+          <CheckInForm cardId={scanState.employee.cardId} reset={onClose} />
+        </div>
+      );
+  }
 }
 
 function EmployeeCard({ employee }: { employee: CachedEmployee }) {

@@ -20,15 +20,19 @@ export interface CachedEmployee {
 }
 
 export interface PendingAction {
-  employeeId: string;
+  cardId: string;
   clientEventId: string; // primary key — UUID, also the idempotency key sent to server
-  // cardId: string;
   action: Direction;
-  // gateId: string;
-  dateTime: string; // ISO timestamp — when the guard actually tapped
+  // gateId is never tracked client-side — resolved server-side from the session.
+  occurredAt: string; // ISO timestamp — when the guard actually tapped
   syncStatus: SyncStatus;
   retryCount: number;
   lastError?: string; // optional, last failure reason — useful for debugging stuck items
+}
+
+export interface MetaEntry {
+  key: string; // primary key, e.g. "lastEmployeeSyncAt"
+  value: string;
 }
 
 // ---------- Database ----------
@@ -36,11 +40,12 @@ export interface PendingAction {
 class DB extends Dexie {
   employees!: EntityTable<CachedEmployee, "cardId">;
   pendingActions!: EntityTable<PendingAction, "clientEventId">;
+  meta!: EntityTable<MetaEntry, "key">;
 
   constructor() {
     super("shift-db");
 
-    this.version(1).stores({
+    this.version(2).stores({
       // cardId is the primary key (&cardId not needed since it's the PK, implicitly unique)
       employees: "cardId, lastAction, cachedAt",
 
@@ -49,7 +54,10 @@ class DB extends Dexie {
       //  - syncStatus: to quickly query all non-synced rows for the badge + retry loop
       //  - cardId: to look up an employee's own pending history (for the duplicate-warning check)
       //  - occurredAt: to order the retry queue and pending-list display chronologically
-      pendingActions: "clientEventId, syncStatus, cardId, dateTime",
+      pendingActions: "clientEventId, syncStatus, cardId, occurredAt",
+
+      // key-value store; currently just "lastEmployeeSyncAt"
+      meta: "key",
     });
   }
 }

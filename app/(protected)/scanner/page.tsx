@@ -2,6 +2,9 @@ import { CustomRightSheet } from "@/components/CustomRightSheet";
 import { QRScanner } from "@/components/QRScanner";
 
 import { LatestCheckins } from "@/components/LatestCheckins";
+import { SyncManager } from "@/components/SyncManager";
+import { EmployeeSyncManager } from "@/components/EmployeeSyncManager";
+import { PendingSyncBadge } from "@/components/PendingSyncBadge";
 // import { TerminalUserSettings } from "@/components/TerminalUserSettings";
 // import { getServerSession, isTerminalRole } from "@/lib/auth-session";
 
@@ -11,8 +14,11 @@ export default async function ScannerPage() {
 
   return (
     <div className="flex min-h-svh flex-col justify-center items-center p-4 sm:p-8">
+      <SyncManager />
+      <EmployeeSyncManager />
       <QRScanner>
         <div className="flex justify-center items-center gap-2">
+          <PendingSyncBadge />
           <CustomRightSheet>
             <LatestCheckins />
           </CustomRightSheet>
