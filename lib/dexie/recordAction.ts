@@ -86,8 +86,8 @@ export function describeLastAction(
     0,
     Math.round((Date.now() - new Date(dateTime).getTime()) / 60000),
   );
-  const timeLabel = minutesAgo === 0 ? "indicə" : `${minutesAgo} dəqiqə əvvəl`;
-  return `${DUPLICATE_WARNING_LABEL[action]} ${timeLabel} artiq qeydə alinib`;
+  const timeLabel = minutesAgo === 0 ? "İndicə" : `${minutesAgo} dəqiqə əvvəl`;
+  return `${DUPLICATE_WARNING_LABEL[action]} ${timeLabel} artıq qeydə alınıb`;
 }
 
 // --- helpers ---
