@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { EmployeeRow } from "@/components/pages/employees/types";
 import type { Prisma } from "@/prisma/lib/generated/prisma/client";
+import dayjs from "dayjs";
 
 export async function getEmployees(
   paramsString?: string,
@@ -58,12 +59,33 @@ export async function getEmployees(
           company: { select: { name: true } },
           department: { select: { name: true } },
           position: { select: { name: true } },
+
+          firstName: true,
+          middleName: true,
+          patronymic: true,
+          lastName: true,
+          idCardSerie: true,
+          idCardNo: true,
+          idCardPin: true,
+          nationality: true,
+          sex: true,
+          birthDate: true,
+          bloodType: true,
+          phoneNumber: true,
+          emergencyPhoneNumber: true,
+          shift: true,
+          hireDate: true,
+          terminationDate: true,
+          createdAt: true,
+          updatedAt: true,
+          isActive: true,
         },
       }),
       prisma.employee.count({ where }),
     ]);
 
     const data: EmployeeRow[] = employees.map((employee, i) => ({
+      ...employee,
       "#": i + 1 + (paginate ? page * limit : 0),
       id: employee.id,
       fullName: employee.fullName,
@@ -72,6 +94,13 @@ export async function getEmployees(
       companyName: employee.company.name,
       departmentName: employee.department.name,
       positionName: employee.position.name,
+      birthDate: employee.birthDate ? dayjs(employee.birthDate).format("YYYY-DD-MM") : "",
+      hireDate: employee.hireDate ? dayjs(employee.hireDate).format("YYYY-DD-MM") : "",
+      terminationDate: employee.terminationDate ? dayjs(employee.terminationDate).format("YYYY-DD-MM") : "",
+      createdAt: employee.createdAt ? dayjs(employee.createdAt).format("YYYY-DD-MM") : "",
+      updatedAt: employee.updatedAt ? dayjs(employee.updatedAt).format("YYYY-DD-MM") : "",
+      isActive: !!employee.isActive ? 'Active' : "",
+
     }));
 
     return { success: true, data, total };

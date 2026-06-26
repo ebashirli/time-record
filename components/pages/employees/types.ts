@@ -7,4 +7,24 @@ export type EmployeeRow = {
   companyName: string;
   departmentName: string;
   positionName: string;
+
+  firstName?: string | null;
+  middleName?: string | null;
+  patronymic?: string | null;
+  lastName?: string | null;
+  idCardSerie?: string | null;
+  idCardNo?: string | null;
+  idCardPin?: string | null;
+  nationality?: string | null;
+  sex?: string | null;
+  birthDate?: string | null;
+  bloodType?: string | null;
+  phoneNumber?: string | null;
+  emergencyPhoneNumber?: string | null;
+  shift?: string | null;
+  hireDate?: string | null;
+  terminationDate?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  isActive?: string | null;
 };
