@@ -8,11 +8,15 @@ let checkInFlight = false;
 let pollHandle: ReturnType<typeof setInterval> | null = null;
 
 /**
- * Refresh profile fields for employees already cached on this terminal.
- * Never proactively caches employees this terminal hasn't itself scanned,
- * and never touches lastAction/lastActionAt — that's local check-in state,
- * not server "profile" data, and overwriting it here would corrupt the
- * duplicate-detection logic in recordAction.ts.
+ * Mirror the full active roster into Dexie, not just employees this terminal
+ * has already scanned — that's what lets lookupEmployee() resolve a card it's
+ * never seen before even while offline (see lookupEmployee.ts). For an
+ * employee newly seeded this way, lastAction/lastActionAt are forced to null
+ * and lastActionKnown to false, since this terminal hasn't itself confirmed
+ * them against the server — that's local check-in state, not server "profile"
+ * data, and guessing at it would corrupt the duplicate-detection logic in
+ * recordAction.ts. For employees already cached, only profile fields are
+ * refreshed; lastAction/lastActionAt/lastActionKnown are left untouched.
  */
 export async function checkForEmployeeUpdates(): Promise<void> {
   if (checkInFlight) return;
@@ -27,10 +31,27 @@ export async function checkForEmployeeUpdates(): Promise<void> {
 
     for (const change of changes) {
       const cached = await db.employees.get(change.cardId);
-      if (!cached) continue; // lazy cache — only refresh what's already here
 
       if (!change.isActive) {
-        await db.employees.delete(change.cardId);
+        if (cached) await db.employees.delete(change.cardId);
+        continue;
+      }
+
+      if (!cached) {
+        await db.employees.add({
+          cardId: change.cardId,
+          id: change.id,
+          fullName: change.fullName,
+          companyName: change.companyName,
+          departmentName: change.departmentName,
+          positionName: change.positionName,
+          image: change.image,
+          imageBlob: null,
+          lastAction: null,
+          lastActionAt: null,
+          lastActionKnown: false,
+          cachedAt: new Date().toISOString(),
+        });
         continue;
       }
 

@@ -1,14 +1,16 @@
-import { redirect } from "next/navigation";
+import { WifiOff } from "lucide-react";
+import { OfflineStatus } from "@/components/OfflineStatus";
 
 export default function OfflinePage() {
-  redirect("/scanner");
-  // return (
-  //   <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
-  //     <h1 className="text-2xl font-semibold">You{`'`}re offline</h1>
-  //     <p className="text-muted-foreground">
-  //       Check your connection. Once you{`'`}re back online, check-ins will sync
-  //       again.
-  //     </p>
-  //   </div>
-  // );
+  return (
+    <div className="flex min-h-svh flex-col items-center justify-center gap-4 p-6 text-center">
+      <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <h1 className="text-2xl font-semibold">İnternet bağlantısı yoxdur</h1>
+      <p className="text-muted-foreground">
+        Bağlantını yoxlayın. Bərpa olunan kimi tətbiq avtomatik olaraq
+        skanerə qayıdacaq.
+      </p>
+      <OfflineStatus />
+    </div>
+  );
 }

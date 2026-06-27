@@ -118,12 +118,19 @@ function EmployeeCard({ employee }: { employee: CachedEmployee }) {
         <div className="flex flex-col items-center ">
           <p className="mb-2">Sonuncu hərəkət</p>
           <Badge className="text-xl font-bold p-7 py-6 ">
-            {employee.lastAction
-              ? employee.lastAction === Direction.IN
-                ? "Giriş"
-                : "Çıxış"
-              : "İlk dəfə"}
+            {!employee.lastActionKnown
+              ? "Yoxlanılmayıb"
+              : employee.lastAction
+                ? employee.lastAction === Direction.IN
+                  ? "Giriş"
+                  : "Çıxış"
+                : "İlk dəfə"}
           </Badge>
+          {!employee.lastActionKnown && (
+            <p className="text-xs text-amber-600 mt-2">
+              Oflayn keşdən — son hərəkət serverdə yoxlanılmayıb
+            </p>
+          )}
         </div>
       </div>
     </div>

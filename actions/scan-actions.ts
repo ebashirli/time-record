@@ -125,12 +125,17 @@ export async function submitCheckin({
 }
 
 export async function getEmployeeChanges(since: string | null) {
+  const { user } = await getCurrentSession();
+  if (!user) throw new Error("Unauthorized");
+
   const changes = await prisma.employee.findMany({
     where: since ? { updatedAt: { gt: new Date(since) } } : {},
     select: {
+      id: true,
       cardId: true,
       fullName: true,
       isActive: true,
+      image: true,
       company: { select: { name: true } },
       department: { select: { name: true } },
       position: { select: { name: true } },
@@ -139,12 +144,14 @@ export async function getEmployeeChanges(since: string | null) {
 
   return {
     changes: changes.map((employee) => ({
+      id: employee.id,
       cardId: employee.cardId,
       fullName: employee.fullName ?? "",
       companyName: employee.company.name,
       departmentName: employee.department.name,
       positionName: employee.position.name,
       isActive: employee.isActive ?? true,
+      image: employee.image,
     })),
     syncedAt: new Date().toISOString(),
   };

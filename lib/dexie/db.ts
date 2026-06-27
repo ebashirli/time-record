@@ -13,6 +13,11 @@ export interface CachedEmployee {
   positionName: string;
   lastAction: Direction | null; // null if never scanned anywhere yet
   lastActionAt: string | null; // ISO timestamp
+  // false for directory-only rows seeded by the bulk roster sync (employeeSync.ts)
+  // before this terminal has ever resolved the employee against the server itself.
+  // lastAction/lastActionAt are not trustworthy for duplicate-detection until this
+  // is true — see lookupEmployee.ts.
+  lastActionKnown: boolean;
   cachedAt: string; // ISO timestamp — when this record was first cached
   id: string;
   image: string | null;
@@ -45,7 +50,7 @@ class DB extends Dexie {
   constructor() {
     super("shift-db");
 
-    this.version(2).stores({
+    const stores = {
       // cardId is the primary key (&cardId not needed since it's the PK, implicitly unique)
       employees: "cardId, lastAction, cachedAt",
 
@@ -58,7 +63,22 @@ class DB extends Dexie {
 
       // key-value store; currently just "lastEmployeeSyncAt"
       meta: "key",
-    });
+    };
+
+    this.version(2).stores(stores);
+
+    // v3 adds lastActionKnown (see CachedEmployee) — existing rows were all
+    // populated by an authoritative single-employee resolve, so they're known.
+    this.version(3)
+      .stores(stores)
+      .upgrade((tx) =>
+        tx
+          .table("employees")
+          .toCollection()
+          .modify((employee) => {
+            employee.lastActionKnown = true;
+          }),
+      );
   }
 }
 

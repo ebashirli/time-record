@@ -12,7 +12,8 @@ export async function proxy(request: NextRequest) {
   if (
     pathname === "/manifest.webmanifest" ||
     pathname === "/sw.js" ||
-    pathname.startsWith("/icons/")
+    pathname.startsWith("/icons/") ||
+    pathname === "/offline"
   ) {
     return NextResponse.next();
   }
@@ -43,7 +44,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next|_next/image|favicon.ico|sign-in|sign-up|api/auth|manifest.webmanifest|sw.js|icons).*)",
+    "/((?!_next/static|_next|_next/image|favicon.ico|sign-in|sign-up|api/auth|manifest.webmanifest|sw.js|icons|offline).*)",
   ],
 };
 
