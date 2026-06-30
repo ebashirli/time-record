@@ -13,11 +13,21 @@ import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { useSession } from "@/lib/auth-client";
 import { Badge } from "./ui/badge";
+import { useEffect, useState } from "react";
+import { getGateById } from "@/actions/gates";
 
 export const UserSettings = ({ isMobile }: { isMobile?: boolean }) => {
   const session = useSession();
   const user = session?.data?.user;
   const { theme, setTheme } = useTheme();
+
+  const [gateName, setGateName] = useState<string | null>(null);
+  useEffect(() => {
+    const promise = user?.gateId
+      ? getGateById(user.gateId)
+      : Promise.resolve(null);
+    promise.then((name) => setGateName(name));
+  }, [user?.gateId]);
 
   return (
     <DropdownMenuContent
@@ -47,6 +57,11 @@ export const UserSettings = ({ isMobile }: { isMobile?: boolean }) => {
             <span className="truncate text-xs text-muted-foreground">
               {user?.email}
             </span>
+            {gateName && (
+              <span className="truncate text-xs text-muted-foreground">
+                {gateName}
+              </span>
+            )}
           </div>
           <Button
             asChild

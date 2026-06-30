@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -16,10 +17,19 @@ import { EllipsisVerticalIcon } from "lucide-react";
 import { UserSettings } from "./UserSettings";
 import { useCurrentSession } from "@/hooks/useCurrentSession";
 import { Badge } from "./ui/badge";
+import { getGateById } from "@/actions/gates";
 
 export function NavUser() {
   const { session, user } = useCurrentSession();
   const { isMobile } = useSidebar();
+  const [gateName, setGateName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const promise = user?.gateId
+      ? getGateById(user.gateId)
+      : Promise.resolve(null);
+    promise.then((name) => setGateName(name));
+  }, [user?.gateId]);
 
   if (!session || !user) return null;
 
@@ -27,7 +37,7 @@ export function NavUser() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="min-h-18">
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -48,9 +58,18 @@ export function NavUser() {
                     <span className="truncate font-medium">{user.role}</span>
                   </Badge>
                 </div>
-                <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
-                </span>
+                <div className="flex w-full justify-between">
+                  <span className="truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </span>
+                </div>
+                <div className="flex w-full justify-between">
+                  {gateName && (
+                    <span className="truncate text-xs text-muted-foreground">
+                      {gateName}
+                    </span>
+                  )}
+                </div>
               </div>
               <EllipsisVerticalIcon className="ml-auto size-4" />
             </SidebarMenuButton>
