@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { DeleteDialog } from "@/components/DeleteDialog";
 import { QRGenerator } from "@/components/QRGenerator";
 import { deleteEmployee } from "@/actions/deleteEmployee";
@@ -15,6 +16,32 @@ export function getEmployeeColumns(
   setData: Dispatch<SetStateAction<EmployeeRow[]>>,
 ): ColumnDef<EmployeeRow>[] {
   return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected()
+                ? true
+                : table.getIsSomePageRowsSelected()
+                  ? "indeterminate"
+                  : false
+            }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+          />
+        </div>
+      ),
+      size: 1,
+    },
     {
       accessorKey: "#",
       header: () => <div className="">#</div>,

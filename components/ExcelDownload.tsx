@@ -8,11 +8,13 @@ import { FileDown, Loader2 } from "lucide-react";
 type Props = {
   endpoint?: string;
   filename?: string;
+  selectedIds?: string[];
 };
 
 export default function ExcelDownload({
   endpoint = "/api/checkins/export",
   filename = "checkins_report.xlsx",
+  selectedIds,
 }: Props) {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,9 +22,9 @@ export default function ExcelDownload({
   const handleDownload = async () => {
     setIsLoading(true);
     try {
-      // Pass all current filters to the export route
-      const params = searchParams.toString();
-      const url = `${endpoint}${params ? `?${params}` : ""}`;
+      const params = new URLSearchParams(searchParams);
+      if (selectedIds?.length) params.set("ids", selectedIds.join(","));
+      const url = `${endpoint}${params.toString() ? `?${params.toString()}` : ""}`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error("Export failed");

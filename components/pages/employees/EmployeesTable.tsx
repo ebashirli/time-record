@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
+import { RowSelectionState } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table/DataTable";
 import { SearchForm } from "@/components/search-form";
 import { FormSelectField } from "@/components/FormSelectField";
@@ -19,6 +20,7 @@ export const EmployeesTable = () => {
 
   const [data, setData] = useState<EmployeeRow[]>([]);
   const [total, setTotal] = useState(0);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   useEffect(() => {
     startTransition(async () => {
@@ -33,6 +35,10 @@ export const EmployeesTable = () => {
 
   const columns = useMemo(() => getEmployeeColumns(setData), []);
 
+  const selectedIds = Object.entries(rowSelection)
+    .filter(([, selected]) => selected)
+    .map(([id]) => id);
+
   return (
     <div className="flex h-[calc(100dvh-var(--header-height)-var(--spacing)*4.5)] min-h-0 w-full flex-col overflow-hidden">
       <DataTable
@@ -41,10 +47,13 @@ export const EmployeesTable = () => {
         rowCount={total}
         loading={isPending}
         filters={<Filters />}
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
         actions={
           <ExcelDownload
             endpoint="/api/employees/export"
             filename="employees_report.xlsx"
+            selectedIds={selectedIds}
           />
         }
       />

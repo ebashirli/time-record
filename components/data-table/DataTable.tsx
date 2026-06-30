@@ -6,6 +6,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   // SortingState,
+  RowSelectionState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -47,6 +48,8 @@ interface DataTableProps<TData extends I, TValue> {
   loading?: boolean;
   filters?: React.ReactNode;
   actions?: React.ReactNode;
+  rowSelection?: RowSelectionState;
+  onRowSelectionChange?: OnChangeFn<RowSelectionState>;
 }
 
 export function DataTable<TData extends I, TValue>({
@@ -56,6 +59,8 @@ export function DataTable<TData extends I, TValue>({
   loading,
   filters,
   actions,
+  rowSelection,
+  onRowSelectionChange,
 }: DataTableProps<TData, TValue>) {
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -121,7 +126,7 @@ export function DataTable<TData extends I, TValue>({
     state: {
       // sorting,
       columnVisibility,
-      // rowSelection,
+      rowSelection: rowSelection ?? {},
       columnFilters,
       pagination: { pageIndex, pageSize },
     },
@@ -131,7 +136,7 @@ export function DataTable<TData extends I, TValue>({
     autoResetPageIndex: false,
     getRowId: (row) => row.id.toString(),
     enableRowSelection: true,
-    // onRowSelectionChange: setRowSelection,
+    onRowSelectionChange,
     // onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
