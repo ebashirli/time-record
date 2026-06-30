@@ -2,6 +2,7 @@ import { getCheckins } from "@/actions/getChekins";
 import { NextRequest } from "next/server";
 import ExcelJS from "exceljs";
 import { CheckinRow } from "@/components/pages/checkins/types";
+import dayjs from "dayjs";
 
 export async function GET(request: NextRequest) {
   const paramsString = request.nextUrl.searchParams.toString();
@@ -69,7 +70,7 @@ async function generateExcelBuffer(checkins?: CheckinRow[]) {
       department: checkin.departmentName,
       gate: checkin.gateName,
       terminal: checkin.checkedByName,
-      dateTime: checkin.dateTime,
+      dateTime: dayjs(checkin.dateTime).add(4, "hour").toDate(),
       direction: checkin.direction === "In" ? "Giriş" : "Çıxış",
     });
   });
