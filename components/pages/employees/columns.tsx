@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DeleteDialog } from "@/components/DeleteDialog";
@@ -28,7 +29,9 @@ export function getEmployeeColumns(
                   ? "indeterminate"
                   : false
             }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
           />
         </div>
       ),
@@ -101,6 +104,18 @@ export function getEmployeeColumns(
       cell: ({ row }) => (
         <div className="font-medium">{row.getValue("positionName")}</div>
       ),
+    },
+    {
+      accessorKey: "isActive",
+      header: () => <div>Status</div>,
+      cell: ({ row }) => {
+        const isActive = row.getValue("isActive") === "Active";
+        return (
+          <Badge variant={isActive ? "default" : "destructive"}>
+            {isActive ? "Active" : "Inactive"}
+          </Badge>
+        );
+      },
     },
     {
       id: "actions",
