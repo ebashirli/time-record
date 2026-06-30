@@ -74,6 +74,15 @@ function Filters() {
         placeholder="By position"
         isFilter
       />
+      <FormSelectField
+        name="isActive"
+        items={[
+          { id: "true", name: "Active" },
+          { id: "false", name: "Inactive" },
+        ]}
+        placeholder="By status"
+        isFilter
+      />
     </div>
   );
 }

@@ -14,11 +14,15 @@ export async function getEmployees(
   const companyId = searchParams.get("companyId") || undefined;
   const departmentId = searchParams.get("departmentId") || undefined;
   const positionId = searchParams.get("positionId") || undefined;
+  const isActiveParam = searchParams.get("isActive");
   const limit = Number(searchParams.get("limit") ?? 20);
   const page = Number(searchParams.get("page") ?? 0);
 
+  const isActive =
+    isActiveParam === "true" ? true : isActiveParam === "false" ? false : undefined;
+
   const where: Prisma.EmployeeWhereInput = {
-    isActive: { not: false },
+    ...(isActive !== undefined ? { isActive } : {}),
     companyId,
     departmentId,
     positionId,
