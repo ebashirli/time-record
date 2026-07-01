@@ -41,7 +41,7 @@ interface I {
   id: string;
 }
 
-interface DataTableProps<TData extends I, TValue> {
+interface Props<TData extends I, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   rowCount?: number;
@@ -50,6 +50,7 @@ interface DataTableProps<TData extends I, TValue> {
   actions?: React.ReactNode;
   rowSelection?: RowSelectionState;
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
+  noClick?: boolean;
 }
 
 export function DataTable<TData extends I, TValue>({
@@ -61,7 +62,8 @@ export function DataTable<TData extends I, TValue>({
   actions,
   rowSelection,
   onRowSelectionChange,
-}: DataTableProps<TData, TValue>) {
+  noClick,
+}: Props<TData, TValue>) {
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -208,10 +210,16 @@ export function DataTable<TData extends I, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className="cursor-pointer"
-                    onClick={() => {
-                      const params = new URLSearchParams(searchParams);
-                      replace(`${pathname}/${row.id}?${params.toString()}`);
-                    }}
+                    onClick={
+                      noClick
+                        ? undefined
+                        : () => {
+                            const params = new URLSearchParams(searchParams);
+                            replace(
+                              `${pathname}/${row.id}?${params.toString()}`,
+                            );
+                          }
+                    }
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (

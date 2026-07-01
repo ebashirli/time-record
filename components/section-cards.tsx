@@ -21,7 +21,7 @@ import {
 export async function SectionCards() {
   const todaysCheckinsCount = await prisma.checkin.count({
     where: {
-      createdAt: {
+      dateTime: {
         gte: dayjs().startOf("day").toDate(),
         lte: dayjs().endOf("day").toDate(),
       },

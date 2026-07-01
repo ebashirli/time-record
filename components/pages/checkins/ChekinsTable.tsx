@@ -50,6 +50,7 @@ export const CheckinsTable = ({ page }: Props) => {
         loading={loading}
         filters={!page && <Filters />}
         actions={!page && <ExcelDownload />}
+        noClick
       />
     </div>
   );
