@@ -158,6 +158,10 @@ async function processAndUpsertRow(row: Row) {
   });
 
   // 4. Map data object
+
+  const phoneNumber = row.phoneNumber?.replaceAll(" ", "");
+  const emergencyPhoneNumber = row.emergencyPhoneNumber?.replaceAll(" ", "");
+
   const employeeData = {
     firstName: row.firstName,
     middleName: row.middleName,
@@ -167,10 +171,8 @@ async function processAndUpsertRow(row: Row) {
     idCardNo: row.idCardNo ? String(row.idCardNo) : undefined,
     idCardPin: row.idCardPin ? String(row.idCardPin) : undefined,
     birthDate: row.birthDate ? new Date(Date.parse(row.birthDate)) : undefined,
-    phoneNumber: row.phoneNumber ? String(row.phoneNumber) : undefined,
-    emergencyPhoneNumber: row.emergencyPhoneNumber
-      ? String(row.emergencyPhoneNumber)
-      : undefined,
+    phoneNumber,
+    emergencyPhoneNumber,
     hireDate: row.hireDate ? new Date(Date.parse(row.hireDate)) : undefined,
     companyId: company.id,
     departmentId: department.id,
@@ -181,7 +183,7 @@ async function processAndUpsertRow(row: Row) {
     nationality: nationality[row.nationality as keyof typeof nationality],
     shift: shift[row.shift as keyof typeof shift],
     sex: sex[row.sex as keyof typeof sex],
-    isActive: row.isActive ? row.isActive === "TRUE" : undefined,
+    isActive: row.isActive === "Active",
     image: row.image,
   };
 
