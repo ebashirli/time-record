@@ -6,7 +6,7 @@
   "scripts": {
     "images": "bunx serve \"D:/DataServer/Idari Ishler/Vusal Abdullayev/backup/KART/Images\" -p 8000",
     "dev": "next dev --experimental-https",
-    "start:app": "NODE_ENV=production node server.ts",
+    "start:app": "NODE_ENV=production bun server.ts",
     "start": "next start",
     "dev:https": "node server.js",
     "dev-old": "next dev",
