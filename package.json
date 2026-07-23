@@ -10,7 +10,7 @@
     "start": "next start",
     "dev:https": "node server.js",
     "dev-old": "next dev",
-    "build": "next build --webpack",
+    "build": "NEXT_DEPLOYMENT_ID=$(git rev-parse --short HEAD) next build --webpack",
     "lint": "eslint",
     "posti": "prisma generate",
     "db:migrate": "prisma migrate dev",
