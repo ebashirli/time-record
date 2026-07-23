@@ -156,7 +156,8 @@ model Employee {
   terminationDate      DateTime?
   cardId               String    @unique
 
-  image     String?
+  image          String?
+  imageUpdatedAt DateTime?
   companyId String
   company   Company   @relation(fields: [companyId], references: [id])
   createdAt DateTime  @default(now())
@@ -172,6 +173,17 @@ model Employee {
   isActive Boolean?  @default(true)
 
   @@map("employee")
+}
+
+model ImageAsset {
+  fileName      String   @id
+  fileSizeBytes Int
+  fileMtimeMs   Float
+  contentHash   String
+  lastCheckedAt DateTime @updatedAt
+  lastChangedAt DateTime @default(now())
+
+  @@map("image_asset")
 }
 
 model Checkin {

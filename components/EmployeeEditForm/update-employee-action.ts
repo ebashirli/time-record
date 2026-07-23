@@ -107,6 +107,10 @@ export async function updateEmployee(
       companyId: data.companyId ?? undefined,
       departmentId: data.departmentId ?? undefined,
       positionId: data.positionId ?? undefined,
+      imageUpdatedAt:
+        data.image !== undefined && data.image !== employee.image
+          ? new Date()
+          : undefined,
     };
 
     // Update employee in database

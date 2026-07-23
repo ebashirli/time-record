@@ -2,6 +2,9 @@ import "dotenv/config";
 import https from "https";
 import next from "next";
 import fs from "fs";
+import { startImageAssetScheduler } from "./lib/server/imageAssetSync";
+
+const IMAGE_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "0.0.0.0";
@@ -27,4 +30,6 @@ app.prepare().then(() => {
     console.log(`✅ Server ready`);
     console.log(`https://${host}:${port}`);
   });
+
+  startImageAssetScheduler(IMAGE_CHECK_INTERVAL_MS);
 });

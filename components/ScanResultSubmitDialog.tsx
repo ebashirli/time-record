@@ -141,17 +141,17 @@ export default function EmployeeImage({
   fullName,
   image,
 }: EmployeeImageProps) {
-  const [imgSrc, setImgSrc] = useState<string>("");
-
-  console.log({ blob, fullName, image, imgSrc });
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!blob) return;
+    if (!blob) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setImgSrc(null);
+      return;
+    }
 
     // 1. Blob-dan müvəqqəti URL yaradırıq (məs: blob:http://localhost:3000/...)
     const url = URL.createObjectURL(blob);
-    console.log({ url });
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setImgSrc(url);
 
     // 2. CLEANUP: Komponent ekrandan itəndə yaddaşı mütləq təmizləyirik

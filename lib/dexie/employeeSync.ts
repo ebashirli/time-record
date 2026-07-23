@@ -1,5 +1,6 @@
 import { getEmployeeChanges } from "@/actions/scan-actions";
-import { db } from "./db";
+import { fetchAndSaveEmployeeImage } from "./fetchAndSaveEmployeeImage";
+import { CachedEmployee, db } from "./db";
 
 const POLL_INTERVAL_MS = 60_000;
 const WATERMARK_KEY = "lastEmployeeSyncAt";
@@ -34,12 +35,36 @@ export async function checkForEmployeeUpdates(): Promise<void> {
         continue;
       }
 
-      await db.employees.update(change.cardId, {
+      const patch: Partial<CachedEmployee> = {
         fullName: change.fullName,
         companyName: change.companyName,
         departmentName: change.departmentName,
         positionName: change.positionName,
-      });
+      };
+
+      if (change.imageUpdatedAt !== (cached.imageUpdatedAt ?? null)) {
+        if (!change.image) {
+          patch.image = null;
+          patch.imageBlob = null;
+          patch.imageUpdatedAt = null;
+        } else {
+          const newBlob = await fetchAndSaveEmployeeImage(change.image);
+          if (newBlob) {
+            patch.image = change.image;
+            patch.imageBlob = newBlob;
+            patch.imageUpdatedAt = change.imageUpdatedAt;
+          } else {
+            // Fetch failed (transient network issue or legacy API hiccup).
+            // Leave image/imageBlob/imageUpdatedAt untouched this cycle
+            // rather than blank a working photo — logged for visibility.
+            console.warn(
+              `[employeeSync] image refresh failed for cardId ${change.cardId}; keeping previously cached photo`,
+            );
+          }
+        }
+      }
+
+      await db.employees.update(change.cardId, patch);
     }
 
     await db.meta.put({ key: WATERMARK_KEY, value: syncedAt });

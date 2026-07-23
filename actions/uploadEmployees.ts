@@ -162,6 +162,12 @@ async function processAndUpsertRow(row: Row) {
   const phoneNumber = row.phoneNumber?.replaceAll(" ", "");
   const emergencyPhoneNumber = row.emergencyPhoneNumber?.replaceAll(" ", "");
 
+  const existing = await prisma.employee.findUnique({
+    where: { cardId: row.cardId },
+    select: { image: true },
+  });
+  const imageChanged = row.image !== undefined && row.image !== existing?.image;
+
   const employeeData = {
     firstName: row.firstName,
     middleName: row.middleName,
@@ -185,6 +191,7 @@ async function processAndUpsertRow(row: Row) {
     sex: sex[row.sex as keyof typeof sex],
     isActive: row.isActive === "Active",
     image: row.image,
+    imageUpdatedAt: imageChanged ? new Date() : undefined,
   };
 
   // 5. Execute Upsert based on cardId

@@ -9,7 +9,8 @@ import {
 } from "react";
 import { useSearchParams } from "next/navigation";
 import { RowSelectionState } from "@tanstack/react-table";
-import { ToggleLeft } from "lucide-react";
+import { ImageIcon, ToggleLeft } from "lucide-react";
+import { toast } from "sonner";
 import { DataTable } from "@/components/data-table/DataTable";
 import { SearchForm } from "@/components/search-form";
 import { FormSelectField } from "@/components/FormSelectField";
@@ -20,6 +21,7 @@ import { getCompanies } from "@/actions/getCompanies";
 import { getDepartments } from "@/actions/getDepartments";
 import { getPositions } from "@/actions/getPositions";
 import { toggleEmployeeStatus } from "@/actions/toggleEmployeeStatus";
+import { triggerImageRecheck } from "@/actions/image-asset-actions";
 import { getEmployeeColumns } from "./columns";
 import { EmployeeRow } from "./types";
 
@@ -27,6 +29,7 @@ export const EmployeesTable = () => {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isToggling, startToggleTransition] = useTransition();
+  const [isRecheckingImages, startImageRecheckTransition] = useTransition();
 
   const [data, setData] = useState<EmployeeRow[]>([]);
   const [total, setTotal] = useState(0);
@@ -71,6 +74,25 @@ export const EmployeesTable = () => {
     });
   };
 
+  const handleRecheckImages = () => {
+    startImageRecheckTransition(async () => {
+      const result = await triggerImageRecheck();
+      if (result.status === "already_running") {
+        toast.info("A photo check is already running, try again shortly");
+        return;
+      }
+      if (result.missing.length) {
+        toast.warning(
+          `Checked ${result.checked} photos, ${result.changed} changed, ${result.missing.length} missing on disk`,
+        );
+      } else {
+        toast.success(
+          `Checked ${result.checked} photos, ${result.changed} changed`,
+        );
+      }
+    });
+  };
+
   return (
     <div className="flex h-[calc(100dvh-var(--header-height)-var(--spacing)*4.5)] min-h-0 w-full flex-col overflow-hidden">
       <DataTable
@@ -99,6 +121,15 @@ export const EmployeesTable = () => {
               filename="employees_report.xlsx"
               selectedIds={selectedIds}
             />
+            <Button
+              variant="outline"
+              onClick={handleRecheckImages}
+              disabled={isRecheckingImages}
+              className="gap-2"
+            >
+              <ImageIcon className="size-4" />
+              Recheck images
+            </Button>
           </>
         }
       />

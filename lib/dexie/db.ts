@@ -17,6 +17,7 @@ export interface CachedEmployee {
   id: string;
   image: string | null;
   imageBlob?: Blob | null;
+  imageUpdatedAt?: string | null;
 }
 
 export interface PendingAction {

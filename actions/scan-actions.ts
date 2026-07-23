@@ -57,6 +57,7 @@ export async function getEmployeeByCardId(
       lastActionAt: employee.checkins[0]?.dateTime.toISOString() ?? null,
       cachedAt: new Date().toISOString(),
       image: employee.image,
+      imageUpdatedAt: employee.imageUpdatedAt?.toISOString() ?? null,
     },
   };
 }
@@ -72,6 +73,7 @@ type EmployeeScanResult = {
   lastActionAt: string | null;
   cachedAt: string;
   image: string | null;
+  imageUpdatedAt: string | null;
 };
 
 export async function submitCheckin({
@@ -88,7 +90,9 @@ export async function submitCheckin({
   const { user } = await getCurrentSession();
   if (!user) throw new Error("Unauthorized");
 
-  const existing = await prisma.checkin.findUnique({ where: { clientEventId } });
+  const existing = await prisma.checkin.findUnique({
+    where: { clientEventId },
+  });
   if (existing) return { status: "duplicate", checkinId: existing.id };
 
   const employee = await prisma.employee.findUnique({ where: { cardId } });
@@ -131,6 +135,8 @@ export async function getEmployeeChanges(since: string | null) {
       cardId: true,
       fullName: true,
       isActive: true,
+      image: true,
+      imageUpdatedAt: true,
       company: { select: { name: true } },
       department: { select: { name: true } },
       position: { select: { name: true } },
@@ -145,6 +151,8 @@ export async function getEmployeeChanges(since: string | null) {
       departmentName: employee.department.name,
       positionName: employee.position.name,
       isActive: employee.isActive ?? true,
+      image: employee.image,
+      imageUpdatedAt: employee.imageUpdatedAt?.toISOString() ?? null,
     })),
     syncedAt: new Date().toISOString(),
   };
